@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin CRM — SPMC Order Dispatch</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#ffd700;--red-deep:#0d0205;--red-card:#240b0e;--red-mid:#1a0508;--text:#fff5e4;--text-muted:#b08060;--border:rgba(255,215,0,0.18);--green:#25d366}
+body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--red-deep);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--red-card);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:380px;width:100%;text-align:center}
+.login-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.login-sub{color:var(--text-muted);font-size:13px;margin-bottom:28px}
+.login-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-size:15px;outline:none;margin-bottom:14px;text-align:center;letter-spacing:3px}
+.login-input:focus{border-color:rgba(255,215,0,0.5)}
+.login-btn{width:100%;background:linear-gradient(135deg,#92400e,#dc7222);color:var(--gold);border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer}
+.login-btn:hover{opacity:0.88}
+.login-error{color:#f87171;font-size:13px;margin-top:10px;display:none}
+
+/* APP */
+#app{display:none}
+
+/* HEADER */
+.admin-header{background:rgba(7,1,3,0.96);border-bottom:1px solid var(--border);padding:0 3%;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.admin-logo{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--gold)}
+.admin-logout{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all 0.2s}
+.admin-logout:hover{border-color:rgba(255,100,100,0.5);color:#f87171}
+
+.admin-body{padding:28px 3%}
+
+/* STATS */
+.stat-cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin-bottom:28px}
+.stat-card{background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.stat-val{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold);display:block;margin-bottom:4px}
+.stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.filter-select,.search-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-size:13px;outline:none}
+.filter-select{cursor:pointer}
+.filter-select option{background:#1a0508}
+.search-input{flex:1;min-width:200px}
+.search-input::placeholder{color:var(--text-muted)}
+.search-input:focus,.filter-select:focus{border-color:rgba(255,215,0,0.4)}
+.toolbar-btn{background:rgba(255,215,0,0.1);border:1px solid var(--border);color:var(--gold);border-radius:10px;padding:9px 16px;font-size:13px;cursor:pointer;font-weight:600;transition:all 0.2s;white-space:nowrap}
+.toolbar-btn:hover{background:rgba(255,215,0,0.2)}
+.toolbar-btn.green{background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.3);color:#25d366}
+.toolbar-btn.green:hover{background:rgba(37,211,102,0.2)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border)}
+.orders-table{width:100%;border-collapse:collapse;min-width:900px}
+.orders-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid var(--border);white-space:nowrap;background:rgba(36,11,14,0.8)}
+.orders-table td{padding:12px;font-size:13px;border-bottom:1px solid rgba(255,215,0,0.05);vertical-align:middle}
+.orders-table tr:last-child td{border-bottom:none}
+.orders-table tbody tr:hover td{background:rgba(255,215,0,0.02)}
+
+/* CELLS */
+.oid{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);font-weight:600}
+.cname{font-weight:600;font-size:13px}
+.caddr{font-size:11px;color:var(--text-muted);margin-top:2px}
+.cphone a{color:var(--gold);text-decoration:none;font-size:12px}
+.cphone a:hover{text-decoration:underline}
+.items-cell{font-size:11px;color:var(--text-muted);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.total-cell{font-weight:700}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;white-space:nowrap}
+.s-pending{background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)}
+.s-confirmed{background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.3)}
+.s-dispatched{background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3)}
+.s-delivered{background:rgba(134,239,172,0.15);color:#86efac;border:1px solid rgba(134,239,172,0.3)}
+.s-cancelled{background:rgba(248,113,113,0.15);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
+.p-paid{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.25)}
+.p-pending{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.p-cod{background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)}
+
+/* ACTIONS */
+.act-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:5px 8px;color:var(--text);font-size:11px;outline:none;cursor:pointer;max-width:110px}
+.act-select option{background:#1a0508}
+.tracking-wrap{display:flex;gap:4px;align-items:center;margin-top:6px}
+.tracking-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:7px;padding:4px 8px;color:var(--text);font-size:11px;width:120px;outline:none}
+.tracking-input:focus{border-color:rgba(255,215,0,0.4)}
+.tracking-input::placeholder{color:var(--text-muted)}
+.save-btn{background:rgba(255,215,0,0.1);border:1px solid var(--border);color:var(--gold);border-radius:7px;padding:4px 8px;font-size:11px;cursor:pointer;white-space:nowrap}
+.save-btn:hover{background:rgba(255,215,0,0.2)}
+.wa-action{display:flex;gap:4px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.wa-tpl-select{background:rgba(37,211,102,0.05);border:1px solid rgba(37,211,102,0.2);border-radius:7px;padding:4px 6px;color:#25d366;font-size:11px;outline:none;cursor:pointer;max-width:120px}
+.wa-tpl-select option{background:#1a0508;color:var(--text)}
+.wa-send-btn{background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.3);color:#25d366;border-radius:7px;padding:4px 8px;font-size:11px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.wa-send-btn:hover{background:rgba(37,211,102,0.25)}
+
+/* DETAIL ROW */
+.detail-row{display:none;background:rgba(10,2,5,0.6)}
+.detail-row.open{display:table-row}
+.detail-inner{padding:16px 20px;font-size:12px;color:var(--text-muted);border-top:1px dashed var(--border)}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+.detail-field{display:flex;flex-direction:column;gap:2px}
+.detail-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+.detail-val{font-size:13px;color:var(--text)}
+.detail-items{margin-top:8px}
+.detail-item-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,215,0,0.05)}
+.detail-item-row:last-child{border-bottom:none}
+.expand-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:2px 6px;transition:transform 0.2s}
+.expand-btn.open{transform:rotate(90deg);color:var(--gold)}
+
+/* MISC */
+.empty-state{text-align:center;padding:60px;color:var(--text-muted)}
+.empty-state span{font-size:48px;display:block;margin-bottom:12px}
+.loading{text-align:center;padding:40px;color:var(--text-muted);font-size:14px}
+.no-backend{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:13px;color:#fbbf24;line-height:1.6}
+code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px}
+
+@media(max-width:640px){.stat-cards{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div style="font-size:48px;margin-bottom:12px">🔐</div>
+    <div class="login-title">Admin CRM</div>
+    <div class="login-sub">Sri Palani Murugan Crackers</div>
+    <input type="password" id="admin-password" class="login-input" placeholder="Enter password" autocomplete="current-password">
+    <button class="login-btn" id="login-btn">Sign In</button>
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="admin-header">
+    <div class="admin-logo">🎆 SPMC Admin CRM</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span style="font-size:12px;color:var(--text-muted)" id="backend-status"></span>
+      <button class="admin-logout" id="logout-btn">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <div class="stat-cards">
+      <div class="stat-card"><span class="stat-val" id="s-total">—</span><span class="stat-label">Total Orders</span></div>
+      <div class="stat-card"><span class="stat-val" id="s-pending">—</span><span class="stat-label">Pending</span></div>
+      <div class="stat-card"><span class="stat-val" id="s-confirmed">—</span><span class="stat-label">Confirmed</span></div>
+      <div class="stat-card"><span class="stat-val" id="s-dispatched">—</span><span class="stat-label">Dispatched</span></div>
+      <div class="stat-card"><span class="stat-val" id="s-revenue">—</span><span class="stat-label">Total Revenue</span></div>
+      <div class="stat-card"><span class="stat-val" id="s-paid">—</span><span class="stat-label">Paid Online</span></div>
+    </div>
+
+    <div id="no-backend" class="no-backend" style="display:none">
+      ⚠️ Backend not running. Start: <code>cd backend && npm install && node server.js</code>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search-input" id="admin-search" placeholder="Search name, phone, order ID...">
+      <select class="filter-select" id="status-filter">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select class="filter-select" id="payment-filter">
+        <option value="all">All Payments</option>
+        <option value="paid">Paid Online</option>
+        <option value="pending">Unpaid</option>
+        <option value="cod">COD</option>
+      </select>
+      <button class="toolbar-btn" id="refresh-btn">🔄 Refresh</button>
+      <a class="toolbar-btn green" id="export-btn" href="http://localhost:3001/orders/export" target="_blank" rel="noopener">⬇ Export CSV</a>
+    </div>
+
+    <div id="orders-container">
+      <div class="loading">Loading orders...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASS = 'spmc2025';
+const API = 'http://localhost:3001';
+let allOrders = [];
+let backendOnline = false;
+
+// ── AUTH ─────────────────────────────────────────────────
+const loginBtn = document.getElementById('login-btn');
+const adminPassInput = document.getElementById('admin-password');
+
+function tryLogin() {
+  if (adminPassInput.value === ADMIN_PASS) {
+    sessionStorage.setItem('spmc_admin', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadOrders();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    adminPassInput.value = '';
+    adminPassInput.focus();
+  }
+}
+loginBtn.addEventListener('click', tryLogin);
+adminPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem('spmc_admin');
+  location.reload();
+});
+if (sessionStorage.getItem('spmc_admin')) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadOrders();
+}
+
+// ── DATA ─────────────────────────────────────────────────
+async function loadOrders() {
+  try {
+    const res = await fetch(API + '/orders', { headers: { 'Authorization': 'Bearer ' + ADMIN_PASS } });
+    if (!res.ok) throw new Error();
+    allOrders = await res.json();
+    backendOnline = true;
+    document.getElementById('backend-status').textContent = '🟢 Backend online';
+    document.getElementById('no-backend').style.display = 'none';
+    // update export link with auth (just opens in new tab — backend already requires Bearer token)
+  } catch {
+    backendOnline = false;
+    allOrders = [];
+    document.getElementById('backend-status').textContent = '🔴 Backend offline';
+    document.getElementById('no-backend').style.display = 'block';
+  }
+  renderOrders();
+  updateStats();
+}
+
+function updateStats() {
+  const orders = allOrders;
+  document.getElementById('s-total').textContent = orders.length;
+  document.getElementById('s-pending').textContent = orders.filter(o => o.status === 'pending').length;
+  document.getElementById('s-confirmed').textContent = orders.filter(o => o.status === 'confirmed').length;
+  document.getElementById('s-dispatched').textContent = orders.filter(o => o.status === 'dispatched').length;
+  const rev = orders.reduce((s, o) => s + (o.total || 0), 0);
+  document.getElementById('s-revenue').textContent = '₹' + rev.toLocaleString('en-IN');
+  const paidRev = orders.filter(o => o.paymentStatus === 'paid').reduce((s, o) => s + (o.total || 0), 0);
+  document.getElementById('s-paid').textContent = '₹' + paidRev.toLocaleString('en-IN');
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function renderOrders() {
+  const container = document.getElementById('orders-container');
+  container.textContent = '';
+
+  const search = document.getElementById('admin-search').value.toLowerCase();
+  const stFilter = document.getElementById('status-filter').value;
+  const payFilter = document.getElementById('payment-filter').value;
+
+  let list = allOrders.filter(o => {
+    const mSearch = !search ||
+      (o.orderId || '').toLowerCase().includes(search) ||
+      (o.customer?.name || '').toLowerCase().includes(search) ||
+      (o.customer?.phone || '').includes(search);
+    const mStatus = stFilter === 'all' || o.status === stFilter;
+    const mPay = payFilter === 'all' || o.paymentStatus === payFilter ||
+      (payFilter === 'cod' && (o.customer?.payment || '').toLowerCase().includes('cash'));
+    return mSearch && mStatus && mPay;
+  });
+  list = [...list].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  if (list.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    const icon = document.createElement('span');
+    icon.textContent = '📦';
+    const msg = document.createElement('p');
+    msg.textContent = allOrders.length === 0
+      ? 'No orders yet. Start the backend to receive orders.'
+      : 'No orders match your filter.';
+    empty.append(icon, msg);
+    container.appendChild(empty);
+    return;
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'table-wrap';
+  const table = document.createElement('table');
+  table.className = 'orders-table';
+
+  const thead = document.createElement('thead');
+  const hrow = document.createElement('tr');
+  ['', 'Order ID', 'Customer', 'Phone', 'Items', 'Total', 'Status', 'Payment', 'Date', 'Actions'].forEach(col => {
+    const th = document.createElement('th');
+    th.textContent = col;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+
+  list.forEach(order => {
+    const tr = buildOrderRow(order);
+    const detailTr = buildDetailRow(order);
+    tbody.append(tr, detailTr);
+  });
+
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  container.appendChild(wrap);
+}
+
+const STATUS_LABELS = {
+  pending: '⏳ Pending', confirmed: '✅ Confirmed',
+  dispatched: '🚚 Dispatched', delivered: '📦 Delivered', cancelled: '❌ Cancelled',
+};
+
+function buildOrderRow(order) {
+  const tr = document.createElement('tr');
+  tr.style.cursor = 'default';
+
+  // Expand toggle
+  const tdExpand = document.createElement('td');
+  const expBtn = document.createElement('button');
+  expBtn.className = 'expand-btn';
+  expBtn.title = 'Show details';
+  expBtn.textContent = '▶';
+  tdExpand.appendChild(expBtn);
+  tr.appendChild(tdExpand);
+
+  // Order ID
+  const tdId = document.createElement('td');
+  const oidEl = document.createElement('div');
+  oidEl.className = 'oid';
+  oidEl.textContent = order.orderId || '—';
+  tdId.appendChild(oidEl);
+  tr.appendChild(tdId);
+
+  // Customer
+  const tdCust = document.createElement('td');
+  const cname = document.createElement('div');
+  cname.className = 'cname';
+  cname.textContent = order.customer?.name || '—';
+  const caddr = document.createElement('div');
+  caddr.className = 'caddr';
+  caddr.textContent = [order.customer?.city, order.customer?.state].filter(Boolean).join(', ');
+  tdCust.append(cname, caddr);
+  tr.appendChild(tdCust);
+
+  // Phone
+  const tdPhone = document.createElement('td');
+  tdPhone.className = 'cphone';
+  const pLink = document.createElement('a');
+  pLink.href = 'tel:' + (order.customer?.phone || '');
+  pLink.textContent = order.customer?.phone || '—';
+  tdPhone.appendChild(pLink);
+  tr.appendChild(tdPhone);
+
+  // Items summary
+  const tdItems = document.createElement('td');
+  tdItems.className = 'items-cell';
+  const itemText = (order.items || []).map(i => i.name + ' ×' + i.qty).join(', ');
+  tdItems.textContent = itemText || '—';
+  tdItems.title = itemText;
+  tr.appendChild(tdItems);
+
+  // Total
+  const tdTotal = document.createElement('td');
+  tdTotal.className = 'total-cell';
+  tdTotal.textContent = order.total ? '₹' + order.total.toLocaleString('en-IN') : '—';
+  tr.appendChild(tdTotal);
+
+  // Status badge + dropdown
+  const tdStatus = document.createElement('td');
+  const badge = document.createElement('span');
+  badge.className = 'badge s-' + (order.status || 'pending');
+  badge.textContent = STATUS_LABELS[order.status] || order.status;
+  const statusSel = document.createElement('select');
+  statusSel.className = 'act-select';
+  statusSel.style.marginTop = '6px';
+  statusSel.style.display = 'block';
+  ['pending','confirmed','dispatched','delivered','cancelled'].forEach(st => {
+    const opt = document.createElement('option');
+    opt.value = st;
+    opt.textContent = st[0].toUpperCase() + st.slice(1);
+    if (st === (order.status || 'pending')) opt.selected = true;
+    statusSel.appendChild(opt);
+  });
+  statusSel.addEventListener('change', async () => {
+    if (!backendOnline) { alert('Backend offline.'); return; }
+    try {
+      const r = await fetch(API + '/orders/' + order.orderId + '/status', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_PASS },
+        body: JSON.stringify({ status: statusSel.value }),
+      });
+      if (!r.ok) throw new Error();
+      order.status = statusSel.value;
+      badge.className = 'badge s-' + statusSel.value;
+      badge.textContent = STATUS_LABELS[statusSel.value];
+      updateStats();
+    } catch { alert('Failed to update status.'); }
+  });
+  tdStatus.append(badge, statusSel);
+  tr.appendChild(tdStatus);
+
+  // Payment status
+  const tdPay = document.createElement('td');
+  const payStatus = order.paymentStatus || 'pending';
+  const isCod = (order.customer?.payment || '').toLowerCase().includes('cash');
+  const payBadgeClass = payStatus === 'paid' ? 'p-paid' : isCod ? 'p-cod' : 'p-pending';
+  const payIcon = payStatus === 'paid' ? '✅ Paid' : isCod ? '💵 COD' : '⏳ Unpaid';
+  const payBadge = document.createElement('span');
+  payBadge.className = 'badge ' + payBadgeClass;
+  payBadge.textContent = payIcon;
+  const payMethod = document.createElement('div');
+  payMethod.style.cssText = 'font-size:10px;color:var(--text-muted);margin-top:4px';
+  payMethod.textContent = order.customer?.payment || order.payment || '';
+  tdPay.append(payBadge, payMethod);
+  tr.appendChild(tdPay);
+
+  // Date
+  const tdDate = document.createElement('td');
+  tdDate.style.cssText = 'font-size:11px;color:var(--text-muted);white-space:pre-line';
+  if (order.createdAt) {
+    const d = new Date(order.createdAt);
+    tdDate.textContent = d.toLocaleDateString('en-IN') + '\n' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  } else {
+    tdDate.textContent = '—';
+  }
+  tr.appendChild(tdDate);
+
+  // Actions: tracking + WhatsApp
+  const tdAct = document.createElement('td');
+
+  // Tracking field
+  const trackWrap = document.createElement('div');
+  trackWrap.className = 'tracking-wrap';
+  const trackInput = document.createElement('input');
+  trackInput.type = 'text';
+  trackInput.className = 'tracking-input';
+  trackInput.placeholder = 'Tracking no.';
+  trackInput.value = order.tracking || '';
+  trackInput.title = 'Enter courier tracking number';
+  const saveTrackBtn = document.createElement('button');
+  saveTrackBtn.className = 'save-btn';
+  saveTrackBtn.textContent = 'Save';
+  saveTrackBtn.addEventListener('click', async () => {
+    const t = trackInput.value.trim();
+    if (!t) return;
+    if (!backendOnline) { alert('Backend offline.'); return; }
+    try {
+      const r = await fetch(API + '/orders/' + order.orderId + '/tracking', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_PASS },
+        body: JSON.stringify({ tracking: t }),
+      });
+      if (!r.ok) throw new Error();
+      order.tracking = t;
+      saveTrackBtn.textContent = '✓ Saved';
+      saveTrackBtn.style.color = '#34d399';
+      setTimeout(() => { saveTrackBtn.textContent = 'Save'; saveTrackBtn.style.color = ''; }, 2000);
+    } catch { alert('Failed to save tracking.'); }
+  });
+  trackWrap.append(trackInput, saveTrackBtn);
+  tdAct.appendChild(trackWrap);
+
+  // WhatsApp action
+  const waWrap = document.createElement('div');
+  waWrap.className = 'wa-action';
+  const waTplSel = document.createElement('select');
+  waTplSel.className = 'wa-tpl-select';
+  [
+    { v: 'confirmed', t: 'Confirmed' },
+    { v: 'dispatched', t: 'Dispatched' },
+    { v: 'delivered', t: 'Delivered' },
+    { v: 'custom', t: 'Custom msg' },
+  ].forEach(({ v, t }) => {
+    const opt = document.createElement('option');
+    opt.value = v;
+    opt.textContent = t;
+    waTplSel.appendChild(opt);
+  });
+  const waSendBtn = document.createElement('a');
+  waSendBtn.className = 'wa-send-btn';
+  waSendBtn.target = '_blank';
+  waSendBtn.rel = 'noopener';
+  waSendBtn.textContent = '💬 Send';
+
+  function buildWaLink() {
+    const phone = (order.customer?.phone || '').replace(/\D/g, '');
+    const waPhone = phone.startsWith('91') ? phone : '91' + phone;
+    const tpl = waTplSel.value;
+    const msgs = {
+      confirmed: `Hi ${order.customer?.name || 'Customer'}, your order *${order.orderId}* with Sri Palani Murugan Crackers has been *confirmed* ✅. We'll dispatch your crackers shortly. Thank you for your order!`,
+      dispatched: `Hi ${order.customer?.name || 'Customer'}, your order *${order.orderId}* has been *dispatched* 🚚!\n\nTracking No: *${order.tracking || '[add tracking no.]'}*\n\nExpected delivery: 3-7 business days. For queries, reply to this message.`,
+      delivered: `Hi ${order.customer?.name || 'Customer'}, your order *${order.orderId}* has been *delivered* 🎉📦. We hope you enjoy the crackers this Diwali! Please share your experience — it means a lot to us.`,
+      custom: `Hi ${order.customer?.name || 'Customer'}, update on your order *${order.orderId}*: ${order.status?.toUpperCase() || ''}. — Sri Palani Murugan Crackers`,
+    };
+    waSendBtn.href = 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(msgs[tpl] || msgs.custom);
+  }
+  buildWaLink();
+  waTplSel.addEventListener('change', buildWaLink);
+  waWrap.append(waTplSel, waSendBtn);
+  tdAct.appendChild(waWrap);
+
+  tr.appendChild(tdAct);
+
+  // Expand detail toggle
+  let detailOpen = false;
+  expBtn.addEventListener('click', () => {
+    detailOpen = !detailOpen;
+    expBtn.classList.toggle('open', detailOpen);
+    const next = tr.nextElementSibling;
+    if (next && next.classList.contains('detail-row')) {
+      next.classList.toggle('open', detailOpen);
+    }
+  });
+
+  return tr;
+}
+
+function buildDetailRow(order) {
+  const tr = document.createElement('tr');
+  tr.className = 'detail-row';
+  const td = document.createElement('td');
+  td.colSpan = 10;
+
+  const inner = document.createElement('div');
+  inner.className = 'detail-inner';
+
+  const grid = document.createElement('div');
+  grid.className = 'detail-grid';
+  const fields = [
+    ['Full Name', order.customer?.name],
+    ['Phone', order.customer?.phone],
+    ['Address', order.customer?.address],
+    ['City', order.customer?.city],
+    ['State', order.customer?.state],
+    ['Pincode', order.customer?.pincode],
+    ['Payment Method', order.customer?.payment || order.payment],
+    ['Payment ID', order.paymentId || '—'],
+    ['Tracking No', order.tracking || '—'],
+    ['Notes', order.notes || '—'],
+    ['Created', order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN') : '—'],
+    ['Last Updated', order.updatedAt ? new Date(order.updatedAt).toLocaleString('en-IN') : '—'],
+  ];
+  fields.forEach(([lbl, val]) => {
+    const f = document.createElement('div');
+    f.className = 'detail-field';
+    const l = document.createElement('span');
+    l.className = 'detail-label';
+    l.textContent = lbl;
+    const v = document.createElement('span');
+    v.className = 'detail-val';
+    v.textContent = val || '—';
+    f.append(l, v);
+    grid.appendChild(f);
+  });
+
+  const itemsTitle = document.createElement('div');
+  itemsTitle.style.cssText = 'font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;margin-top:12px';
+  itemsTitle.textContent = 'Order Items';
+  const itemsList = document.createElement('div');
+  itemsList.className = 'detail-items';
+  (order.items || []).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'detail-item-row';
+    const name = document.createElement('span');
+    name.textContent = item.name + ' × ' + item.qty;
+    const price = document.createElement('span');
+    price.textContent = '₹' + ((item.price || 0) * item.qty).toLocaleString('en-IN');
+    row.append(name, price);
+    itemsList.appendChild(row);
+  });
+  const grandRow = document.createElement('div');
+  grandRow.className = 'detail-item-row';
+  grandRow.style.fontWeight = '700';
+  grandRow.style.color = 'var(--gold)';
+  grandRow.style.borderTop = '1px solid var(--border)';
+  grandRow.style.marginTop = '4px';
+  grandRow.style.paddingTop = '6px';
+  const gl = document.createElement('span');
+  gl.textContent = 'Total';
+  const gv = document.createElement('span');
+  gv.textContent = '₹' + (order.total || 0).toLocaleString('en-IN');
+  grandRow.append(gl, gv);
+  itemsList.appendChild(grandRow);
+
+  inner.append(grid, itemsTitle, itemsList);
+  td.appendChild(inner);
+  tr.appendChild(td);
+  return tr;
+}
+
+// ── EVENTS ────────────────────────────────────────────────
+document.getElementById('admin-search').addEventListener('input', renderOrders);
+document.getElementById('status-filter').addEventListener('change', renderOrders);
+document.getElementById('payment-filter').addEventListener('change', renderOrders);
+document.getElementById('refresh-btn').addEventListener('click', loadOrders);
+
+// Export CSV (needs auth header — open with fetch + blob download)
+document.getElementById('export-btn').addEventListener('click', async e => {
+  e.preventDefault();
+  if (!backendOnline) { alert('Backend offline.'); return; }
+  try {
+    const r = await fetch(API + '/orders/export', { headers: { 'Authorization': 'Bearer ' + ADMIN_PASS } });
+    if (!r.ok) throw new Error();
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'spmc-orders-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch { alert('Export failed. Check backend.'); }
+});
+</script>
+</body>
+</html>

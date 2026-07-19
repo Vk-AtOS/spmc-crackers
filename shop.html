@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop — Sri Palani Murugan Crackers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#ffd700;--gold-dim:#a07b10;
+  --red-deep:#0d0205;--red-mid:#1a0508;--red-card:#240b0e;
+  --orange:#ff6b1a;
+  --text:#fff5e4;--text-muted:#b08060;
+  --border:rgba(255,215,0,0.18);--glow:rgba(255,165,0,0.35);
+}
+html{scroll-behavior:smooth}
+body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-serif;overflow-x:hidden;min-height:100vh}
+body.tamil-mode{font-family:'Noto Sans Tamil','Poppins',sans-serif}
+
+nav{
+  position:sticky;top:0;z-index:100;padding:0 5%;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(7,1,3,0.96);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Cinzel',serif;font-size:16px;font-weight:700;text-decoration:none;
+  background:linear-gradient(135deg,var(--gold),#ff8c00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-cart{
+  position:relative;display:flex;align-items:center;gap:6px;
+  background:rgba(255,215,0,0.1);border:1px solid var(--border);
+  border-radius:10px;padding:7px 14px;text-decoration:none;
+  color:var(--gold);font-size:13px;font-weight:600;
+}
+#cart-badge{
+  position:absolute;top:-6px;right:-6px;background:#e85d04;color:white;
+  border-radius:50%;width:20px;height:20px;display:none;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;
+}
+.lang-toggle{display:flex;gap:4px;background:rgba(255,255,255,0.05);border-radius:8px;padding:3px}
+.lang-btn{padding:4px 10px;border-radius:5px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:transparent;color:var(--text-muted);transition:all 0.2s}
+.lang-btn.active{background:var(--gold);color:#0d0205}
+
+/* SEARCH + FILTER BAR */
+.shop-header{
+  padding:32px 5% 0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(92,40,14,0.2),transparent 60%);
+}
+.shop-title{
+  font-family:'Cinzel',serif;font-size:clamp(22px,4vw,36px);font-weight:700;
+  background:linear-gradient(135deg,var(--gold),#ff8c00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.shop-subtitle{color:var(--text-muted);font-size:14px;margin-bottom:24px}
+
+.search-bar{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px;
+}
+.search-input{
+  flex:1;min-width:220px;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:12px;
+  padding:11px 18px;color:var(--text);font-size:14px;outline:none;
+  transition:border-color 0.2s;
+}
+.search-input:focus{border-color:rgba(255,215,0,0.5)}
+.search-input::placeholder{color:var(--text-muted)}
+.sort-select{
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:12px;padding:11px 16px;color:var(--text);font-size:13px;
+  outline:none;cursor:pointer;
+}
+.sort-select option{background:#1a0508}
+
+/* CATEGORY FILTER PILLS */
+.cat-filters{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;
+  scrollbar-width:none;
+}
+.cat-filters::-webkit-scrollbar{display:none}
+.cat-pill{
+  flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:30px;padding:7px 16px;font-size:12px;font-weight:600;
+  color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.cat-pill:hover{border-color:rgba(255,215,0,0.4);color:var(--gold)}
+.cat-pill.active{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold)}
+
+/* PRODUCTS GRID */
+.shop-layout{
+  display:grid;gap:0;
+  padding:0 5% 60px;
+}
+.products-count{
+  font-size:13px;color:var(--text-muted);padding:16px 0;
+}
+.products-count span{color:var(--gold);font-weight:600}
+.products-grid{
+  display:grid;gap:20px;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+}
+
+/* PRODUCT CARD */
+.product-card{
+  background:var(--red-card);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  transition:transform 0.3s cubic-bezier(.23,1,.32,1),box-shadow 0.3s,border-color 0.3s;
+  cursor:pointer;display:flex;flex-direction:column;
+}
+.product-card:hover{
+  transform:translateY(-6px) scale(1.015);
+  box-shadow:0 20px 50px rgba(255,165,0,0.15),0 0 0 1px rgba(255,215,0,0.3);
+  border-color:rgba(255,215,0,0.4);
+}
+.product-thumb{
+  height:130px;display:flex;align-items:center;justify-content:center;
+  font-size:48px;position:relative;
+}
+.product-badge{
+  position:absolute;top:10px;right:10px;
+  background:linear-gradient(135deg,#dc7222,#92400e);
+  color:var(--gold);font-size:10px;font-weight:700;
+  border-radius:6px;padding:3px 7px;
+}
+.product-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
+.product-cat-tag{
+  font-size:10px;color:var(--orange);font-weight:600;
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;
+}
+.product-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;flex:1}
+.product-name-ta{font-size:11px;color:var(--text-muted);margin-bottom:8px;font-family:'Noto Sans Tamil',sans-serif}
+.product-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:10px}
+.product-price{font-size:17px;font-weight:700;color:var(--gold)}
+.product-mrp{font-size:11px;color:var(--text-muted);text-decoration:line-through}
+.product-unit{font-size:10px;color:var(--text-muted)}
+.product-actions{display:flex;gap:8px}
+.btn-add{
+  flex:1;background:rgba(255,215,0,0.1);border:1px solid var(--border);
+  color:var(--gold);border-radius:8px;padding:8px;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-add:hover{background:rgba(255,215,0,0.22);border-color:var(--gold)}
+.btn-qty{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  color:var(--text);border-radius:8px;padding:8px 12px;font-size:14px;
+  cursor:pointer;transition:all 0.2s;font-weight:600;
+}
+.btn-qty:hover{background:rgba(255,255,255,0.12)}
+.qty-display{
+  background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);
+  color:var(--gold);border-radius:8px;padding:8px 12px;font-size:13px;
+  font-weight:700;text-align:center;min-width:36px;
+}
+
+/* NO RESULTS */
+.no-results{
+  text-align:center;padding:80px 20px;color:var(--text-muted);
+  grid-column:1/-1;
+}
+.no-results span{font-size:48px;display:block;margin-bottom:16px}
+
+/* STICKY CHECKOUT BAR */
+.checkout-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(90deg,#92400e,#7c2d12);
+  padding:14px 5%;
+  display:none;align-items:center;justify-content:space-between;
+  box-shadow:0 -4px 30px rgba(0,0,0,0.5);
+}
+.checkout-bar.show{display:flex}
+.checkout-bar-info{color:var(--gold);font-weight:600;font-size:14px}
+.checkout-bar-sub{color:rgba(255,245,228,0.7);font-size:12px;margin-top:2px}
+.checkout-bar-btn{
+  background:var(--gold);color:#0d0205;border:none;border-radius:10px;
+  padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;
+  text-decoration:none;white-space:nowrap;
+}
+
+/* TOAST */
+.cart-toast{
+  position:fixed;top:80px;right:24px;z-index:9999;
+  background:linear-gradient(135deg,#1a5e1f,#166534);
+  border:1px solid rgba(134,239,172,0.3);border-radius:12px;
+  padding:12px 20px;color:white;font-size:14px;font-weight:600;
+  transform:translateX(120%);transition:transform 0.3s;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+}
+.cart-toast.show{transform:translateX(0)}
+
+@media(max-width:600px){
+  .shop-header,.shop-layout{padding-left:4%;padding-right:4%}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">🎆 Sri Palani Murugan Crackers</a>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ta">தமிழ்</button>
+    </div>
+    <a href="cart.html" class="nav-cart">
+      🛒 Cart
+      <span id="cart-badge">0</span>
+    </a>
+  </div>
+</nav>
+
+<div class="shop-header">
+  <h1 class="shop-title">🎆 All Products</h1>
+  <p class="shop-subtitle">137+ products · Flat 50% OFF · Direct from Sivakasi</p>
+
+  <div class="search-bar">
+    <input class="search-input" id="search-input" placeholder="Search products... (e.g. sparkler, bomb, rocket)" type="text" autocomplete="off">
+    <select class="sort-select" id="sort-select">
+      <option value="default">Sort: Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name-asc">Name: A–Z</option>
+    </select>
+  </div>
+
+  <div class="cat-filters" id="cat-filters"></div>
+</div>
+
+<div class="shop-layout">
+  <div class="products-count" id="products-count">Showing <span id="count-num">0</span> products</div>
+  <div class="products-grid" id="products-grid"></div>
+</div>
+
+<!-- Checkout bar -->
+<div class="checkout-bar" id="checkout-bar">
+  <div>
+    <div class="checkout-bar-info" id="cb-info">0 items in cart</div>
+    <div class="checkout-bar-sub" id="cb-sub">Total: ₹0</div>
+  </div>
+  <a href="cart.html" class="checkout-bar-btn">View Cart →</a>
+</div>
+
+<div class="cart-toast" id="cart-toast">✅ Added!</div>
+
+<script src="js/products.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/support.js"></script>
+<script>
+let activeCat = 'all';
+let searchQ = '';
+let sortMode = 'default';
+
+// Build category filter pills
+(function() {
+  const container = document.getElementById('cat-filters');
+  CATEGORIES.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-pill' + (cat.id === 'all' ? ' active' : '');
+    btn.textContent = cat.emoji + ' ' + (currentLang === 'ta' ? cat.labelTa : cat.label);
+    btn.dataset.cat = cat.id;
+    btn.addEventListener('click', () => {
+      activeCat = cat.id;
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts();
+    });
+    container.appendChild(btn);
+  });
+})();
+
+// Check URL param for pre-selected category
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) {
+    activeCat = cat;
+    document.querySelectorAll('.cat-pill').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === cat);
+    });
+  }
+})();
+
+// Search
+document.getElementById('search-input').addEventListener('input', e => {
+  searchQ = e.target.value.toLowerCase();
+  renderProducts();
+});
+
+// Sort
+document.getElementById('sort-select').addEventListener('change', e => {
+  sortMode = e.target.value;
+  renderProducts();
+});
+
+// Cart quantity state
+const qtyState = {};
+
+function renderProducts() {
+  let list = activeCat === 'all' ? [...PRODUCTS] : getByCategory(activeCat);
+
+  if (searchQ) {
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(searchQ) ||
+      p.nameTa.includes(searchQ) ||
+      p.cat.includes(searchQ)
+    );
+  }
+
+  if (sortMode === 'price-asc') list.sort((a, b) => a.price - b.price);
+  else if (sortMode === 'price-desc') list.sort((a, b) => b.price - a.price);
+  else if (sortMode === 'name-asc') list.sort((a, b) => a.name.localeCompare(b.name));
+
+  const grid = document.getElementById('products-grid');
+  grid.textContent = '';
+  document.getElementById('count-num').textContent = list.length;
+
+  if (list.length === 0) {
+    const noRes = document.createElement('div');
+    noRes.className = 'no-results';
+    const icon = document.createElement('span');
+    icon.textContent = '🔍';
+    const msg = document.createElement('p');
+    msg.textContent = 'No products found. Try a different search or category.';
+    noRes.append(icon, msg);
+    grid.appendChild(noRes);
+    return;
+  }
+
+  list.forEach(p => grid.appendChild(buildCard(p)));
+}
+
+function buildCard(p) {
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.dataset.pid = p.id;
+
+  const bg = CATEGORY_COLORS[p.cat] || '#240b0e';
+  const thumb = document.createElement('div');
+  thumb.className = 'product-thumb';
+  thumb.style.background = `linear-gradient(160deg,${bg}cc,#0d0205)`;
+  const em = document.createElement('div');
+  em.textContent = p.emoji;
+  thumb.appendChild(em);
+
+  if (!p.noDiscount) {
+    const badge = document.createElement('div');
+    badge.className = 'product-badge';
+    badge.textContent = '50% OFF';
+    thumb.appendChild(badge);
+  }
+
+  const body = document.createElement('div');
+  body.className = 'product-body';
+
+  const catTag = document.createElement('div');
+  catTag.className = 'product-cat-tag';
+  const catMeta = getCategoryMeta(p.cat);
+  catTag.textContent = catMeta ? catMeta.emoji + ' ' + catMeta.label : p.cat;
+
+  const name = document.createElement('div');
+  name.className = 'product-name';
+  name.textContent = currentLang === 'ta' ? p.nameTa : p.name;
+
+  const nameTa = document.createElement('div');
+  nameTa.className = 'product-name-ta';
+  nameTa.textContent = currentLang === 'ta' ? p.name : p.nameTa;
+
+  const priceRow = document.createElement('div');
+  priceRow.className = 'product-price-row';
+  const price = document.createElement('span');
+  price.className = 'product-price';
+  price.textContent = '₹' + p.price.toLocaleString('en-IN');
+  const mrpEl = document.createElement('span');
+  mrpEl.className = 'product-mrp';
+  if (!p.noDiscount) mrpEl.textContent = '₹' + p.mrp.toLocaleString('en-IN');
+  const unitEl = document.createElement('span');
+  unitEl.className = 'product-unit';
+  unitEl.textContent = '/ ' + p.unit;
+  priceRow.append(price, mrpEl, unitEl);
+
+  // Actions: qty selector or add button
+  const actions = document.createElement('div');
+  actions.className = 'product-actions';
+  actions.id = 'actions-' + p.id;
+
+  const cartItems = Cart.get();
+  const inCart = cartItems.find(i => i.id === p.id);
+
+  if (inCart) {
+    renderQtyControls(actions, p, inCart.qty);
+  } else {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.textContent = '🛒 Add to Cart';
+    addBtn.addEventListener('click', () => {
+      Cart.add(p.id);
+      renderQtyControls(actions, p, 1);
+      updateCheckoutBar();
+      showToast(p.name);
+    });
+    actions.appendChild(addBtn);
+  }
+
+  body.append(catTag, name, nameTa, priceRow, actions);
+  card.append(thumb, body);
+  return card;
+}
+
+function renderQtyControls(container, p, qty) {
+  container.textContent = '';
+  const minus = document.createElement('button');
+  minus.className = 'btn-qty';
+  minus.textContent = '−';
+
+  const display = document.createElement('div');
+  display.className = 'qty-display';
+  display.textContent = qty;
+
+  const plus = document.createElement('button');
+  plus.className = 'btn-qty';
+  plus.textContent = '+';
+
+  minus.addEventListener('click', () => {
+    const current = Cart.get().find(i => i.id === p.id);
+    const newQty = current ? current.qty - 1 : 0;
+    Cart.setQty(p.id, newQty);
+    if (newQty <= 0) {
+      container.textContent = '';
+      const addBtn = document.createElement('button');
+      addBtn.className = 'btn-add';
+      addBtn.textContent = '🛒 Add to Cart';
+      addBtn.addEventListener('click', () => {
+        Cart.add(p.id);
+        renderQtyControls(container, p, 1);
+        updateCheckoutBar();
+      });
+      container.appendChild(addBtn);
+    } else {
+      display.textContent = newQty;
+    }
+    updateCheckoutBar();
+  });
+
+  plus.addEventListener('click', () => {
+    Cart.add(p.id);
+    const updated = Cart.get().find(i => i.id === p.id);
+    display.textContent = updated ? updated.qty : 1;
+    updateCheckoutBar();
+  });
+
+  container.append(minus, display, plus);
+}
+
+function updateCheckoutBar() {
+  const count = Cart.count();
+  const total = Cart.total();
+  const bar = document.getElementById('checkout-bar');
+  bar.classList.toggle('show', count > 0);
+  document.getElementById('cb-info').textContent = count + ' item' + (count !== 1 ? 's' : '') + ' in cart';
+  document.getElementById('cb-sub').textContent = 'Total: ₹' + total.toLocaleString('en-IN');
+}
+
+function showToast(name) {
+  const toast = document.getElementById('cart-toast');
+  toast.textContent = '✅ ' + name + ' added!';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Init
+renderProducts();
+updateCheckoutBar();
+
+// Keep checkout bar updated when cart changes
+window.addEventListener('cartUpdated', updateCheckoutBar);
+</script>
+</body>
+</html>

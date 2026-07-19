@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cart — Sri Palani Murugan Crackers</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#ffd700;--red-deep:#0d0205;--red-card:#240b0e;--red-mid:#1a0508;
+  --orange:#ff6b1a;--text:#fff5e4;--text-muted:#b08060;
+  --border:rgba(255,215,0,0.18);
+}
+body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh}
+nav{
+  padding:0 5%;height:64px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(7,1,3,0.96);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+}
+.nav-logo{font-family:'Cinzel',serif;font-size:16px;font-weight:700;text-decoration:none;
+  background:linear-gradient(135deg,var(--gold),#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-back{color:var(--text-muted);text-decoration:none;font-size:14px}
+.nav-back:hover{color:var(--gold)}
+
+.cart-wrap{max-width:960px;margin:0 auto;padding:40px 5% 100px}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,36px);font-weight:700;
+  background:linear-gradient(135deg,var(--gold),#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:32px;}
+
+.cart-layout{display:grid;gap:24px;grid-template-columns:1fr 340px;align-items:start}
+
+/* ITEMS */
+.cart-items{display:flex;flex-direction:column;gap:14px}
+.cart-item{
+  display:flex;align-items:center;gap:16px;
+  background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:16px;
+  transition:border-color 0.2s;
+}
+.cart-item:hover{border-color:rgba(255,215,0,0.35)}
+.item-thumb{
+  width:70px;height:70px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;flex-shrink:0;
+}
+.item-info{flex:1;min-width:0}
+.item-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-name-ta{font-size:11px;color:var(--text-muted);margin-bottom:6px;font-family:'Noto Sans Tamil',sans-serif}
+.item-unit{font-size:11px;color:var(--text-muted)}
+.item-price-each{font-size:13px;color:var(--gold);font-weight:600}
+.item-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.qty-btn{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.05);color:var(--text);font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;font-weight:600;
+}
+.qty-btn:hover{background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4)}
+.qty-val{
+  width:40px;text-align:center;font-size:14px;font-weight:700;color:var(--gold);
+}
+.item-subtotal{font-size:14px;font-weight:700;color:var(--text);min-width:64px;text-align:right}
+.item-remove{
+  background:none;border:none;color:rgba(255,100,100,0.6);font-size:18px;
+  cursor:pointer;padding:4px;border-radius:6px;transition:color 0.2s;
+  flex-shrink:0;
+}
+.item-remove:hover{color:#ef4444}
+
+/* SUMMARY */
+.cart-summary{
+  background:var(--red-card);border:1px solid var(--border);
+  border-radius:16px;padding:24px;position:sticky;top:80px;
+}
+.summary-title{font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:20px}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px}
+.summary-row.total{
+  border-top:1px solid var(--border);margin-top:14px;padding-top:14px;
+  font-size:18px;font-weight:700;color:var(--gold);
+}
+.summary-label{color:var(--text-muted)}
+.summary-val{color:var(--text);font-weight:600}
+.summary-savings{
+  background:rgba(134,239,172,0.1);border:1px solid rgba(134,239,172,0.2);
+  border-radius:10px;padding:10px 14px;margin:14px 0;
+  font-size:13px;color:#86efac;text-align:center;font-weight:600;
+}
+.checkout-btn{
+  display:block;width:100%;background:linear-gradient(135deg,#92400e,#dc7222);
+  color:var(--gold);border:none;border-radius:12px;padding:14px;
+  font-size:15px;font-weight:700;cursor:pointer;text-align:center;
+  text-decoration:none;margin-top:16px;transition:all 0.3s;letter-spacing:0.5px;
+  box-shadow:0 4px 20px rgba(220,114,34,0.4);
+}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,165,0,0.4)}
+.continue-btn{
+  display:block;width:100%;background:transparent;border:1px solid var(--border);
+  color:var(--text-muted);border-radius:12px;padding:12px;
+  font-size:14px;cursor:pointer;text-align:center;text-decoration:none;
+  margin-top:10px;transition:all 0.2s;
+}
+.continue-btn:hover{border-color:rgba(255,215,0,0.4);color:var(--gold)}
+.safety-note{
+  margin-top:16px;font-size:11px;color:rgba(255,165,0,0.6);
+  line-height:1.5;border-top:1px solid var(--border);padding-top:14px;
+}
+
+/* EMPTY STATE */
+.cart-empty{text-align:center;padding:80px 20px}
+.cart-empty-icon{font-size:64px;margin-bottom:16px;display:block}
+.cart-empty-title{font-family:'Cinzel',serif;font-size:22px;color:var(--text);margin-bottom:8px}
+.cart-empty-sub{color:var(--text-muted);font-size:14px;margin-bottom:28px}
+
+@media(max-width:720px){.cart-layout{grid-template-columns:1fr}.cart-summary{position:static}}
+@media(max-width:500px){
+  .cart-item{flex-wrap:wrap;gap:10px}
+  .item-controls{margin-left:auto}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">🎆 Sri Palani Murugan Crackers</a>
+  <a href="shop.html" class="nav-back">← Continue Shopping</a>
+</nav>
+
+<div class="cart-wrap">
+  <h1 class="page-title">🛒 Your Cart</h1>
+  <div id="cart-root"></div>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/support.js"></script>
+<script>
+function renderCart() {
+  const root = document.getElementById('cart-root');
+  root.textContent = '';
+
+  const items = Cart.get();
+
+  if (items.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'cart-empty';
+    const icon = document.createElement('span');
+    icon.className = 'cart-empty-icon';
+    icon.textContent = '🛒';
+    const title = document.createElement('h2');
+    title.className = 'cart-empty-title';
+    title.textContent = 'Your cart is empty';
+    const sub = document.createElement('p');
+    sub.className = 'cart-empty-sub';
+    sub.textContent = 'Browse our catalog and add some products!';
+    const shopBtn = document.createElement('a');
+    shopBtn.href = 'shop.html';
+    shopBtn.className = 'checkout-btn';
+    shopBtn.textContent = '🎆 Browse Products';
+    empty.append(icon, title, sub, shopBtn);
+    root.appendChild(empty);
+    return;
+  }
+
+  const layout = document.createElement('div');
+  layout.className = 'cart-layout';
+
+  // Items column
+  const itemsCol = document.createElement('div');
+  itemsCol.className = 'cart-items';
+
+  items.forEach(item => {
+    const p = getProduct(item.id);
+    if (!p) return;
+    const row = buildItemRow(p, item.qty);
+    itemsCol.appendChild(row);
+  });
+
+  // Summary column
+  const summary = buildSummary(items);
+
+  layout.append(itemsCol, summary);
+  root.appendChild(layout);
+}
+
+function buildItemRow(p, qty) {
+  const row = document.createElement('div');
+  row.className = 'cart-item';
+  row.id = 'row-' + p.id;
+
+  const bg = CATEGORY_COLORS[p.cat] || '#240b0e';
+  const thumb = document.createElement('div');
+  thumb.className = 'item-thumb';
+  thumb.style.background = `linear-gradient(160deg,${bg}cc,#0d0205)`;
+  thumb.textContent = p.emoji;
+
+  const info = document.createElement('div');
+  info.className = 'item-info';
+  const name = document.createElement('div');
+  name.className = 'item-name';
+  name.textContent = p.name;
+  const nameTa = document.createElement('div');
+  nameTa.className = 'item-name-ta';
+  nameTa.textContent = p.nameTa;
+  const priceEach = document.createElement('div');
+  priceEach.className = 'item-price-each';
+  priceEach.textContent = '₹' + p.price.toLocaleString('en-IN') + ' / ' + p.unit;
+  info.append(name, nameTa, priceEach);
+
+  const controls = document.createElement('div');
+  controls.className = 'item-controls';
+  const minus = document.createElement('button');
+  minus.className = 'qty-btn';
+  minus.textContent = '−';
+  const qtyVal = document.createElement('div');
+  qtyVal.className = 'qty-val';
+  qtyVal.textContent = qty;
+  const plus = document.createElement('button');
+  plus.className = 'qty-btn';
+  plus.textContent = '+';
+
+  minus.addEventListener('click', () => {
+    Cart.setQty(p.id, qty - 1);
+    renderCart();
+  });
+  plus.addEventListener('click', () => {
+    Cart.add(p.id);
+    renderCart();
+  });
+  controls.append(minus, qtyVal, plus);
+
+  const subtotal = document.createElement('div');
+  subtotal.className = 'item-subtotal';
+  subtotal.textContent = '₹' + (p.price * qty).toLocaleString('en-IN');
+
+  const remove = document.createElement('button');
+  remove.className = 'item-remove';
+  remove.setAttribute('aria-label', 'Remove ' + p.name);
+  remove.textContent = '🗑';
+  remove.addEventListener('click', () => {
+    Cart.remove(p.id);
+    renderCart();
+  });
+
+  row.append(thumb, info, controls, subtotal, remove);
+  return row;
+}
+
+function buildSummary(items) {
+  const div = document.createElement('div');
+  div.className = 'cart-summary';
+
+  const title = document.createElement('div');
+  title.className = 'summary-title';
+  title.textContent = 'Order Summary';
+
+  let subtotal = 0, savings = 0;
+  items.forEach(item => {
+    const p = getProduct(item.id);
+    if (!p) return;
+    subtotal += p.price * item.qty;
+    if (!p.noDiscount) savings += (p.mrp - p.price) * item.qty;
+  });
+
+  const rowCount = makeRow('Items', items.reduce((s, i) => s + i.qty, 0) + ' items');
+  const rowSub = makeRow('Subtotal', '₹' + subtotal.toLocaleString('en-IN'));
+
+  const savingsBadge = document.createElement('div');
+  savingsBadge.className = 'summary-savings';
+  savingsBadge.textContent = '🎉 You save ₹' + savings.toLocaleString('en-IN') + ' (50% Diwali discount!)';
+
+  const rowShip = makeRow('Shipping', 'Calculated at checkout');
+  const rowTotal = makeRow('Total', '₹' + subtotal.toLocaleString('en-IN'));
+  rowTotal.className = 'summary-row total';
+
+  const checkoutBtn = document.createElement('a');
+  checkoutBtn.href = 'checkout.html';
+  checkoutBtn.className = 'checkout-btn';
+  checkoutBtn.textContent = '✅ Proceed to Checkout';
+
+  const continueBtn = document.createElement('a');
+  continueBtn.href = 'shop.html';
+  continueBtn.className = 'continue-btn';
+  continueBtn.textContent = '← Continue Shopping';
+
+  const safety = document.createElement('div');
+  safety.className = 'safety-note';
+  safety.textContent = '⚠️ Crackers are for outdoor use only. Adult supervision required. Keep away from children under 15.';
+
+  div.append(title, rowCount, rowSub, savingsBadge, rowShip, rowTotal, checkoutBtn, continueBtn, safety);
+  return div;
+}
+
+function makeRow(label, val) {
+  const row = document.createElement('div');
+  row.className = 'summary-row';
+  const l = document.createElement('span');
+  l.className = 'summary-label';
+  l.textContent = label;
+  const v = document.createElement('span');
+  v.className = 'summary-val';
+  v.textContent = val;
+  row.append(l, v);
+  return row;
+}
+
+renderCart();
+window.addEventListener('cartUpdated', renderCart);
+</script>
+</body>
+</html>

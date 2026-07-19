@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Placed — Sri Palani Murugan Crackers</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#ffd700;--red-deep:#0d0205;--red-card:#240b0e;--text:#fff5e4;--text-muted:#b08060;--border:rgba(255,215,0,0.18)}
+body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+
+.success-icon{font-size:72px;margin-bottom:20px;animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+.success-title{font-family:'Cinzel',serif;font-size:clamp(24px,5vw,40px);font-weight:700;
+  background:linear-gradient(135deg,var(--gold),#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:12px;animation:fade-up 0.6s ease 0.2s both}
+
+.success-sub{color:var(--text-muted);font-size:15px;max-width:480px;line-height:1.7;
+  margin-bottom:32px;animation:fade-up 0.6s ease 0.35s both}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.order-card{
+  background:var(--red-card);border:1px solid var(--border);border-radius:16px;
+  padding:24px 28px;max-width:420px;width:100%;margin-bottom:28px;
+  animation:fade-up 0.6s ease 0.5s both;
+}
+.order-id-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.order-id{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.order-detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,215,0,0.08);font-size:14px}
+.order-detail-row:last-child{border-bottom:none}
+.detail-label{color:var(--text-muted)}
+.detail-val{color:var(--text);font-weight:500}
+
+.steps{max-width:420px;width:100%;margin-bottom:32px;animation:fade-up 0.6s ease 0.65s both}
+.step{display:flex;gap:14px;align-items:flex-start;text-align:left;margin-bottom:18px}
+.step-num{
+  width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#92400e,#dc7222);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  color:var(--gold);flex-shrink:0;margin-top:2px;
+}
+.step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.step-desc{font-size:12px;color:var(--text-muted);line-height:1.5}
+
+.actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;animation:fade-up 0.6s ease 0.8s both}
+.btn-wa{
+  display:flex;align-items:center;gap:8px;background:#25d366;color:white;
+  border:none;border-radius:12px;padding:13px 24px;font-size:14px;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;
+}
+.btn-wa:hover{opacity:0.88;transform:translateY(-2px)}
+.btn-shop{
+  display:flex;align-items:center;gap:8px;background:transparent;color:var(--gold);
+  border:1px solid var(--border);border-radius:12px;padding:13px 24px;font-size:14px;font-weight:600;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;
+}
+.btn-shop:hover{border-color:var(--gold);background:rgba(255,215,0,0.06)}
+
+/* Confetti dots */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+</style>
+</head>
+<body>
+
+<canvas class="confetti" id="confetti-canvas"></canvas>
+
+<div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center">
+  <div class="success-icon">🎆</div>
+  <h1 class="success-title">Order Sent Successfully!</h1>
+  <p class="success-sub">Your order has been sent to our WhatsApp. Our team will confirm within 2 hours and provide dispatch details.</p>
+
+  <div class="order-card" id="order-card">
+    <div class="order-id-label">Order ID</div>
+    <div class="order-id" id="order-id-display">SPMC--------</div>
+    <div class="order-detail-row">
+      <span class="detail-label">Name</span>
+      <span class="detail-val" id="detail-name">—</span>
+    </div>
+    <div class="order-detail-row">
+      <span class="detail-label">Phone</span>
+      <span class="detail-val" id="detail-phone">—</span>
+    </div>
+    <div class="order-detail-row">
+      <span class="detail-label">Total</span>
+      <span class="detail-val" id="detail-total">—</span>
+    </div>
+    <div class="order-detail-row">
+      <span class="detail-label">Status</span>
+      <span class="detail-val" style="color:#fbbf24">⏳ Awaiting Confirmation</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Order Received</div>
+        <div class="step-desc">Your order details have been sent to our WhatsApp.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Confirmation Call / WhatsApp</div>
+        <div class="step-desc">We'll confirm your order and payment within 2 hours.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Dispatch</div>
+        <div class="step-desc">Your crackers are packed and dispatched from Sivakasi.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Delivery</div>
+        <div class="step-desc">Delivered to your door in 3–7 business days.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a href="https://wa.me/917200915142" target="_blank" rel="noopener" class="btn-wa">
+      <span>💬</span><span>WhatsApp Us</span>
+    </a>
+    <a href="shop.html" class="btn-shop">
+      <span>🎆</span><span>Shop More</span>
+    </a>
+  </div>
+</div>
+
+<script>
+// Populate order details from sessionStorage
+(function() {
+  const orderId = sessionStorage.getItem('spmc_order_id') || '';
+  const customer = JSON.parse(sessionStorage.getItem('spmc_customer') || '{}');
+  const total = sessionStorage.getItem('spmc_order_total') || '0';
+
+  const idEl = document.getElementById('order-id-display');
+  if (idEl && orderId) idEl.textContent = orderId;
+
+  const nameEl = document.getElementById('detail-name');
+  if (nameEl && customer.name) nameEl.textContent = customer.name;
+
+  const phoneEl = document.getElementById('detail-phone');
+  if (phoneEl && customer.phone) phoneEl.textContent = customer.phone;
+
+  const totalEl = document.getElementById('detail-total');
+  if (totalEl) totalEl.textContent = '₹' + parseInt(total).toLocaleString('en-IN');
+})();
+
+// Simple confetti animation
+(function() {
+  const canvas = document.getElementById('confetti-canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+
+  const colors = ['#ffd700','#ff8c00','#ff4444','#00cc66','#ff44cc','#44ccff','#ffffff'];
+  const pieces = Array.from({ length: 80 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * 200,
+    w: 6 + Math.random() * 8,
+    h: 3 + Math.random() * 5,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2 + Math.random() * 3,
+    angle: Math.random() * 360,
+    va: (Math.random() - 0.5) * 6,
+    life: 1,
+  }));
+
+  let frame = 0;
+  function draw() {
+    if (frame > 180) return; // stop after 3 seconds
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.05;
+      p.angle += p.va;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.globalAlpha = Math.max(0, 1 - frame / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
