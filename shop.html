@@ -119,7 +119,8 @@ nav{
 }
 .product-thumb{
   height:130px;display:flex;align-items:center;justify-content:center;
-  font-size:48px;position:relative;
+  font-size:48px;position:relative;overflow:hidden;
+  border-radius:8px 8px 0 0;
 }
 .product-badge{
   position:absolute;top:10px;right:10px;
@@ -251,6 +252,7 @@ nav{
 <script src="js/i18n.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/support.js"></script>
+<script src="js/product-images.js"></script>
 <script>
 let activeCat = 'all';
 let searchQ = '';
@@ -343,10 +345,21 @@ function buildCard(p) {
   const bg = CATEGORY_COLORS[p.cat] || '#240b0e';
   const thumb = document.createElement('div');
   thumb.className = 'product-thumb';
-  thumb.style.background = `linear-gradient(160deg,${bg}cc,#0d0205)`;
-  const em = document.createElement('div');
-  em.textContent = p.emoji;
-  thumb.appendChild(em);
+  const imgUrl = window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id];
+  if (imgUrl) {
+    thumb.style.background = '#0d0205';
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.alt = p.name;
+    img.loading = 'lazy';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    thumb.appendChild(img);
+  } else {
+    thumb.style.background = `linear-gradient(160deg,${bg}cc,#0d0205)`;
+    const em = document.createElement('div');
+    em.textContent = p.emoji;
+    thumb.appendChild(em);
+  }
 
   if (!p.noDiscount) {
     const badge = document.createElement('div');
