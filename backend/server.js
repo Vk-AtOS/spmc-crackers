@@ -10,7 +10,11 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'spmc2025';
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+if (!ADMIN_TOKEN) {
+  console.error('[FATAL] ADMIN_TOKEN env var not set. Copy backend/.env.example to backend/.env and set a secure token.');
+  process.exit(1);
+}
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 const WA_TOKEN = process.env.WA_TOKEN || '';
@@ -283,7 +287,7 @@ app.get('/health', (_req, res) => res.json({
 
 app.listen(PORT, () => {
   console.log('SPMC Order Backend on port ' + PORT);
-  console.log('Admin token:', ADMIN_TOKEN);
+  console.log('Admin token: [set]');
   if (!rzp) console.log('[INFO] Razorpay disabled — set RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to enable');
   if (!WA_TOKEN) console.log('[INFO] WhatsApp API disabled — set WA_TOKEN + WA_PHONE_ID to enable');
 });

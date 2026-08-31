@@ -173,7 +173,7 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
         <option value="cod">COD</option>
       </select>
       <button class="toolbar-btn" id="refresh-btn">🔄 Refresh</button>
-      <a class="toolbar-btn green" id="export-btn" href="http://localhost:3001/orders/export" target="_blank" rel="noopener">⬇ Export CSV</a>
+      <button class="toolbar-btn green" id="export-btn">⬇ Export CSV</button>
     </div>
 
     <div id="orders-container">
@@ -183,34 +183,36 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
 </div>
 
 <script>
-const ADMIN_PASS = 'spmc2025';
+let ADMIN_TOKEN = sessionStorage.getItem('spmc_admin_token') || '';
 const API = 'http://localhost:3001';
 let allOrders = [];
 let backendOnline = false;
 
 // ── AUTH ─────────────────────────────────────────────────
+// Token entered here becomes the Bearer token for all backend calls.
+// The backend validates it — wrong token = 401, no client-side bypass possible.
 const loginBtn = document.getElementById('login-btn');
 const adminPassInput = document.getElementById('admin-password');
 
 function tryLogin() {
-  if (adminPassInput.value === ADMIN_PASS) {
-    sessionStorage.setItem('spmc_admin', '1');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadOrders();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
-    adminPassInput.value = '';
-    adminPassInput.focus();
-  }
+  const entered = adminPassInput.value.trim();
+  if (!entered) return;
+  ADMIN_TOKEN = entered;
+  sessionStorage.setItem('spmc_admin_token', entered);
+  sessionStorage.setItem('spmc_admin', '1');
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadOrders();
 }
 loginBtn.addEventListener('click', tryLogin);
 adminPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
 document.getElementById('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem('spmc_admin');
+  sessionStorage.removeItem('spmc_admin_token');
+  ADMIN_TOKEN = '';
   location.reload();
 });
-if (sessionStorage.getItem('spmc_admin')) {
+if (sessionStorage.getItem('spmc_admin') && ADMIN_TOKEN) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   loadOrders();
@@ -219,7 +221,7 @@ if (sessionStorage.getItem('spmc_admin')) {
 // ── DATA ─────────────────────────────────────────────────
 async function loadOrders() {
   try {
-    const res = await fetch(API + '/orders', { headers: { 'Authorization': 'Bearer ' + ADMIN_PASS } });
+    const res = await fetch(API + '/orders', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
     if (!res.ok) throw new Error();
     allOrders = await res.json();
     backendOnline = true;
@@ -392,7 +394,7 @@ function buildOrderRow(order) {
     try {
       const r = await fetch(API + '/orders/' + order.orderId + '/status', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_PASS },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
         body: JSON.stringify({ status: statusSel.value }),
       });
       if (!r.ok) throw new Error();
@@ -453,7 +455,7 @@ function buildOrderRow(order) {
     try {
       const r = await fetch(API + '/orders/' + order.orderId + '/tracking', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_PASS },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
         body: JSON.stringify({ tracking: t }),
       });
       if (!r.ok) throw new Error();
@@ -605,7 +607,7 @@ document.getElementById('export-btn').addEventListener('click', async e => {
   e.preventDefault();
   if (!backendOnline) { alert('Backend offline.'); return; }
   try {
-    const r = await fetch(API + '/orders/export', { headers: { 'Authorization': 'Bearer ' + ADMIN_PASS } });
+    const r = await fetch(API + '/orders/export', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
     if (!r.ok) throw new Error();
     const blob = await r.blob();
     const url = URL.createObjectURL(blob);
