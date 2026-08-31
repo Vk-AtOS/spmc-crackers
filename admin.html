@@ -182,9 +182,10 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
   </div>
 </div>
 
+<script src="js/config.js"></script>
 <script>
 let ADMIN_TOKEN = sessionStorage.getItem('spmc_admin_token') || '';
-const API = 'http://localhost:3001';
+const API = window.SPMC_API;
 let allOrders = [];
 let backendOnline = false;
 

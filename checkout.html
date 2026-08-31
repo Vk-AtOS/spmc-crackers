@@ -111,6 +111,7 @@ nav{
 <script src="js/i18n.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/support.js"></script>
+<script src="js/config.js"></script>
 <script>
 const items = Cart.get();
 if (items.length === 0) window.location.href = 'shop.html';
@@ -311,7 +312,7 @@ layout.append(formSection, review);
 root.appendChild(layout);
 
 // ── SUBMIT ───────────────────────────────────────────────
-const BACKEND = 'http://localhost:3001';
+const BACKEND = window.SPMC_API;
 
 function validateForm() {
   const val = id => document.getElementById(id)?.value.trim() || '';
