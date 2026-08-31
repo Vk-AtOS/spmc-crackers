@@ -1,0 +1,1449 @@
+[
+  {
+    "id": 1,
+    "name": "3 1/2\" Lakshmi",
+    "nameTa": "3 1/2\" லட்சுமி",
+    "cat": "one-sound",
+    "mrp": 22,
+    "price": 11,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 2,
+    "name": "4\" Lakshmi",
+    "nameTa": "4\" லட்சுமி",
+    "cat": "one-sound",
+    "mrp": 36,
+    "price": 18,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 3,
+    "name": "4\" Deluxe Lakshmi",
+    "nameTa": "4\" டீலக்ஸ் லட்சுமி",
+    "cat": "one-sound",
+    "mrp": 60,
+    "price": 30,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 4,
+    "name": "Mega Deluxe Lakshmi",
+    "nameTa": "மெகா டீலக்ஸ் லட்சுமி",
+    "cat": "one-sound",
+    "mrp": 90,
+    "price": 45,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 5,
+    "name": "Gold Lakshmi",
+    "nameTa": "கோல்டு லட்சுமி",
+    "cat": "one-sound",
+    "mrp": 70,
+    "price": 35,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 6,
+    "name": "5\" Mega Deluxe",
+    "nameTa": "5\" மெகா டீலக்ஸ்",
+    "cat": "one-sound",
+    "mrp": 100,
+    "price": 50,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 7,
+    "name": "6\" Mega Deluxe",
+    "nameTa": "6\" மெகா டீலக்ஸ்",
+    "cat": "one-sound",
+    "mrp": 130,
+    "price": 65,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 8,
+    "name": "2 3/4\" Kuruvi",
+    "nameTa": "2 3/4\" குருவி",
+    "cat": "one-sound",
+    "mrp": 18,
+    "price": 9,
+    "unit": "pkt",
+    "emoji": "🔊"
+  },
+  {
+    "id": 9,
+    "name": "24 Deluxe",
+    "nameTa": "24 டீலக்ஸ்",
+    "cat": "deluxe",
+    "mrp": 90,
+    "price": 45,
+    "unit": "pkt",
+    "emoji": "⭐"
+  },
+  {
+    "id": 10,
+    "name": "28 Deluxe",
+    "nameTa": "28 டீலக்ஸ்",
+    "cat": "deluxe",
+    "mrp": 100,
+    "price": 50,
+    "unit": "pkt",
+    "emoji": "⭐"
+  },
+  {
+    "id": 11,
+    "name": "50 Deluxe",
+    "nameTa": "50 டீலக்ஸ்",
+    "cat": "deluxe",
+    "mrp": 170,
+    "price": 85,
+    "unit": "pkt",
+    "emoji": "⭐"
+  },
+  {
+    "id": 12,
+    "name": "100 Deluxe",
+    "nameTa": "100 டீலக்ஸ்",
+    "cat": "deluxe",
+    "mrp": 340,
+    "price": 170,
+    "unit": "pkt",
+    "emoji": "⭐"
+  },
+  {
+    "id": 13,
+    "name": "100 Wala (Full)",
+    "nameTa": "100 வாலா",
+    "cat": "garland",
+    "mrp": 80,
+    "price": 40,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 14,
+    "name": "200 Wala (Full)",
+    "nameTa": "200 வாலா",
+    "cat": "garland",
+    "mrp": 160,
+    "price": 80,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 15,
+    "name": "600 Wala (Full)",
+    "nameTa": "600 வாலா",
+    "cat": "garland",
+    "mrp": 360,
+    "price": 180,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 16,
+    "name": "1000 Wala (Full)",
+    "nameTa": "1000 வாலா",
+    "cat": "garland",
+    "mrp": 540,
+    "price": 270,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 17,
+    "name": "2000 Wala (Full)",
+    "nameTa": "2000 வாலா",
+    "cat": "garland",
+    "mrp": 1200,
+    "price": 600,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 18,
+    "name": "5000 Wala (Full)",
+    "nameTa": "5000 வாலா",
+    "cat": "garland",
+    "mrp": 2700,
+    "price": 1350,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 19,
+    "name": "10000 Wala (Full)",
+    "nameTa": "10000 வாலா",
+    "cat": "garland",
+    "mrp": 5300,
+    "price": 2650,
+    "unit": "box",
+    "emoji": "🎊"
+  },
+  {
+    "id": 20,
+    "name": "1000 Wala (Half)",
+    "nameTa": "1000 வாலா (Half)",
+    "cat": "garland",
+    "mrp": 370,
+    "price": 185,
+    "unit": "box",
+    "emoji": "🎉"
+  },
+  {
+    "id": 21,
+    "name": "2000 Wala (Half)",
+    "nameTa": "2000 வாலா (Half)",
+    "cat": "garland",
+    "mrp": 720,
+    "price": 360,
+    "unit": "box",
+    "emoji": "🎉"
+  },
+  {
+    "id": 22,
+    "name": "5000 Wala (Half)",
+    "nameTa": "5000 வாலா (Half)",
+    "cat": "garland",
+    "mrp": 2000,
+    "price": 1000,
+    "unit": "box",
+    "emoji": "🎉"
+  },
+  {
+    "id": 23,
+    "name": "10000 Wala (Half)",
+    "nameTa": "10000 வாலா (Half)",
+    "cat": "garland",
+    "mrp": 4000,
+    "price": 2000,
+    "unit": "box",
+    "emoji": "🎉"
+  },
+  {
+    "id": 24,
+    "name": "28 Chorsa",
+    "nameTa": "28 சோர்சா",
+    "cat": "chorsa-giant",
+    "mrp": 34,
+    "price": 17,
+    "unit": "pkt",
+    "emoji": "💫"
+  },
+  {
+    "id": 25,
+    "name": "28 Giant",
+    "nameTa": "28 ஜெயிண்ட்",
+    "cat": "chorsa-giant",
+    "mrp": 56,
+    "price": 28,
+    "unit": "pkt",
+    "emoji": "💫"
+  },
+  {
+    "id": 26,
+    "name": "56 Giant",
+    "nameTa": "56 ஜெயிண்ட்",
+    "cat": "chorsa-giant",
+    "mrp": 120,
+    "price": 60,
+    "unit": "pkt",
+    "emoji": "💫"
+  },
+  {
+    "id": 27,
+    "name": "Red Bijili",
+    "nameTa": "ரெட் பிஜிலி",
+    "cat": "bijili",
+    "mrp": 60,
+    "price": 30,
+    "unit": "pkt",
+    "emoji": "⚡"
+  },
+  {
+    "id": 28,
+    "name": "Stripped Bijili",
+    "nameTa": "கோடு பிஜிலி",
+    "cat": "bijili",
+    "mrp": 70,
+    "price": 35,
+    "unit": "pkt",
+    "emoji": "⚡"
+  },
+  {
+    "id": 29,
+    "name": "Hydro Bomb",
+    "nameTa": "கைட்ரோ பாம்",
+    "cat": "bombs",
+    "mrp": 160,
+    "price": 80,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 30,
+    "name": "King of King",
+    "nameTa": "கிங் ஆப் கிங்",
+    "cat": "bombs",
+    "mrp": 220,
+    "price": 110,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 31,
+    "name": "Classic Bomb",
+    "nameTa": "கிளாசிக் பாம்",
+    "cat": "bombs",
+    "mrp": 270,
+    "price": 135,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 32,
+    "name": "Mega Super Bomb",
+    "nameTa": "மெகா சூப்பர் பாம்",
+    "cat": "bombs",
+    "mrp": 370,
+    "price": 185,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 33,
+    "name": "DTS Bomb",
+    "nameTa": "DTS பாம்",
+    "cat": "bombs",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 34,
+    "name": "1/4 KG Paper Bomb",
+    "nameTa": "1/4 கி பேப்பர் பாம்",
+    "cat": "bombs",
+    "mrp": 150,
+    "price": 75,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 35,
+    "name": "1/2 KG Paper Bomb",
+    "nameTa": "1/2 கி பேப்பர் பாம்",
+    "cat": "bombs",
+    "mrp": 320,
+    "price": 160,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 36,
+    "name": "1 KG Paper Bomb",
+    "nameTa": "1 கி பேப்பர் பாம்",
+    "cat": "bombs",
+    "mrp": 460,
+    "price": 230,
+    "unit": "box",
+    "emoji": "💥"
+  },
+  {
+    "id": 37,
+    "name": "Money in the Bank (3 pcs)",
+    "nameTa": "மணி இந்த பேங்க்",
+    "cat": "chakkars",
+    "mrp": 400,
+    "price": 200,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 38,
+    "name": "Chakkar Big (10 pcs)",
+    "nameTa": "சக்கரம் பெரியது 10 pcs",
+    "cat": "chakkars",
+    "mrp": 110,
+    "price": 55,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 39,
+    "name": "Chakkar Big (25 pcs)",
+    "nameTa": "சக்கரம் பெரியது 25 pcs",
+    "cat": "chakkars",
+    "mrp": 240,
+    "price": 120,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 40,
+    "name": "Chakkar Special",
+    "nameTa": "சக்கரம் ஸ்பெஷல்",
+    "cat": "chakkars",
+    "mrp": 240,
+    "price": 120,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 41,
+    "name": "Chakkar Deluxe",
+    "nameTa": "சக்கரம் டீலக்ஸ்",
+    "cat": "chakkars",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 42,
+    "name": "Chakkar Orbit Spinner",
+    "nameTa": "ஆர்பிட் சக்கரம்",
+    "cat": "chakkars",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 43,
+    "name": "Whizzle Chakkar",
+    "nameTa": "விசில் சக்கரம்",
+    "cat": "chakkars",
+    "mrp": 370,
+    "price": 185,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 44,
+    "name": "4×4 Wheel Chakkar",
+    "nameTa": "4×4 சக்கரம்",
+    "cat": "chakkars",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 45,
+    "name": "Wire Chakkar",
+    "nameTa": "வயர் சக்கரம்",
+    "cat": "chakkars",
+    "mrp": 700,
+    "price": 350,
+    "unit": "box",
+    "emoji": "🌀"
+  },
+  {
+    "id": 46,
+    "name": "Flower Pot Small",
+    "nameTa": "பூச்சட்டி சிறியது",
+    "cat": "flower-pots",
+    "mrp": 110,
+    "price": 55,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 47,
+    "name": "Flower Pot Big",
+    "nameTa": "பூச்சட்டி பெரியது",
+    "cat": "flower-pots",
+    "mrp": 180,
+    "price": 90,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 48,
+    "name": "Flower Pot Special",
+    "nameTa": "பூச்சட்டி ஸ்பெஷல்",
+    "cat": "flower-pots",
+    "mrp": 240,
+    "price": 120,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 49,
+    "name": "Flower Pot Asoka",
+    "nameTa": "பூச்சட்டி அசோகா",
+    "cat": "flower-pots",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 50,
+    "name": "Colour Koti",
+    "nameTa": "கலர் கோட்டி",
+    "cat": "flower-pots",
+    "mrp": 420,
+    "price": 210,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 51,
+    "name": "Colour Koti Deluxe",
+    "nameTa": "கலர் கோட்டி டீலக்ஸ்",
+    "cat": "flower-pots",
+    "mrp": 530,
+    "price": 265,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 52,
+    "name": "Tri Colour (5 in 1)",
+    "nameTa": "ட்ரை கலர் 5 in 1",
+    "cat": "flower-pots",
+    "mrp": 650,
+    "price": 325,
+    "unit": "box",
+    "emoji": "🌺"
+  },
+  {
+    "id": 53,
+    "name": "1 1/2\" Twinkling Star",
+    "nameTa": "1 1/2\" சாட்டை",
+    "cat": "twinkling-stars",
+    "mrp": 80,
+    "price": 40,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 54,
+    "name": "4\" Twinkling Star",
+    "nameTa": "4\" சாட்டை",
+    "cat": "twinkling-stars",
+    "mrp": 160,
+    "price": 80,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 55,
+    "name": "Lazer Show / Ultra Pencil",
+    "nameTa": "லேசர் பென்சில்",
+    "cat": "pencil-fountain",
+    "mrp": 320,
+    "price": 160,
+    "unit": "box",
+    "emoji": "🕯️"
+  },
+  {
+    "id": 56,
+    "name": "Lollipop Pencil",
+    "nameTa": "லாலிபாப் பென்சில்",
+    "cat": "pencil-fountain",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🕯️"
+  },
+  {
+    "id": 57,
+    "name": "Water Falls Pencil",
+    "nameTa": "வாட்டர்ஃபால்ஸ் பென்சில்",
+    "cat": "pencil-fountain",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🕯️"
+  },
+  {
+    "id": 58,
+    "name": "Popcorn Pencil",
+    "nameTa": "பாப்கான் பென்சில்",
+    "cat": "pencil-fountain",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🕯️"
+  },
+  {
+    "id": 59,
+    "name": "Rocket Bomb",
+    "nameTa": "ராக்கெட் பாம்",
+    "cat": "rockets",
+    "mrp": 180,
+    "price": 90,
+    "unit": "box",
+    "emoji": "🚀"
+  },
+  {
+    "id": 60,
+    "name": "Mega Rocket",
+    "nameTa": "மெகா ராக்கெட்",
+    "cat": "rockets",
+    "mrp": 330,
+    "price": 165,
+    "unit": "box",
+    "emoji": "🚀"
+  },
+  {
+    "id": 61,
+    "name": "Whistle Rocket",
+    "nameTa": "விசில் ராக்கெட்",
+    "cat": "rockets",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🚀"
+  },
+  {
+    "id": 62,
+    "name": "Siren (3 pcs)",
+    "nameTa": "சைரன் 3 pcs",
+    "cat": "siren",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🔴"
+  },
+  {
+    "id": 63,
+    "name": "Flash Colour",
+    "nameTa": "பிளாஷ் கலர்",
+    "cat": "matches",
+    "mrp": 250,
+    "price": 125,
+    "unit": "box",
+    "emoji": "🎆"
+  },
+  {
+    "id": 64,
+    "name": "Pokeman",
+    "nameTa": "போக்கெமான்",
+    "cat": "matches",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🎆"
+  },
+  {
+    "id": 65,
+    "name": "Mega Match",
+    "nameTa": "மெகா மேட்ச்",
+    "cat": "matches",
+    "mrp": 580,
+    "price": 290,
+    "unit": "box",
+    "emoji": "🎆"
+  },
+  {
+    "id": 66,
+    "name": "Peacock (5 in 1)",
+    "nameTa": "பீக்காக் 5 in 1",
+    "cat": "showers",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🦚"
+  },
+  {
+    "id": 67,
+    "name": "Mega Peacock",
+    "nameTa": "மெகா பீக்காக்",
+    "cat": "showers",
+    "mrp": 400,
+    "price": 200,
+    "unit": "box",
+    "emoji": "🦚"
+  },
+  {
+    "id": 68,
+    "name": "Bada Super Peacock",
+    "nameTa": "படா சூப்பர் பீக்காக்",
+    "cat": "showers",
+    "mrp": 850,
+    "price": 425,
+    "unit": "box",
+    "emoji": "🦚"
+  },
+  {
+    "id": 69,
+    "name": "Pogo",
+    "nameTa": "போகோ",
+    "cat": "fancy-showers",
+    "mrp": 80,
+    "price": 40,
+    "unit": "box",
+    "emoji": "🌈"
+  },
+  {
+    "id": 70,
+    "name": "Angry Bird",
+    "nameTa": "ஆங்ரி பேர்டு",
+    "cat": "fancy-showers",
+    "mrp": 140,
+    "price": 70,
+    "unit": "box",
+    "emoji": "🌈"
+  },
+  {
+    "id": 71,
+    "name": "Golden Globe (5 in 1)",
+    "nameTa": "கோல்டன் குளோப் 5 in 1",
+    "cat": "fancy-showers",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🌈"
+  },
+  {
+    "id": 72,
+    "name": "Peacock Feather (5 in 1)",
+    "nameTa": "பீக்காக் பெதர் 5 in 1",
+    "cat": "fancy-showers",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🌈"
+  },
+  {
+    "id": 73,
+    "name": "Colour Rain (5 in 1)",
+    "nameTa": "கலர் ரெயின் 5 in 1",
+    "cat": "fancy-showers",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🌈"
+  },
+  {
+    "id": 74,
+    "name": "Tin Beer",
+    "nameTa": "டின் பீர்",
+    "cat": "variety-showers",
+    "mrp": 250,
+    "price": 125,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 75,
+    "name": "Popcorn Tin",
+    "nameTa": "பாப்கான் டின்",
+    "cat": "variety-showers",
+    "mrp": 360,
+    "price": 180,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 76,
+    "name": "Minions",
+    "nameTa": "மினியன்ஸ்",
+    "cat": "variety-showers",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 77,
+    "name": "Aqua Queen",
+    "nameTa": "அக்வா குயின்",
+    "cat": "variety-showers",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 78,
+    "name": "Monster TN67",
+    "nameTa": "மான்ஸ்டர் TN67",
+    "cat": "variety-showers",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 79,
+    "name": "Rolex 100 (RX 100)",
+    "nameTa": "ரோலக்ஸ் 100",
+    "cat": "variety-showers",
+    "mrp": 440,
+    "price": 220,
+    "unit": "box",
+    "emoji": "🎨"
+  },
+  {
+    "id": 80,
+    "name": "Fire & Feather",
+    "nameTa": "பயர் & பெதர்",
+    "cat": "magic-fountain",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌟"
+  },
+  {
+    "id": 81,
+    "name": "Nebula",
+    "nameTa": "நெபுலா",
+    "cat": "magic-fountain",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌟"
+  },
+  {
+    "id": 82,
+    "name": "Golden Sparrow",
+    "nameTa": "கோல்டன் ஸ்பாரோ",
+    "cat": "magic-fountain",
+    "mrp": 350,
+    "price": 175,
+    "unit": "box",
+    "emoji": "🌟"
+  },
+  {
+    "id": 83,
+    "name": "Dragon Slay",
+    "nameTa": "டிராகன் ஸ்லே",
+    "cat": "magic-fountain",
+    "mrp": 460,
+    "price": 230,
+    "unit": "box",
+    "emoji": "🌟"
+  },
+  {
+    "id": 84,
+    "name": "Thunder Coconut",
+    "nameTa": "தண்டர் கோகோனட்",
+    "cat": "amazing-fountain",
+    "mrp": 600,
+    "price": 300,
+    "unit": "box",
+    "emoji": "🌊"
+  },
+  {
+    "id": 85,
+    "name": "Mangatha",
+    "nameTa": "மங்கத்தா",
+    "cat": "amazing-fountain",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🌊"
+  },
+  {
+    "id": 86,
+    "name": "Jigarthanda",
+    "nameTa": "ஜிகர்தண்டா",
+    "cat": "amazing-fountain",
+    "mrp": 380,
+    "price": 190,
+    "unit": "box",
+    "emoji": "🌊"
+  },
+  {
+    "id": 87,
+    "name": "Kit Kat",
+    "nameTa": "கிட் கேட்",
+    "cat": "kids-special",
+    "mrp": 90,
+    "price": 45,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 88,
+    "name": "Helicopter (5 in 1)",
+    "nameTa": "ஹெலிகாப்டர் 5 in 1",
+    "cat": "kids-special",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 89,
+    "name": "Pampara/Spinner (5 in 1)",
+    "nameTa": "பம்பரம்/ஸ்பின்னர் 5 in 1",
+    "cat": "kids-special",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 90,
+    "name": "Butterfly",
+    "nameTa": "பட்டாம்பூச்சி",
+    "cat": "kids-special",
+    "mrp": 230,
+    "price": 115,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 91,
+    "name": "Photo Flash",
+    "nameTa": "போட்டோ பிளாஸ்",
+    "cat": "kids-special",
+    "mrp": 230,
+    "price": 115,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 92,
+    "name": "Selfie Stick",
+    "nameTa": "செல்பி ஸ்டிக்",
+    "cat": "kids-special",
+    "mrp": 420,
+    "price": 210,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 93,
+    "name": "Hunter 007",
+    "nameTa": "கண்டர் 007",
+    "cat": "kids-special",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 94,
+    "name": "Kalash Nikavo",
+    "nameTa": "காலாஸ் நிக்கவோ",
+    "cat": "kids-special",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 95,
+    "name": "Bheema Kadham",
+    "nameTa": "பீமா கதம்",
+    "cat": "kids-special",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 96,
+    "name": "Guitar",
+    "nameTa": "கிட்டார்",
+    "cat": "kids-special",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 97,
+    "name": "Emu Egg",
+    "nameTa": "ஈமு எக்",
+    "cat": "kids-special",
+    "mrp": 420,
+    "price": 210,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 98,
+    "name": "Smoke",
+    "nameTa": "ஸ்மோக்",
+    "cat": "kids-special",
+    "mrp": 420,
+    "price": 210,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 99,
+    "name": "Gun",
+    "nameTa": "துப்பாக்கி",
+    "cat": "kids-special",
+    "mrp": 200,
+    "price": 100,
+    "unit": "pcs",
+    "emoji": "🎈"
+  },
+  {
+    "id": 100,
+    "name": "Roll Cap",
+    "nameTa": "ரோல் கேப்",
+    "cat": "kids-special",
+    "mrp": 200,
+    "price": 100,
+    "unit": "box",
+    "emoji": "🎈"
+  },
+  {
+    "id": 101,
+    "name": "7 Shot (5 in 1)",
+    "nameTa": "7 சாட் 5 in 1",
+    "cat": "fancy-shots",
+    "mrp": 260,
+    "price": 130,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 102,
+    "name": "12 Shot Multicolour",
+    "nameTa": "12 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 500,
+    "price": 250,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 103,
+    "name": "15 Shot Multicolour",
+    "nameTa": "15 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 680,
+    "price": 340,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 104,
+    "name": "30 Shot Multicolour",
+    "nameTa": "30 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 1000,
+    "price": 500,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 105,
+    "name": "60 Shot Multicolour",
+    "nameTa": "60 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 2000,
+    "price": 1000,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 106,
+    "name": "120 Shot Multicolour",
+    "nameTa": "120 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 4000,
+    "price": 2000,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 107,
+    "name": "240 Shot Multicolour",
+    "nameTa": "240 சாட் மல்டி கலர்",
+    "cat": "fancy-shots",
+    "mrp": 8000,
+    "price": 4000,
+    "unit": "box",
+    "emoji": "🎇"
+  },
+  {
+    "id": 108,
+    "name": "1\" Pipe",
+    "nameTa": "1\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 130,
+    "price": 65,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 109,
+    "name": "2\" Pipe",
+    "nameTa": "2\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 280,
+    "price": 140,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 110,
+    "name": "2\" Pipe (3 pcs)",
+    "nameTa": "2\" பைப் 3 pcs",
+    "cat": "fancy-pipe",
+    "mrp": 680,
+    "price": 340,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 111,
+    "name": "3\" Pipe",
+    "nameTa": "3\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 660,
+    "price": 330,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 112,
+    "name": "3 1/2\" Pipe",
+    "nameTa": "3 1/2\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 800,
+    "price": 400,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 113,
+    "name": "4\" Pipe",
+    "nameTa": "4\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 900,
+    "price": 450,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 114,
+    "name": "4 1/2\" Pipe",
+    "nameTa": "4 1/2\" பைப்",
+    "cat": "fancy-pipe",
+    "mrp": 1000,
+    "price": 500,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 115,
+    "name": "Double Ball",
+    "nameTa": "டபுல் பால்",
+    "cat": "fancy-pipe",
+    "mrp": 900,
+    "price": 450,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 116,
+    "name": "3 Step Fancy",
+    "nameTa": "3 ஸ்டெப் பென்சி",
+    "cat": "fancy-pipe",
+    "mrp": 480,
+    "price": 240,
+    "unit": "box",
+    "emoji": "🎑"
+  },
+  {
+    "id": 117,
+    "name": "7cm Electric Sparkler",
+    "nameTa": "7cm கம்பி",
+    "cat": "sparklers",
+    "mrp": 24,
+    "price": 12,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 118,
+    "name": "7cm Colour Sparkler",
+    "nameTa": "7cm கலர் கம்பி",
+    "cat": "sparklers",
+    "mrp": 26,
+    "price": 13,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 119,
+    "name": "7cm Green Sparkler",
+    "nameTa": "7cm பச்சை கம்பி",
+    "cat": "sparklers",
+    "mrp": 28,
+    "price": 14,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 120,
+    "name": "7cm Red Sparkler",
+    "nameTa": "7cm சிவப்பு கம்பி",
+    "cat": "sparklers",
+    "mrp": 34,
+    "price": 17,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 121,
+    "name": "10cm Electric Sparkler",
+    "nameTa": "10cm கம்பி",
+    "cat": "sparklers",
+    "mrp": 36,
+    "price": 18,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 122,
+    "name": "10cm Colour Sparkler",
+    "nameTa": "10cm கலர் கம்பி",
+    "cat": "sparklers",
+    "mrp": 42,
+    "price": 21,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 123,
+    "name": "10cm Green Sparkler",
+    "nameTa": "10cm பச்சை கம்பி",
+    "cat": "sparklers",
+    "mrp": 46,
+    "price": 23,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 124,
+    "name": "10cm Red Sparkler",
+    "nameTa": "10cm சிவப்பு கம்பி",
+    "cat": "sparklers",
+    "mrp": 58,
+    "price": 26,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 125,
+    "name": "15cm Electric Sparkler",
+    "nameTa": "15cm கம்பி",
+    "cat": "sparklers",
+    "mrp": 90,
+    "price": 45,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 126,
+    "name": "15cm Colour Sparkler",
+    "nameTa": "15cm கலர் கம்பி",
+    "cat": "sparklers",
+    "mrp": 92,
+    "price": 46,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 127,
+    "name": "15cm Green Sparkler",
+    "nameTa": "15cm பச்சை கம்பி",
+    "cat": "sparklers",
+    "mrp": 96,
+    "price": 48,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 128,
+    "name": "15cm Red Sparkler",
+    "nameTa": "15cm சிவப்பு கம்பி",
+    "cat": "sparklers",
+    "mrp": 104,
+    "price": 52,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 129,
+    "name": "15cm All in One",
+    "nameTa": "15cm 3 in 1",
+    "cat": "sparklers",
+    "mrp": 400,
+    "price": 200,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 130,
+    "name": "30cm Electric Sparkler",
+    "nameTa": "30cm கம்பி",
+    "cat": "sparklers",
+    "mrp": 92,
+    "price": 46,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 131,
+    "name": "30cm Colour Sparkler",
+    "nameTa": "30cm கலர் கம்பி",
+    "cat": "sparklers",
+    "mrp": 96,
+    "price": 48,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 132,
+    "name": "30cm Green Sparkler",
+    "nameTa": "30cm பச்சை கம்பி",
+    "cat": "sparklers",
+    "mrp": 104,
+    "price": 52,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 133,
+    "name": "30cm Red Sparkler",
+    "nameTa": "30cm சிவப்பு கம்பி",
+    "cat": "sparklers",
+    "mrp": 110,
+    "price": 55,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 134,
+    "name": "30cm All in One",
+    "nameTa": "30cm 3 in 1",
+    "cat": "sparklers",
+    "mrp": 400,
+    "price": 200,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 135,
+    "name": "50cm Electric Sparkler",
+    "nameTa": "50cm கம்பி",
+    "cat": "sparklers",
+    "mrp": 450,
+    "price": 225,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 136,
+    "name": "50cm Colour Sparkler",
+    "nameTa": "50cm கலர் கம்பி",
+    "cat": "sparklers",
+    "mrp": 500,
+    "price": 250,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 137,
+    "name": "Rotating Sparkler (Umbrella)",
+    "nameTa": "ரோட்டேடிங் கம்பி குடை",
+    "cat": "sparklers",
+    "mrp": 480,
+    "price": 240,
+    "unit": "box",
+    "emoji": "✨"
+  },
+  {
+    "id": 201,
+    "name": "Gift Box 20 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 20 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 450,
+    "price": 450,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 202,
+    "name": "Gift Box 25 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 25 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 550,
+    "price": 550,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 203,
+    "name": "Gift Box 30 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 30 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 650,
+    "price": 650,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 204,
+    "name": "Gift Box 35 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 35 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 750,
+    "price": 750,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 205,
+    "name": "Gift Box 40 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 40 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 850,
+    "price": 850,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 206,
+    "name": "Gift Box 50 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 50 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 1000,
+    "price": 1000,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  },
+  {
+    "id": 207,
+    "name": "Gift Box 60 Items",
+    "nameTa": "கிஃப்ட் பாக்ஸ் 60 பொருட்கள்",
+    "cat": "gift-boxes",
+    "mrp": 1200,
+    "price": 1200,
+    "unit": "box",
+    "emoji": "🎁",
+    "noDiscount": true
+  }
+]

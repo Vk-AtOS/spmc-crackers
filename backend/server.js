@@ -52,9 +52,38 @@ db.prepare(`
 `).run();
 
 // Safe column migrations for existing DBs
-['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT'].forEach(col => {
+['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT', 'returnReason TEXT'].forEach(col => {
   try { db.prepare('ALTER TABLE orders ADD COLUMN ' + col).run(); } catch {}
 });
+
+// ── PRODUCTS TABLE ────────────────────────────────────────
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS products (
+    id         INTEGER PRIMARY KEY,
+    name       TEXT NOT NULL,
+    nameTa     TEXT,
+    cat        TEXT NOT NULL,
+    mrp        REAL NOT NULL,
+    price      REAL NOT NULL,
+    unit       TEXT NOT NULL DEFAULT 'pkt',
+    emoji      TEXT,
+    active     INTEGER NOT NULL DEFAULT 1,
+    noDiscount INTEGER NOT NULL DEFAULT 0
+  )
+`).run();
+
+// Seed from static catalog on first run
+const seedData = require('./products_seed.json');
+if (db.prepare('SELECT COUNT(*) as n FROM products').get().n === 0) {
+  const ins = db.prepare(
+    'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)'
+  );
+  db.transaction(pp => pp.forEach(p =>
+    ins.run(p.id, p.name, p.nameTa || null, p.cat, p.mrp, p.price,
+            p.unit || 'pkt', p.emoji || null, p.noDiscount ? 1 : 0)
+  ))(seedData);
+  console.log('[PRODUCTS] Seeded', seedData.length, 'products from catalog');
+}
 
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '1mb' }));
@@ -77,6 +106,7 @@ function parseOrder(row) {
     paymentStatus: row.paymentStatus || 'pending',
     tracking: row.tracking,
     notes: row.notes,
+    returnReason: row.returnReason || null,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -198,14 +228,14 @@ app.get('/orders/:id', adminAuth, (req, res) => {
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// PATCH /orders/:id/status — update dispatch status
+// PATCH /orders/:id/status — update dispatch status (includes returned)
 app.patch('/orders/:id/status', adminAuth, (req, res) => {
-  const VALID = ['pending', 'confirmed', 'dispatched', 'delivered', 'cancelled'];
-  const { status } = req.body;
+  const VALID = ['pending', 'confirmed', 'dispatched', 'delivered', 'cancelled', 'returned'];
+  const { status, returnReason } = req.body;
   if (!VALID.includes(status)) return res.status(400).json({ error: 'Invalid status' });
   try {
-    const result = db.prepare('UPDATE orders SET status = ?, updatedAt = ? WHERE orderId = ?')
-      .run(status, new Date().toISOString(), req.params.id);
+    const result = db.prepare('UPDATE orders SET status = ?, returnReason = ?, updatedAt = ? WHERE orderId = ?')
+      .run(status, returnReason || null, new Date().toISOString(), req.params.id);
     if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
     console.log('[STATUS]', req.params.id, '->', status);
     res.json({ success: true, orderId: req.params.id, status });
@@ -277,6 +307,65 @@ app.post('/orders/:id/notify', adminAuth, async (req, res) => {
     console.error('[WA NOTIFY ERROR]', err.message);
     res.status(500).json({ error: 'WhatsApp notification failed', detail: err.message });
   }
+});
+
+// ── PRODUCT ROUTES ────────────────────────────────────────
+
+// GET /products — public (used by shop to get live prices + active flag)
+app.get('/products', (_req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM products ORDER BY id').all();
+    res.json(rows.map(r => ({
+      id: r.id, name: r.name, nameTa: r.nameTa, cat: r.cat,
+      mrp: r.mrp, price: r.price, unit: r.unit, emoji: r.emoji,
+      active: !!r.active, noDiscount: !!r.noDiscount,
+    })));
+  } catch { res.status(500).json({ error: 'Database error' }); }
+});
+
+// PUT /products/:id — admin: edit name/price/active/etc
+app.put('/products/:id', adminAuth, (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (!id || isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+  const { name, nameTa, cat, mrp, price, unit, emoji, active, noDiscount } = req.body;
+  try {
+    const row = db.prepare('SELECT id FROM products WHERE id = ?').get(id);
+    if (!row) return res.status(404).json({ error: 'Product not found' });
+    db.prepare(`
+      UPDATE products SET
+        name=COALESCE(?,name), nameTa=COALESCE(?,nameTa), cat=COALESCE(?,cat),
+        mrp=COALESCE(?,mrp), price=COALESCE(?,price), unit=COALESCE(?,unit),
+        emoji=COALESCE(?,emoji), active=COALESCE(?,active), noDiscount=COALESCE(?,noDiscount)
+      WHERE id=?
+    `).run(
+      name || null, nameTa || null, cat || null,
+      mrp != null ? +mrp : null, price != null ? +price : null,
+      unit || null, emoji || null,
+      active != null ? (active ? 1 : 0) : null,
+      noDiscount != null ? (noDiscount ? 1 : 0) : null,
+      id
+    );
+    res.json({ success: true });
+  } catch { res.status(500).json({ error: 'Database error' }); }
+});
+
+// POST /products — admin: add new product
+app.post('/products', adminAuth, (req, res) => {
+  const { name, nameTa, cat, mrp, price, unit, emoji, noDiscount } = req.body;
+  if (!name || !cat || mrp == null || price == null)
+    return res.status(400).json({ error: 'name, cat, mrp, price are required' });
+  if (typeof +mrp !== 'number' || typeof +price !== 'number')
+    return res.status(400).json({ error: 'mrp and price must be numbers' });
+  try {
+    const maxId = db.prepare('SELECT MAX(id) as m FROM products').get().m || 0;
+    const newId = maxId + 1;
+    db.prepare(
+      'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)'
+    ).run(newId, name.trim(), nameTa || null, cat, +mrp, +price,
+          unit || 'pkt', emoji || '🎆', noDiscount ? 1 : 0);
+    console.log('[PRODUCT ADD]', newId, name.trim());
+    res.status(201).json({ success: true, id: newId });
+  } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
 // Health

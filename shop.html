@@ -253,6 +253,7 @@ nav{
 <script src="js/cart.js"></script>
 <script src="js/support.js"></script>
 <script src="js/product-images.js"></script>
+<script src="js/config.js"></script>
 <script>
 let activeCat = 'all';
 let searchQ = '';
@@ -304,7 +305,7 @@ document.getElementById('sort-select').addEventListener('change', e => {
 const qtyState = {};
 
 function renderProducts() {
-  let list = activeCat === 'all' ? [...PRODUCTS] : getByCategory(activeCat);
+  let list = (activeCat === 'all' ? [...PRODUCTS] : getByCategory(activeCat)).filter(p => !p._hidden);
 
   if (searchQ) {
     list = list.filter(p =>
@@ -492,6 +493,32 @@ updateCheckoutBar();
 
 // Keep checkout bar updated when cart changes
 window.addEventListener('cartUpdated', updateCheckoutBar);
+
+// Sync live prices + active state from backend (non-blocking)
+// If backend is offline the static PRODUCTS array is used as-is.
+(async function syncBackendProducts() {
+  try {
+    const r = await fetch(window.SPMC_API + '/products');
+    if (!r.ok) return;
+    const backendProducts = await r.json();
+    let changed = false;
+    backendProducts.forEach(bp => {
+      const idx = PRODUCTS.findIndex(p => p.id === bp.id);
+      if (idx === -1) {
+        // New product added via admin — append it
+        if (bp.active) { PRODUCTS.push(bp); changed = true; }
+      } else {
+        // Update price and active state
+        const p = PRODUCTS[idx];
+        if (p.mrp !== bp.mrp || p.price !== bp.price) { p.mrp = bp.mrp; p.price = bp.price; changed = true; }
+        if (!!p._hidden !== !bp.active) { p._hidden = !bp.active; changed = true; }
+      }
+    });
+    // Mark products hidden by admin
+    PRODUCTS.forEach(p => { if (p._hidden === undefined) p._hidden = false; });
+    if (changed) renderProducts();
+  } catch { /* backend offline — static catalog used */ }
+})();
 </script>
 </body>
 </html>
