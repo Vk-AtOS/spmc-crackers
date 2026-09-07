@@ -4,7 +4,7 @@
 
 const express = require('express');
 const cors = require('cors');
-const Database = require('better-sqlite3');
+const { DatabaseSync } = require('node:sqlite');
 const crypto = require('crypto');
 const path = require('path');
 
@@ -33,7 +33,7 @@ if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
 }
 
 // ── DB INIT ───────────────────────────────────────────────
-const db = new Database(path.join(__dirname, 'orders.db'));
+const db = new DatabaseSync(path.join(__dirname, 'orders.db'));
 db.prepare(`
   CREATE TABLE IF NOT EXISTS orders (
     orderId       TEXT PRIMARY KEY,
@@ -78,10 +78,17 @@ if (db.prepare('SELECT COUNT(*) as n FROM products').get().n === 0) {
   const ins = db.prepare(
     'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)'
   );
-  db.transaction(pp => pp.forEach(p =>
-    ins.run(p.id, p.name, p.nameTa || null, p.cat, p.mrp, p.price,
-            p.unit || 'pkt', p.emoji || null, p.noDiscount ? 1 : 0)
-  ))(seedData);
+  db.prepare('BEGIN').run();
+  try {
+    seedData.forEach(p =>
+      ins.run(p.id, p.name, p.nameTa || null, p.cat, p.mrp, p.price,
+              p.unit || 'pkt', p.emoji || null, p.noDiscount ? 1 : 0)
+    );
+    db.prepare('COMMIT').run();
+  } catch (e) {
+    db.prepare('ROLLBACK').run();
+    throw e;
+  }
   console.log('[PRODUCTS] Seeded', seedData.length, 'products from catalog');
 }
 
