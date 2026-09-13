@@ -191,7 +191,7 @@ window.PRODUCT_IMAGES = {
   149: 'images/products/sp_50cm_colour.jpg',
   150: 'images/products/product_137.jpg',
 
-  // GIFT BOXES (201-207)
+  // GIFT BOXES (201-208)
   201: 'images/products/giftbox_pattasu.jpg',
   202: 'images/products/giftbox_arjuna.jpg',
   203: 'images/products/giftbox_bheema.jpg',
@@ -199,4 +199,5 @@ window.PRODUCT_IMAGES = {
   205: 'images/products/giftbox_arjuna.jpg',
   206: 'images/products/giftbox_bheema.jpg',
   207: 'images/products/giftbox_pattasu.jpg',
+  208: 'images/products/giftbox_bheema.jpg',
 };

@@ -265,13 +265,14 @@ const PRODUCTS = [
   { id: 150, name: 'Rotating Sparkler (Umbrella)', nameTa: 'ரோட்டேடிங் கம்பி குடை', cat: 'sparklers', mrp: 960, price: 240, unit: 'box', emoji: '✨', desc: 'Rotating umbrella sparkler with spinning multi-color sparks — a unique handheld Diwali showpiece.' },
 
   // GIFT BOXES (no discount)
-  { id: 201, name: 'Gift Box 20 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 20', cat: 'gift-boxes', mrp: 450, price: 450, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 20 assorted fireworks — perfect for family gifting.' },
-  { id: 202, name: 'Gift Box 25 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 25', cat: 'gift-boxes', mrp: 550, price: 550, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 25 assorted fireworks — perfect for family gifting.' },
-  { id: 203, name: 'Gift Box 30 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 30', cat: 'gift-boxes', mrp: 650, price: 650, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 30 assorted fireworks — perfect for family gifting.' },
-  { id: 204, name: 'Gift Box 35 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 35', cat: 'gift-boxes', mrp: 750, price: 750, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 35 assorted fireworks — perfect for family gifting.' },
-  { id: 205, name: 'Gift Box 40 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 40', cat: 'gift-boxes', mrp: 850, price: 850, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 40 assorted fireworks — perfect for family gifting.' },
-  { id: 206, name: 'Gift Box 50 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 50', cat: 'gift-boxes', mrp: 1000, price: 1000, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 50 assorted fireworks — perfect for family gifting.' },
-  { id: 207, name: 'Gift Box 60 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 60', cat: 'gift-boxes', mrp: 1200, price: 1200, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 60 assorted fireworks — perfect for family gifting.' },
+  { id: 201, name: 'Gift Box 21 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 21', cat: 'gift-boxes', mrp: 250, price: 250, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 21 assorted fireworks — perfect for family gifting.' },
+  { id: 202, name: 'Gift Box 25 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 25', cat: 'gift-boxes', mrp: 310, price: 310, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 25 assorted fireworks — perfect for family gifting.' },
+  { id: 203, name: 'Gift Box 30 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 30', cat: 'gift-boxes', mrp: 370, price: 370, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 30 assorted fireworks — perfect for family gifting.' },
+  { id: 204, name: 'Gift Box 35 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 35', cat: 'gift-boxes', mrp: 440, price: 440, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 35 assorted fireworks — perfect for family gifting.' },
+  { id: 205, name: 'Gift Box 40 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 40', cat: 'gift-boxes', mrp: 520, price: 520, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 40 assorted fireworks — perfect for family gifting.' },
+  { id: 206, name: 'Gift Box 51 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 51', cat: 'gift-boxes', mrp: 760, price: 760, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 51 assorted fireworks — perfect for family gifting.' },
+  { id: 207, name: 'Gift Box 60 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 60', cat: 'gift-boxes', mrp: 980, price: 980, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 60 assorted fireworks — perfect for family gifting.' },
+  { id: 208, name: 'Gift Box 70 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 70', cat: 'gift-boxes', mrp: 1150, price: 1150, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 70 assorted fireworks — the grandest gift for big celebrations.' },
 ];
 
 const FEATURED_IDS = [51, 68, 119, 44, 82, 142, 65, 35, 203, 66, 60, 81];

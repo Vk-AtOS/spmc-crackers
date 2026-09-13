@@ -37,8 +37,7 @@ nav{
 .nav-logo{
   display:flex;align-items:center;gap:10px;text-decoration:none;
 }
-.nav-logo-icon{font-size:28px;animation:spin-slow 12s linear infinite}
-@keyframes spin-slow{to{transform:rotate(360deg)}}
+.nav-logo-img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 42%;border:2px solid var(--gold);flex-shrink:0;}
 .nav-logo-text{
   font-family:'Cinzel',serif;font-size:18px;font-weight:700;
   background:linear-gradient(135deg,var(--gold),#ff8c00);
@@ -160,6 +159,12 @@ nav{
   animation:fade-up 1s ease 0.8s both;
 }
 .hero-dates span{color:var(--gold);font-weight:600}
+.hero-banner-wrap{margin-bottom:28px;animation:fade-up 0.7s ease both;}
+.hero-banner-img{
+  width:220px;border-radius:16px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.6),0 0 0 2px rgba(255,215,0,0.25);
+  display:block;margin:0 auto;
+}
 .hero-scroll{
   position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -481,7 +486,7 @@ footer{
 <!-- NAV -->
 <nav id="main-nav">
   <a href="index.html" class="nav-logo">
-    <span class="nav-logo-icon">🎆</span>
+    <img src="images/company_banner.jpg" class="nav-logo-img" alt="Sri Palani Murugan Crackers Logo">
     <div>
       <div class="nav-logo-text">Sri Palani Murugan</div>
       <div class="nav-logo-sub">Crackers · Sivakasi</div>
@@ -516,6 +521,9 @@ footer{
   <canvas id="fireworks-canvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content parallax-layer" data-depth="0.4">
+    <div class="hero-banner-wrap">
+      <img src="images/company_banner.jpg" class="hero-banner-img" alt="Sri Palani Murugan Crackers">
+    </div>
     <div class="hero-tag">✨ <span data-i18n="hero_tag">Direct from Sivakasi</span></div>
     <h1 class="hero-title" data-i18n="hero_title">Sri Palani Murugan Crackers</h1>
     <p class="hero-subtitle" data-i18n="hero_subtitle">Premium Sivakasi Fireworks • Delivery Available across India</p>
@@ -527,7 +535,7 @@ footer{
         📋 <span data-i18n="hero_cta2">View Catalog</span>
       </a>
     </div>
-    <p class="hero-dates" data-i18n="hero_dates">Special Diwali Offer: <span>Sep 5 – Oct 17</span></p>
+    <p class="hero-dates" data-i18n="hero_dates">Special Diwali Offer: <span>Oct 01 – Nov 30, 2026</span></p>
   </div>
   <div class="hero-scroll">
     <div class="scroll-line"></div>
@@ -662,11 +670,14 @@ footer{
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="index.html" class="footer-logo">🎆 Sri Palani Murugan Crackers</a>
+      <a href="index.html" class="footer-logo" style="display:flex;align-items:center;gap:10px;">
+        <img src="images/company_banner.jpg" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:50% 42%;border:1.5px solid var(--gold);" alt="logo">
+        Sri Palani Murugan Crackers
+      </a>
       <p class="footer-tagline" data-i18n="footer_tagline">Premium fireworks from the heart of Sivakasi.</p>
       <div class="footer-contact-item">📍 <span data-i18n="footer_addr">Sattur to Madathupatti Road, Sivakasi – 626131</span></div>
       <div class="footer-contact-item">📞 <a href="tel:+917200915142">+91 7200915142</a></div>
-      <div class="footer-contact-item">✉️ <a href="mailto:muthumurugan3005@gmail.com">muthumurugan3005@gmail.com</a></div>
+      <div class="footer-contact-item">✉️ <a href="mailto:palanimurugancrackers@gmail.com">palanimurugancrackers@gmail.com</a></div>
     </div>
     <div>
       <div class="footer-head" data-i18n="footer_quick">Quick Links</div>
@@ -861,8 +872,8 @@ window.addEventListener('scroll', () => {
 (function() {
   const items = [
     '🚚 Pan India Delivery Available',
-    '🎁 Gift Boxes from ₹450', '✨ 157+ Products', '⭐ Direct from Sivakasi',
-    '📞 WhatsApp: 7200915142', '🎊 Diwali Special Offer Sep 5 – Oct 17',
+    '🎁 Gift Boxes from ₹250', '✨ 163+ Products', '⭐ Direct from Sivakasi',
+    '📞 WhatsApp: 7200915142', '🎊 Diwali Special Offer Oct 01 – Nov 30, 2026',
     '💥 Premium Sivakasi Fireworks', '🌟 All types available',
   ];
   const track = document.getElementById('ticker');

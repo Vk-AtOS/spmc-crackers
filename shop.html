@@ -29,7 +29,9 @@ nav{
   font-family:'Cinzel',serif;font-size:16px;font-weight:700;text-decoration:none;
   background:linear-gradient(135deg,var(--gold),#ff8c00);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:flex;align-items:center;gap:9px;
 }
+.nav-logo-img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:50% 42%;border:2px solid var(--gold);flex-shrink:0;}
 .nav-right{display:flex;align-items:center;gap:16px}
 .nav-cart{
   position:relative;display:flex;align-items:center;gap:6px;
@@ -238,7 +240,10 @@ nav{
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">🎆 Sri Palani Murugan Crackers</a>
+  <a href="index.html" class="nav-logo">
+    <img src="images/company_banner.jpg" class="nav-logo-img" alt="SPM Crackers Logo">
+    Sri Palani Murugan Crackers
+  </a>
   <div class="nav-right">
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="en">EN</button>
