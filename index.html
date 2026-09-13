@@ -255,6 +255,7 @@ section{padding:80px 5%}
   color:var(--gold);font-size:11px;font-weight:700;
   border-radius:6px;padding:3px 8px;
 }
+.product-badge-nodiscount{background:#555;color:#ccc;}
 .product-body{padding:14px 16px 16px}
 .product-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3}
 .product-name-ta{font-size:12px;color:var(--text-muted);margin-bottom:10px;font-family:'Noto Sans Tamil',sans-serif}
@@ -926,12 +927,10 @@ function buildProductCard(p) {
   em.textContent = p.emoji;
   thumb.append(glow, em);
 
-  if (!p.noDiscount) {
-    const badge = document.createElement('div');
-    badge.className = 'product-badge';
-    badge.textContent = '70% OFF';
-    thumb.appendChild(badge);
-  }
+  const badge = document.createElement('div');
+  badge.className = p.noDiscount ? 'product-badge product-badge-nodiscount' : 'product-badge';
+  badge.textContent = p.noDiscount ? 'No Discount' : '75% OFF';
+  thumb.appendChild(badge);
 
   const body = document.createElement('div');
   body.className = 'product-body';

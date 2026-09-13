@@ -108,9 +108,10 @@ const PRODUCTS = [
   { id: 33, name: '1/4 KG Paper Bomb', nameTa: '1/4 கி பேப்பர் பாம்', cat: 'bombs', mrp: 240, price: 60, unit: 'box', emoji: '💥', desc: 'Traditional 1/4 KG paper bomb with a deep, resonant boom — Diwali classic.' },
   { id: 34, name: '1/2 KG Paper Bomb', nameTa: '1/2 கி பேப்பர் பாம்', cat: 'bombs', mrp: 520, price: 130, unit: 'box', emoji: '💥', desc: 'Traditional 1/2 KG paper bomb with a powerful, deep boom — serious Diwali firepower.' },
   { id: 35, name: '1 KG Paper Bomb', nameTa: '1 கி பேப்பர் பாம்', cat: 'bombs', mrp: 960, price: 240, unit: 'box', emoji: '💥', desc: 'Traditional 1 KG paper bomb with a massive, ground-shaking boom — the biggest bang.' },
+  { id: 160, name: '555 Bomb', nameTa: '555 பாம்', cat: 'bombs', mrp: 480, price: 120, unit: 'box', emoji: '💥', desc: 'Classic 555 bomb with a powerful thunderous explosion — the iconic Sivakasi crowd stopper.' },
 
   // CHAKKARS
-  { id: 36, name: 'Money in the Bank (3 pcs)', nameTa: 'மணி இன் தி பேங்க்', cat: 'chakkars', mrp: 800, price: 200, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 3-piece box.' },
+  { id: 36, name: 'Money in the Bank (3 pcs)', nameTa: 'மணி இன் தி பேங்க்', cat: 'bombs', mrp: 800, price: 200, unit: 'box', emoji: '💥', desc: 'Explosive Money in the Bank bomb — big bang in a 3-piece box. Guaranteed crowd stopper.' },
   { id: 37, name: 'Chakkar Big (10 pcs)', nameTa: 'சக்கரம் பெரியது 10 pcs', cat: 'chakkars', mrp: 180, price: 45, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 10-piece box.' },
   { id: 38, name: 'Chakkar Big (25 pcs)', nameTa: 'சக்கரம் பெரியது 25 pcs', cat: 'chakkars', mrp: 400, price: 100, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 25-piece box.' },
   { id: 39, name: 'Chakkar Special', nameTa: 'சக்கரம் ஸ்பெஷல்', cat: 'chakkars', mrp: 480, price: 120, unit: 'box', emoji: '🌀', desc: 'Special spinning ground chakkar releasing colorful sparks in a dazzling whirling display.' },
@@ -209,6 +210,11 @@ const PRODUCTS = [
   { id: 106, name: 'Watermelon', nameTa: 'வாட்டர்மிலன்', cat: 'new-2026', mrp: 1400, price: 350, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Watermelon variety — exciting new firework effects you\'ve never seen before.' },
   { id: 107, name: 'Mini Cylinder', nameTa: 'மினி சிலிண்டர்', cat: 'new-2026', mrp: 640, price: 160, unit: 'pcs', emoji: '🆕', desc: 'Brand new 2026 Mini Cylinder variety — exciting new firework effects you\'ve never seen before.' },
   { id: 108, name: 'Cylinder', nameTa: 'சிலிண்டர்', cat: 'new-2026', mrp: 800, price: 200, unit: 'pcs', emoji: '🆕', desc: 'Brand new 2026 Cylinder variety — exciting new firework effects you\'ve never seen before.' },
+  { id: 161, name: 'Raceing Car', nameTa: 'ரேஸிங் கார்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Racing Car variety — speeds across the ground with a blazing trail of sparks.' },
+  { id: 162, name: 'Hand Short', nameTa: 'ஹேண்ட் ஷாட்', cat: 'new-2026', mrp: 2200, price: 550, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Hand Short variety — handheld aerial shot with spectacular color burst effects.' },
+  { id: 163, name: 'Bat Ball', nameTa: 'பேட் பால்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Bat Ball variety — exciting bat-and-ball shaped firework with dazzling effects.' },
+  { id: 164, name: 'I-CON', nameTa: 'ஐ-கான்', cat: 'new-2026', mrp: 800, price: 200, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 I-CON variety — iconic new firework with unforgettable visual effects.' },
+  { id: 165, name: 'Love Dose', nameTa: 'லவ் டோஸ்', cat: 'new-2026', mrp: 700, price: 175, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Love Dose variety — romantic heart-shaped sparks perfect for celebrations.' },
 
   // FANCY SHOTS
   { id: 109, name: '7 Shot (5 in 1)', nameTa: '7 சாட் 5 in 1', cat: 'fancy-shots', mrp: 480, price: 120, unit: 'box', emoji: '🎇', desc: '7-shot multicolour aerial barrage — vibrant colors burst in rapid sequence. 5-in-1 pack.' },
