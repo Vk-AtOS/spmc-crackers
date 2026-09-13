@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sri Palani Murugan Crackers — Sivakasi | Diwali Fireworks</title>
-<meta name="description" content="Premium Sivakasi fireworks. 137+ products. Pan-India delivery. Shop online for Diwali crackers.">
+<meta name="description" content="Premium Sivakasi fireworks. 157+ products. Pan-India delivery. Shop online for Diwali crackers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- GSAP for scroll-driven 3D animations -->
@@ -74,6 +74,8 @@ nav{
   transition:opacity 0.2s;
 }
 .nav-wa:hover{opacity:0.88}
+.nav-admin{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:6px 12px;color:rgba(255,215,0,0.7);font-size:12px;font-weight:600;text-decoration:none}
+.nav-admin:hover{background:rgba(255,215,0,0.15);color:#ffd700}
 .nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
 
 /* ── TICKER ──────────────────────────────────────────── */
@@ -494,6 +496,7 @@ footer{
   </div>
   <div style="display:flex;gap:12px;align-items:center">
     <a href="https://wa.me/917200915142" target="_blank" rel="noopener" class="nav-wa">💬 WhatsApp</a>
+    <a href="admin.html" class="nav-admin">⚙️ Admin</a>
     <a href="cart.html" class="nav-cart">
       🛒 <span data-i18n="nav_cart">Cart</span>
       <span id="cart-badge">0</span>
@@ -562,10 +565,10 @@ footer{
 <!-- CTA BANNER -->
 <section id="cta-banner">
   <h2 class="cta-title">🎆 Celebrate Diwali with the Best Crackers</h2>
-  <p class="cta-sub">Shop 137+ products • Direct from Sivakasi factories</p>
+  <p class="cta-sub">Shop 157+ products • Direct from Sivakasi factories</p>
   <div class="cta-numbers">
     <div>
-      <span class="cta-stat-val">137+</span>
+      <span class="cta-stat-val">157+</span>
       <span class="cta-stat-lbl">Products</span>
     </div>
     <div>
@@ -857,7 +860,7 @@ window.addEventListener('scroll', () => {
 (function() {
   const items = [
     '🚚 Pan India Delivery Available',
-    '🎁 Gift Boxes from ₹450', '✨ 137+ Products', '⭐ Direct from Sivakasi',
+    '🎁 Gift Boxes from ₹450', '✨ 157+ Products', '⭐ Direct from Sivakasi',
     '📞 WhatsApp: 7200915142', '🎊 Diwali Special Offer Sep 5 – Oct 17',
     '💥 Premium Sivakasi Fireworks', '🌟 All types available',
   ];
@@ -923,6 +926,12 @@ function buildProductCard(p) {
   em.textContent = p.emoji;
   thumb.append(glow, em);
 
+  if (!p.noDiscount) {
+    const badge = document.createElement('div');
+    badge.className = 'product-badge';
+    badge.textContent = '70% OFF';
+    thumb.appendChild(badge);
+  }
 
   const body = document.createElement('div');
   body.className = 'product-body';
@@ -959,6 +968,10 @@ function buildProductCard(p) {
 
   body.append(name, nameTa, priceRow, addBtn);
   card.append(thumb, body);
+
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', () => { window.location.href = 'shop.html?id=' + p.id; });
+
   return card;
 }
 

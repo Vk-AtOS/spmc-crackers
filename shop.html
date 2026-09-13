@@ -197,6 +197,40 @@ nav{
   .shop-header,.shop-layout{padding-left:4%;padding-right:4%}
   .products-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
 }
+
+/* ADMIN BUTTON */
+.nav-admin{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:6px 12px;color:rgba(255,215,0,0.7);font-size:12px;font-weight:600;text-decoration:none}
+.nav-admin:hover{background:rgba(255,215,0,0.15);color:#ffd700}
+
+/* PRODUCT BADGE */
+.product-badge{position:absolute;top:10px;right:10px;background:#e85d04;color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:20px;letter-spacing:.5px}
+
+/* PRODUCT MODAL */
+#product-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)}
+.modal-box{position:relative;background:#1a0508;border:1px solid rgba(255,215,0,0.25);border-radius:20px;width:min(92vw,520px);max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;z-index:1}
+@media(min-width:600px){.modal-box{flex-direction:row;max-height:80vh}}
+.modal-close{position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:18px;width:32px;height:32px;border-radius:50%;cursor:pointer;z-index:2;line-height:1}
+.modal-img-wrap{position:relative;min-height:200px;background:#0d0205;display:flex;align-items:center;justify-content:center;border-radius:20px 20px 0 0;overflow:hidden;flex-shrink:0}
+@media(min-width:600px){.modal-img-wrap{width:220px;border-radius:20px 0 0 20px;min-height:auto}}
+#modal-img{width:100%;height:100%;object-fit:cover}
+.modal-emoji{font-size:72px;position:absolute}
+.modal-badge{position:absolute;top:12px;left:12px;background:#e85d04;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.modal-body{padding:20px;flex:1}
+.modal-cat{font-size:11px;color:#ffd700;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.modal-name{font-size:20px;font-weight:700;color:#fff5e4;line-height:1.2;margin-bottom:3px}
+.modal-name-ta{font-size:14px;color:#b08060;margin-bottom:10px;font-family:'Noto Sans Tamil','Poppins',sans-serif}
+.modal-desc{font-size:13px;color:#b08060;line-height:1.6;margin-bottom:14px;border-bottom:1px solid rgba(255,215,0,0.1);padding-bottom:14px}
+.modal-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:16px}
+.modal-price{font-size:26px;font-weight:700;color:#ffd700}
+.modal-mrp{font-size:14px;color:#666;text-decoration:line-through}
+.modal-unit{font-size:12px;color:#b08060}
+.modal-actions{display:flex;gap:10px;align-items:center}
+.modal-qty{display:flex;align-items:center;gap:0;border:1px solid rgba(255,215,0,0.25);border-radius:10px;overflow:hidden}
+.qty-btn{background:rgba(255,215,0,0.1);border:none;color:#ffd700;font-size:18px;width:36px;height:36px;cursor:pointer;font-weight:700}
+.qty-num{padding:0 12px;color:#fff;font-weight:600;font-size:15px}
+.modal-add-btn{flex:1;background:linear-gradient(135deg,#92400e,#7c2d12);border:1px solid rgba(255,215,0,0.3);color:#ffd700;font-weight:700;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:14px;font-family:'Poppins',sans-serif}
+.modal-add-btn:hover{background:linear-gradient(135deg,#b45309,#92400e)}
 </style>
 </head>
 <body>
@@ -208,6 +242,7 @@ nav{
       <button class="lang-btn active" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="ta">தமிழ்</button>
     </div>
+    <a href="admin.html" class="nav-admin">⚙️ Admin</a>
     <a href="cart.html" class="nav-cart">
       🛒 Cart
       <span id="cart-badge">0</span>
@@ -217,7 +252,7 @@ nav{
 
 <div class="shop-header">
   <h1 class="shop-title">🎆 All Products</h1>
-  <p class="shop-subtitle">137+ products · Direct from Sivakasi</p>
+  <p class="shop-subtitle">157+ products · Direct from Sivakasi</p>
 
   <div class="search-bar">
     <input class="search-input" id="search-input" placeholder="Search products... (e.g. sparkler, bomb, rocket)" type="text" autocomplete="off">
@@ -247,6 +282,38 @@ nav{
 </div>
 
 <div class="cart-toast" id="cart-toast">✅ Added!</div>
+
+<!-- Product popup modal -->
+<div id="product-modal" style="display:none">
+  <div class="modal-overlay"></div>
+  <div class="modal-box">
+    <button class="modal-close">✕</button>
+    <div class="modal-img-wrap">
+      <img id="modal-img" src="" alt="">
+      <div class="modal-emoji" id="modal-emoji"></div>
+      <div class="modal-badge" id="modal-badge">70% OFF</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-cat" id="modal-cat"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-name-ta" id="modal-name-ta"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-price"></span>
+        <span class="modal-mrp" id="modal-mrp"></span>
+        <span class="modal-unit" id="modal-unit"></span>
+      </div>
+      <div class="modal-actions">
+        <div class="modal-qty">
+          <button class="qty-btn" id="modal-qty-minus">−</button>
+          <span class="qty-num" id="modal-qty-num">1</span>
+          <button class="qty-btn" id="modal-qty-plus">+</button>
+        </div>
+        <button class="modal-add-btn" id="modal-add-btn">🛒 Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="js/products.js"></script>
 <script src="js/i18n.js"></script>
@@ -362,6 +429,12 @@ function buildCard(p) {
     thumb.appendChild(em);
   }
 
+  if (!p.noDiscount) {
+    const badge = document.createElement('div');
+    badge.className = 'product-badge';
+    badge.textContent = '70% OFF';
+    thumb.appendChild(badge);
+  }
 
   const body = document.createElement('div');
   body.className = 'product-body';
@@ -417,6 +490,13 @@ function buildCard(p) {
 
   body.append(catTag, name, nameTa, priceRow, actions);
   card.append(thumb, body);
+
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('.product-actions')) return;
+    openModal(p);
+  });
+
   return card;
 }
 
@@ -487,6 +567,73 @@ updateCheckoutBar();
 
 // Keep checkout bar updated when cart changes
 window.addEventListener('cartUpdated', updateCheckoutBar);
+
+// ── PRODUCT MODAL ─────────────────────────────────────────
+let modalQty = 1;
+let modalProduct = null;
+
+function openModal(p) {
+  modalProduct = p;
+  modalQty = 1;
+  document.getElementById('modal-qty-num').textContent = 1;
+
+  const imgUrl = window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id];
+  const imgEl = document.getElementById('modal-img');
+  const emojiEl = document.getElementById('modal-emoji');
+  if (imgUrl) {
+    imgEl.src = imgUrl; imgEl.style.display = 'block'; emojiEl.style.display = 'none';
+  } else {
+    imgEl.style.display = 'none'; emojiEl.style.display = 'block'; emojiEl.textContent = p.emoji;
+  }
+
+  const badge = document.getElementById('modal-badge');
+  badge.style.display = p.noDiscount ? 'none' : 'block';
+
+  const catMeta = getCategoryMeta(p.cat);
+  document.getElementById('modal-cat').textContent = catMeta ? catMeta.emoji + ' ' + catMeta.label : p.cat;
+  document.getElementById('modal-name').textContent = currentLang === 'ta' ? p.nameTa : p.name;
+  document.getElementById('modal-name-ta').textContent = currentLang === 'ta' ? p.name : p.nameTa;
+  document.getElementById('modal-desc').textContent = p.desc || 'Premium Sivakasi firework — direct from factory.';
+  document.getElementById('modal-price').textContent = '₹' + p.price.toLocaleString('en-IN');
+  document.getElementById('modal-mrp').textContent = p.noDiscount ? '' : '₹' + p.mrp.toLocaleString('en-IN');
+  document.getElementById('modal-unit').textContent = '/ ' + p.unit;
+
+  const modal = document.getElementById('product-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('product-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  modalProduct = null;
+}
+
+document.getElementById('modal-qty-minus').addEventListener('click', () => {
+  if (modalQty > 1) { modalQty--; document.getElementById('modal-qty-num').textContent = modalQty; }
+});
+document.getElementById('modal-qty-plus').addEventListener('click', () => {
+  modalQty++; document.getElementById('modal-qty-num').textContent = modalQty;
+});
+document.querySelector('.modal-close').addEventListener('click', closeModal);
+document.querySelector('.modal-overlay').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('modal-add-btn').addEventListener('click', () => {
+  if (!modalProduct) return;
+  for (let i = 0; i < modalQty; i++) Cart.add(modalProduct.id);
+  showToast(modalProduct.name + ' × ' + modalQty + ' added!');
+  closeModal();
+});
+
+// Auto-open modal if ?id= param present
+(function() {
+  const idParam = new URLSearchParams(window.location.search).get('id');
+  if (idParam) {
+    const p = getProduct(parseInt(idParam));
+    if (p) setTimeout(() => openModal(p), 300);
+  }
+})();
 
 // Sync live prices + active state from backend (non-blocking)
 // If backend is offline the static PRODUCTS array is used as-is.
