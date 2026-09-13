@@ -1,6 +1,6 @@
 // All 137 products from Sri Palani Murugan Crackers catalog
-// Prices are MRP; discountPrice is 50% off (displayed price)
-// Gift boxes: no discount
+// price is the selling price; mrp is shown crossed-out
+// Gift boxes: mrp == price (no discount)
 
 const CATEGORIES = [
   { id: 'all', label: 'All Products', labelTa: 'அனைத்தும்', emoji: '🎆' },

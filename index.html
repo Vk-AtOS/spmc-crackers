@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sri Palani Murugan Crackers — Sivakasi | Flat 50% OFF</title>
-<meta name="description" content="Premium Sivakasi fireworks at flat 50% off. 137+ products. Pan-India delivery. Shop online for Diwali crackers.">
+<title>Sri Palani Murugan Crackers — Sivakasi | Diwali Fireworks</title>
+<meta name="description" content="Premium Sivakasi fireworks. 137+ products. Pan-India delivery. Shop online for Diwali crackers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- GSAP for scroll-driven 3D animations -->
@@ -514,7 +514,7 @@ footer{
   <div class="hero-content parallax-layer" data-depth="0.4">
     <div class="hero-tag">✨ <span data-i18n="hero_tag">Direct from Sivakasi</span></div>
     <h1 class="hero-title" data-i18n="hero_title">Sri Palani Murugan Crackers</h1>
-    <p class="hero-subtitle" data-i18n="hero_subtitle">Flat 50% OFF on all crackers • Delivery Available across India</p>
+    <p class="hero-subtitle" data-i18n="hero_subtitle">Premium Sivakasi Fireworks • Delivery Available across India</p>
     <div class="hero-ctas">
       <a href="shop.html" class="btn-primary">
         🛒 <span data-i18n="hero_cta">Shop Now</span>
@@ -562,15 +562,15 @@ footer{
 <!-- CTA BANNER -->
 <section id="cta-banner">
   <h2 class="cta-title">🎆 Celebrate Diwali with the Best Crackers</h2>
-  <p class="cta-sub">Shop 137+ products at flat 50% OFF • Direct from Sivakasi factories</p>
+  <p class="cta-sub">Shop 137+ products • Direct from Sivakasi factories</p>
   <div class="cta-numbers">
     <div>
       <span class="cta-stat-val">137+</span>
       <span class="cta-stat-lbl">Products</span>
     </div>
     <div>
-      <span class="cta-stat-val">50%</span>
-      <span class="cta-stat-lbl">Discount</span>
+      <span class="cta-stat-val">5★</span>
+      <span class="cta-stat-lbl">Quality</span>
     </div>
     <div>
       <span class="cta-stat-val">3-5</span>
@@ -599,7 +599,7 @@ footer{
     </div>
     <div class="trust-card">
       <span class="trust-icon">💰</span>
-      <div><div class="trust-head" data-i18n="trust_2">50% OFF</div><div class="trust-desc" data-i18n="trust_2d">Flat half-price on entire catalog</div></div>
+      <div><div class="trust-head" data-i18n="trust_2">Best Price</div><div class="trust-desc" data-i18n="trust_2d">Factory direct pricing, no middlemen</div></div>
     </div>
     <div class="trust-card">
       <span class="trust-icon">🚚</span>
@@ -645,7 +645,7 @@ footer{
     </div>
     <div class="review-card">
       <div class="review-stars">★★★★★</div>
-      <p class="review-text">"ஒரு ஆர்டர் வைத்தேன். 4 நாட்களில் டெலிவரி கிடைத்தது. பட்டாசு தரமாக இருந்தது. 50% தள்ளுபடி மிகவும் நல்லது. அடுத்த வருடமும் வாங்குவேன்!"</p>
+      <p class="review-text">"ஒரு ஆர்டர் வைத்தேன். 4 நாட்களில் டெலிவரி கிடைத்தது. பட்டாசு தரமாக இருந்தது. விலை மிகவும் சரியாக இருந்தது. அடுத்த வருடமும் வாங்குவேன்!"</p>
       <div class="review-author">
         <div class="review-avatar">👨</div>
         <div><div class="review-name">Murugan V.</div><div class="review-loc">Madurai, Tamil Nadu</div></div>
@@ -856,7 +856,7 @@ window.addEventListener('scroll', () => {
 // ── TICKER ──────────────────────────────────────────────
 (function() {
   const items = [
-    '🎆 Flat 50% OFF on all crackers', '🚚 Pan India Delivery Available',
+    '🚚 Pan India Delivery Available',
     '🎁 Gift Boxes from ₹450', '✨ 137+ Products', '⭐ Direct from Sivakasi',
     '📞 WhatsApp: 7200915142', '🎊 Diwali Special Offer Sep 5 – Oct 17',
     '💥 Premium Sivakasi Fireworks', '🌟 All types available',
@@ -923,12 +923,6 @@ function buildProductCard(p) {
   em.textContent = p.emoji;
   thumb.append(glow, em);
 
-  if (!p.noDiscount) {
-    const badge = document.createElement('div');
-    badge.className = 'product-badge';
-    badge.textContent = '50% OFF';
-    thumb.appendChild(badge);
-  }
 
   const body = document.createElement('div');
   body.className = 'product-body';

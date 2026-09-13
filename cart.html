@@ -266,7 +266,7 @@ function buildSummary(items) {
 
   const savingsBadge = document.createElement('div');
   savingsBadge.className = 'summary-savings';
-  savingsBadge.textContent = '🎉 You save ₹' + savings.toLocaleString('en-IN') + ' (50% Diwali discount!)';
+  savingsBadge.textContent = '🎉 You save ₹' + savings.toLocaleString('en-IN') + '!';
 
   const rowShip = makeRow('Shipping', 'Calculated at checkout');
   const rowTotal = makeRow('Total', '₹' + subtotal.toLocaleString('en-IN'));

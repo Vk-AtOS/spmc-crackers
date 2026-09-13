@@ -217,7 +217,7 @@ nav{
 
 <div class="shop-header">
   <h1 class="shop-title">🎆 All Products</h1>
-  <p class="shop-subtitle">137+ products · Flat 50% OFF · Direct from Sivakasi</p>
+  <p class="shop-subtitle">137+ products · Direct from Sivakasi</p>
 
   <div class="search-bar">
     <input class="search-input" id="search-input" placeholder="Search products... (e.g. sparkler, bomb, rocket)" type="text" autocomplete="off">
@@ -362,12 +362,6 @@ function buildCard(p) {
     thumb.appendChild(em);
   }
 
-  if (!p.noDiscount) {
-    const badge = document.createElement('div');
-    badge.className = 'product-badge';
-    badge.textContent = '50% OFF';
-    thumb.appendChild(badge);
-  }
 
   const body = document.createElement('div');
   body.className = 'product-body';
