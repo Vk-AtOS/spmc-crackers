@@ -78,9 +78,11 @@ const Cart = {
       ``,
       `*Total:* ₹${total.toLocaleString('en-IN')}`,
       `*Payment:* ${customerInfo.payment}`,
+      customerInfo.utr ? `*UTR / Transaction ID:* ${customerInfo.utr}` : null,
+      customerInfo.notes ? `*Notes:* ${customerInfo.notes}` : null,
       ``,
       `_Order placed via website_`,
-    ].join('\n');
+    ].filter(l => l !== null).join('\n');
     return encodeURIComponent(msg);
   },
 

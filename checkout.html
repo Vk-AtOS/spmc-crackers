@@ -186,8 +186,9 @@ formEl.appendChild(payTitle);
 const payOptions = document.createElement('div');
 payOptions.className = 'payment-options';
 
+const upiId = window.SPMC_UPI || 'sripalanimurugan@upi';
 [
-  { id: 'whatsapp-confirm', title: '💬 Pay on WhatsApp Confirmation', sub: "We'll confirm your order and send UPI payment link via WhatsApp" },
+  { id: 'whatsapp-confirm', title: '💬 Pay via UPI + WhatsApp', sub: `Pay to UPI: ${upiId} — enter UTR below after payment` },
   { id: 'razorpay', title: '💳 Pay Now — UPI / Card / NetBanking', sub: 'Instant payment via Razorpay. Order confirmed immediately.' },
   { id: 'cod', title: '💵 Cash on Delivery', sub: 'Available in select Tamil Nadu areas only' },
 ].forEach((pay, i) => {
@@ -213,11 +214,61 @@ payOptions.className = 'payment-options';
     document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     radio.checked = true;
+    updateUpiSection();
   });
   payOptions.appendChild(opt);
 });
 
 formEl.appendChild(payOptions);
+
+// UPI details + UTR section (shown only when WhatsApp UPI is selected)
+const upiSection = document.createElement('div');
+upiSection.id = 'upi-section';
+upiSection.style.cssText = 'margin-top:14px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:10px;padding:14px;';
+
+const upiHeader = document.createElement('div');
+upiHeader.style.cssText = 'font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px';
+upiHeader.textContent = '\u{1F4F2} Pay to UPI';
+
+const upiRow = document.createElement('div');
+upiRow.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:12px';
+const upiIdSpan = document.createElement('span');
+upiIdSpan.style.cssText = 'font-size:15px;font-weight:700;color:#fff;background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 14px;flex:1';
+upiIdSpan.textContent = upiId;
+const copyBtn = document.createElement('button');
+copyBtn.type = 'button';
+copyBtn.textContent = 'Copy';
+copyBtn.style.cssText = 'background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.3);color:var(--gold);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;white-space:nowrap';
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(upiId).then(() => {
+    copyBtn.textContent = 'Copied ✓';
+    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+  });
+});
+upiRow.append(upiIdSpan, copyBtn);
+
+const utrGroup = document.createElement('div');
+utrGroup.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+const utrLabel = document.createElement('label');
+utrLabel.style.cssText = 'font-size:12px;color:var(--text-muted)';
+utrLabel.htmlFor = 'utr-input';
+utrLabel.textContent = 'UTR / Transaction ID (enter after payment — optional)';
+const utrInput = document.createElement('input');
+utrInput.type = 'text';
+utrInput.id = 'utr-input';
+utrInput.placeholder = '12-digit UTR number (e.g. 426811234567)';
+utrInput.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:Poppins,sans-serif;outline:none;width:100%';
+utrGroup.append(utrLabel, utrInput);
+upiSection.append(upiHeader, upiRow, utrGroup);
+formEl.appendChild(upiSection);
+
+function updateUpiSection() {
+  const sel = document.querySelector('input[name="payment"]:checked')?.id;
+  upiSection.style.display = sel === 'pay-whatsapp-confirm' ? 'block' : 'none';
+  const btnTxt = submitBtn.querySelector('span:last-child');
+  if (btnTxt) btnTxt.textContent = sel === 'pay-razorpay' ? 'Pay Now — UPI / Card / NetBanking' : 'Place Order on WhatsApp';
+}
+updateUpiSection();
 
 const safetyDiv = document.createElement('div');
 safetyDiv.className = 'safety-notice';
@@ -360,6 +411,7 @@ function getCustomerInfo() {
     city: val('city'), state: val('state'), pincode: val('pincode'),
     payment: document.querySelector('input[name="payment"]:checked')?.value || 'WhatsApp Confirmation',
     notes: val('notes'),
+    utr: document.getElementById('utr-input')?.value.trim() || '',
   };
 }
 
@@ -376,6 +428,7 @@ function saveToBackend(orderId, customerInfo, paymentId, paymentStatus) {
       total: subtotal, createdAt: new Date().toISOString(),
       paymentId: paymentId || null,
       paymentStatus: paymentStatus || 'pending',
+      utr: customerInfo.utr || null,
     }),
   }).catch(() => {});
 }

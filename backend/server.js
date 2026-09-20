@@ -52,7 +52,7 @@ db.prepare(`
 `).run();
 
 // Safe column migrations for existing DBs
-['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT', 'returnReason TEXT'].forEach(col => {
+['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT', 'returnReason TEXT', 'utr TEXT'].forEach(col => {
   try { db.prepare('ALTER TABLE orders ADD COLUMN ' + col).run(); } catch {}
 });
 
@@ -112,6 +112,7 @@ function parseOrder(row) {
     paymentId: row.paymentId,
     paymentStatus: row.paymentStatus || 'pending',
     tracking: row.tracking,
+    utr: row.utr || null,
     notes: row.notes,
     returnReason: row.returnReason || null,
     createdAt: row.createdAt,
@@ -132,20 +133,20 @@ app.get('/config', (_req, res) => {
 
 // POST /orders — place order
 app.post('/orders', (req, res) => {
-  const { orderId, customer, items, total, createdAt, notes, paymentId, paymentStatus } = req.body;
+  const { orderId, customer, items, total, createdAt, notes, paymentId, paymentStatus, utr } = req.body;
   if (!orderId || !customer || !items) return res.status(400).json({ error: 'Missing required fields' });
   if (typeof orderId !== 'string' || orderId.length > 40) return res.status(400).json({ error: 'Invalid orderId' });
   if (typeof total !== 'number' || !Array.isArray(items)) return res.status(400).json({ error: 'Invalid payload' });
   try {
     db.prepare(`
       INSERT OR IGNORE INTO orders
-        (orderId, customerJson, itemsJson, total, status, payment, paymentId, paymentStatus, notes, createdAt)
-      VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)
+        (orderId, customerJson, itemsJson, total, status, payment, paymentId, paymentStatus, utr, notes, createdAt)
+      VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)
     `).run(
       orderId, JSON.stringify(customer), JSON.stringify(items),
       Number(total) || 0, customer.payment || '',
       paymentId || null, paymentStatus || 'pending',
-      notes || '', createdAt || new Date().toISOString(),
+      utr || null, notes || '', createdAt || new Date().toISOString(),
     );
     console.log('[ORDER]', orderId, customer.name, 'Rs.' + total, paymentStatus || 'pending');
     res.status(201).json({ success: true, orderId });
@@ -246,6 +247,20 @@ app.patch('/orders/:id/status', adminAuth, (req, res) => {
     if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
     console.log('[STATUS]', req.params.id, '->', status);
     res.json({ success: true, orderId: req.params.id, status });
+  } catch { res.status(500).json({ error: 'Database error' }); }
+});
+
+// PATCH /orders/:id/payment — admin confirms UPI payment with UTR
+app.patch('/orders/:id/payment', adminAuth, (req, res) => {
+  const { paymentStatus, utr } = req.body;
+  if (!['paid', 'pending', 'failed'].includes(paymentStatus))
+    return res.status(400).json({ error: 'Invalid paymentStatus' });
+  try {
+    const result = db.prepare('UPDATE orders SET paymentStatus = ?, utr = ?, updatedAt = ? WHERE orderId = ?')
+      .run(paymentStatus, utr ? utr.trim() : null, new Date().toISOString(), req.params.id);
+    if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
+    console.log('[PAYMENT]', req.params.id, '->', paymentStatus, utr || '');
+    res.json({ success: true, orderId: req.params.id, paymentStatus, utr: utr || null });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 

@@ -560,6 +560,47 @@ function buildOrderRow(order) {
   payMethod.style.cssText = 'font-size:10px;color:var(--text-muted);margin-top:4px';
   payMethod.textContent = order.customer?.payment || order.payment || '';
   tdPay.append(payBadge, payMethod);
+
+  if (order.utr) {
+    const utrDiv = document.createElement('div');
+    utrDiv.style.cssText = 'font-size:10px;color:var(--text-muted);margin-top:3px';
+    utrDiv.textContent = 'UTR: ' + order.utr;
+    tdPay.appendChild(utrDiv);
+  }
+
+  if (payStatus !== 'paid' && !isCod) {
+    const markPaidBtn = document.createElement('button');
+    markPaidBtn.className = 'save-btn';
+    markPaidBtn.style.cssText = 'margin-top:5px;font-size:10px';
+    markPaidBtn.textContent = '✓ Mark Paid';
+    markPaidBtn.addEventListener('click', async () => {
+      if (!backendOnline) { alert('Backend offline.'); return; }
+      const utr = prompt('Enter UTR / Transaction ID (optional):') || '';
+      try {
+        const r = await fetch(API + '/orders/' + order.orderId + '/payment', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+          body: JSON.stringify({ paymentStatus: 'paid', utr }),
+        });
+        if (!r.ok) throw new Error();
+        order.paymentStatus = 'paid';
+        if (utr) order.utr = utr;
+        payBadge.className = 'badge p-paid';
+        payBadge.textContent = '✅ Paid';
+        markPaidBtn.remove();
+        if (utr && !tdPay.querySelector('.utr-line')) {
+          const u = document.createElement('div');
+          u.className = 'utr-line';
+          u.style.cssText = 'font-size:10px;color:var(--text-muted);margin-top:3px';
+          u.textContent = 'UTR: ' + utr;
+          tdPay.appendChild(u);
+        }
+        updateStats();
+      } catch { alert('Failed to update payment.'); }
+    });
+    tdPay.appendChild(markPaidBtn);
+  }
+
   tr.appendChild(tdPay);
 
   // Date
@@ -647,6 +688,14 @@ function buildOrderRow(order) {
   waWrap.append(waTplSel, waSendBtn);
   tdAct.appendChild(waWrap);
 
+  // Receipt button
+  const receiptBtn = document.createElement('button');
+  receiptBtn.className = 'save-btn';
+  receiptBtn.style.cssText = 'margin-top:6px;width:100%';
+  receiptBtn.textContent = '🧾 Receipt';
+  receiptBtn.addEventListener('click', () => printReceipt(order));
+  tdAct.appendChild(receiptBtn);
+
   tr.appendChild(tdAct);
 
   // Expand detail toggle
@@ -683,6 +732,7 @@ function buildDetailRow(order) {
     ['Pincode', order.customer?.pincode],
     ['Payment Method', order.customer?.payment || order.payment],
     ['Payment ID', order.paymentId || '—'],
+    ['UTR / Transaction ID', order.utr || '—'],
     ['Tracking No', order.tracking || '—'],
     ['Return Reason', order.returnReason || '—'],
     ['Notes', order.notes || '—'],
@@ -735,6 +785,55 @@ function buildDetailRow(order) {
   td.appendChild(inner);
   tr.appendChild(td);
   return tr;
+}
+
+// ── RECEIPT ───────────────────────────────────────────────
+function printReceipt(order) {
+  const date = order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN') : '—';
+  const c = order.customer || {};
+  const itemRows = (order.items || []).map(i =>
+    `<tr><td>${i.name}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">&#8377;${((i.price||0)*i.qty).toLocaleString('en-IN')}</td></tr>`
+  ).join('');
+  const utrRow = order.utr ? `<tr><td style="color:#555">UTR</td><td>${order.utr}</td></tr>` : '';
+  const addrParts = [c.address, c.city, c.state, c.pincode].filter(Boolean).join(', ');
+  const html = [
+    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt – ' + order.orderId + '</title>',
+    '<style>',
+    'body{font-family:Arial,sans-serif;max-width:480px;margin:30px auto;color:#111;font-size:13px}',
+    'h1{font-size:18px;margin:0}.sub{color:#555;font-size:12px}',
+    'hr{border:none;border-top:1px solid #ddd;margin:12px 0}',
+    'table{width:100%;border-collapse:collapse}',
+    'th{text-align:left;font-size:11px;text-transform:uppercase;color:#888;padding-bottom:4px}',
+    'td{padding:3px 0;vertical-align:top}',
+    '.total-row td{font-weight:700;border-top:1px solid #ddd;padding-top:6px}',
+    '.footer{text-align:center;font-size:11px;color:#888;margin-top:20px}',
+    '@media print{body{margin:0}}',
+    '</style></head><body>',
+    '<h1>Sri Palani Murugan Crackers</h1>',
+    '<div class="sub">Order Receipt</div><hr>',
+    '<table><tbody>',
+    '<tr><td style="width:45%;color:#555">Order ID</td><td>' + order.orderId + '</td></tr>',
+    '<tr><td style="color:#555">Date</td><td>' + date + '</td></tr>',
+    '<tr><td style="color:#555">Name</td><td>' + (c.name || '—') + '</td></tr>',
+    '<tr><td style="color:#555">Phone</td><td>' + (c.phone || '—') + '</td></tr>',
+    '<tr><td style="color:#555">Address</td><td>' + (addrParts || '—') + '</td></tr>',
+    '</tbody></table><hr>',
+    '<table><thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Amount</th></tr></thead>',
+    '<tbody>' + itemRows + '</tbody>',
+    '<tfoot><tr class="total-row"><td colspan="2">Grand Total</td><td style="text-align:right">&#8377;' + (order.total||0).toLocaleString('en-IN') + '</td></tr></tfoot>',
+    '</table><hr>',
+    '<table><tbody>',
+    '<tr><td style="width:45%;color:#555">Payment</td><td>' + (c.payment || order.payment || '—') + '</td></tr>',
+    '<tr><td style="color:#555">Status</td><td>' + (order.paymentStatus === 'paid' ? 'Paid ✅' : 'Pending ⏳') + '</td></tr>',
+    utrRow,
+    '</tbody></table>',
+    '<div class="footer">Thank you for your order!<br>Sri Palani Murugan Crackers</div>',
+    '</body></html>',
+  ].join('\n');
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  w.addEventListener('load', () => { w.print(); URL.revokeObjectURL(url); });
 }
 
 // ── ORDER EVENTS ──────────────────────────────────────────
