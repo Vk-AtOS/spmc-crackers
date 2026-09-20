@@ -76,18 +76,18 @@ const PRODUCTS = [
   { id: 11, name: '100 Deluxe', nameTa: '100 டீலக்ஸ்', cat: 'deluxe', mrp: 880, price: 220, unit: 'pkt', emoji: '⭐', desc: 'Bumper pack of 100 deluxe crackers for a long, loud celebration — best-value deluxe.' },
 
   // GARLAND FULL
-  { id: 12, name: '100 Wala (Full)', nameTa: '100 வாலா', cat: 'garland-full', mrp: 200, price: 50, unit: 'box', emoji: '🎊', desc: 'Continuous 100-wala garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 13, name: '200 Wala (Full)', nameTa: '200 வாலா', cat: 'garland-full', mrp: 400, price: 100, unit: 'box', emoji: '🎊', desc: 'Continuous 200-wala garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 14, name: '1000 Wala (Full)', nameTa: '1000 வாலா', cat: 'garland-full', mrp: 1080, price: 270, unit: 'box', emoji: '🎊', desc: 'Continuous 1000-wala garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 15, name: '2000 Wala (Full)', nameTa: '2000 வாலா', cat: 'garland-full', mrp: 2160, price: 540, unit: 'box', emoji: '🎊', desc: 'Continuous 2000-wala garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 16, name: '5000 Wala (Full)', nameTa: '5000 வாலா', cat: 'garland-full', mrp: 5200, price: 1300, unit: 'box', emoji: '🎊', desc: 'Continuous 5000-wala garland cracker — spectacular non-stop snapping display for big events.' },
-  { id: 17, name: '10000 Wala (Full)', nameTa: '10000 வாலா', cat: 'garland-full', mrp: 10400, price: 2600, unit: 'box', emoji: '🎊', desc: 'Continuous 10000-wala garland cracker — the ultimate non-stop crackling extravaganza.' },
+  { id: 12, name: '100 Wala', nameTa: '100 வாலா', cat: 'garland-full', mrp: 200, price: 50, unit: 'box', emoji: '🎊', desc: 'Continuous 100-wala garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 13, name: '200 Wala', nameTa: '200 வாலா', cat: 'garland-full', mrp: 400, price: 100, unit: 'box', emoji: '🎊', desc: 'Continuous 200-wala garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 14, name: '1000 Wala', nameTa: '1000 வாலா', cat: 'garland-full', mrp: 1080, price: 270, unit: 'box', emoji: '🎊', desc: 'Continuous 1000-wala garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 15, name: '2000 Wala', nameTa: '2000 வாலா', cat: 'garland-full', mrp: 2160, price: 540, unit: 'box', emoji: '🎊', desc: 'Continuous 2000-wala garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 16, name: '5000 Wala', nameTa: '5000 வாலா', cat: 'garland-full', mrp: 5200, price: 1300, unit: 'box', emoji: '🎊', desc: 'Continuous 5000-wala garland cracker — spectacular non-stop snapping display for big events.' },
+  { id: 17, name: '10000 Wala', nameTa: '10000 வாலா', cat: 'garland-full', mrp: 10400, price: 2600, unit: 'box', emoji: '🎊', desc: 'Continuous 10000-wala garland cracker — the ultimate non-stop crackling extravaganza.' },
 
   // GARLAND HALF
-  { id: 18, name: '1000 Wala (Half)', nameTa: '1000 வாலா (Half)', cat: 'garland-half', mrp: 720, price: 180, unit: 'box', emoji: '🎉', desc: 'Continuous 1000-wala half garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 19, name: '2000 Wala (Half)', nameTa: '2000 வாலா (Half)', cat: 'garland-half', mrp: 1440, price: 360, unit: 'box', emoji: '🎉', desc: 'Continuous 2000-wala half garland cracker — non-stop burst of rapid snapping sounds.' },
-  { id: 20, name: '5000 Wala (Half)', nameTa: '5000 வாலா (Half)', cat: 'garland-half', mrp: 3600, price: 900, unit: 'box', emoji: '🎉', desc: 'Continuous 5000-wala half garland cracker — spectacular non-stop snapping display.' },
-  { id: 21, name: '10000 Wala (Half)', nameTa: '10000 வாலா (Half)', cat: 'garland-half', mrp: 7200, price: 1800, unit: 'box', emoji: '🎉', desc: 'Continuous 10000-wala half garland cracker — the ultimate half-strand crackling extravaganza.' },
+  { id: 18, name: '1000 Wala', nameTa: '1000 வாலா', cat: 'garland-half', mrp: 720, price: 180, unit: 'box', emoji: '🎉', desc: 'Continuous 1000-wala half garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 19, name: '2000 Wala', nameTa: '2000 வாலா', cat: 'garland-half', mrp: 1440, price: 360, unit: 'box', emoji: '🎉', desc: 'Continuous 2000-wala half garland cracker — non-stop burst of rapid snapping sounds.' },
+  { id: 20, name: '5000 Wala', nameTa: '5000 வாலா', cat: 'garland-half', mrp: 3600, price: 900, unit: 'box', emoji: '🎉', desc: 'Continuous 5000-wala half garland cracker — spectacular non-stop snapping display.' },
+  { id: 21, name: '10000 Wala', nameTa: '10000 வாலா', cat: 'garland-half', mrp: 7200, price: 1800, unit: 'box', emoji: '🎉', desc: 'Continuous 10000-wala half garland cracker — the ultimate half-strand crackling extravaganza.' },
 
   // CHORSA & GIANT
   { id: 22, name: '28 Chorsa', nameTa: '28 சோர்சா', cat: 'chorsa-giant', mrp: 80, price: 20, unit: 'pkt', emoji: '💫', desc: 'Pack of 28 Chorsa crackers with a compact, crisp snap — traditional Diwali staple.' },
@@ -167,7 +167,7 @@ const PRODUCTS = [
   { id: 73, name: 'Colour Rain (5 in 1)', nameTa: 'கலர் ரெயின் 5 in 1', cat: 'fancy-showers', mrp: 520, price: 130, unit: 'box', emoji: '🌈', desc: 'Novelty Colour Rain fancy shower with multi-color sparkling rainfall display. 5-in-1 pack.' },
 
   // VARIETY SHOWERS
-  { id: 74, name: 'Tin Beer', nameTa: 'டின் பீர்', cat: 'variety-showers', mrp: 440, price: 110, unit: 'box', emoji: '🎨', desc: 'Themed Tin Beer shower fountain with beer-can novelty casing and multi-color sparks.' },
+  { id: 74, name: 'Beer Tin', nameTa: 'பீர் டின்', cat: 'variety-showers', mrp: 440, price: 110, unit: 'box', emoji: '🎨', desc: 'Themed Tin Beer shower fountain with beer-can novelty casing and multi-color sparks.' },
   { id: 75, name: 'Popcorn Tin', nameTa: 'பாப்கான் டின்', cat: 'variety-showers', mrp: 600, price: 150, unit: 'box', emoji: '🎨', desc: 'Themed Popcorn Tin shower fountain with popcorn-bucket novelty casing and multi-color sparks.' },
   { id: 76, name: 'Minions', nameTa: 'மினியன்ஸ்', cat: 'variety-showers', mrp: 800, price: 200, unit: 'box', emoji: '🎨', desc: 'Themed Minions shower fountain with adorable Minions novelty casing and multi-color sparks.' },
   { id: 77, name: 'Aqua Queen', nameTa: 'அக்வா குயின்', cat: 'variety-showers', mrp: 800, price: 200, unit: 'box', emoji: '🎨', desc: 'Themed Aqua Queen shower fountain with royal novelty casing and cascading multi-color sparks.' },

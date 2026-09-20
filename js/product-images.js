@@ -145,6 +145,8 @@ window.PRODUCT_IMAGES = {
   104: 'images/products/new_hunter007.jpg',
   105: 'images/products/new_emu_egg.jpg',
   106: 'images/products/new_watermelon.jpg',
+  107: 'images/products/cylinder_bomb.jpg',
+  108: 'images/products/cylinder_bomb.jpg',
 
   // FANCY SHOTS (109-119)
   109: 'images/products/shots_7.jpg',
