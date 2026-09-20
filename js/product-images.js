@@ -2,10 +2,10 @@
 // Named images used where available; numbered fallbacks for the rest
 window.PRODUCT_IMAGES = {
   // ONE SOUND CRACKERS (1-7)
-  1:   'images/products/product_1.jpg',
-  2:   'images/products/product_2.jpg',
-  3:   'images/products/product_3.jpg',
-  4:   'images/products/product_4.jpg',
+  1:   'images/products/product_7.jpg',
+  2:   'images/products/product_7.jpg',
+  3:   'images/products/product_7.jpg',
+  4:   'images/products/product_7.jpg',
   5:   'images/products/product_6.jpg',
   6:   'images/products/product_7.jpg',
   7:   'images/products/product_8.jpg',
