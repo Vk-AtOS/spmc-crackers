@@ -216,12 +216,41 @@ const PRODUCTS = [
   { id: 164, name: 'I-CON', nameTa: 'ஐ-கான்', cat: 'new-2026', mrp: 800, price: 200, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 I-CON variety — iconic new firework with unforgettable visual effects.' },
   { id: 165, name: 'Love Dose', nameTa: 'லவ் டோஸ்', cat: 'new-2026', mrp: 700, price: 175, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Love Dose variety — romantic heart-shaped sparks perfect for celebrations.' },
 
+  // ROCKETS (extra)
+  { id: 168, name: 'Musical Rocket', nameTa: 'மியூசிக்கல் ராக்கெட்', cat: 'rockets', mrp: 800, price: 200, unit: 'box', emoji: '🚀', desc: 'Musical rocket that soars skyward with a melody and brilliant color burst — a musical sky show.' },
+
+  // SIREN (extra)
+  { id: 172, name: 'Chamma Chamma', nameTa: 'சம்மா சம்மா', cat: 'siren', mrp: 800, price: 200, unit: 'box', emoji: '🔴', desc: 'Siren firework with a wailing Chamma Chamma sound effect and vibrant light display.' },
+
+  // KIDS SPECIAL (extra)
+  { id: 166, name: 'Snap Click', nameTa: 'ஸ்னாப் கிளிக்', cat: 'kids-special', mrp: 280, price: 70, unit: 'box', emoji: '🎈', desc: 'Safe fun Snap Click camera-shaped firework for kids — colorful crackling pop with novelty camera design.' },
+
+  // MAGIC FOUNTAIN (extra)
+  { id: 169, name: 'Lima Green', nameTa: 'லிமா கிரீன்', cat: 'magic-fountain', mrp: 1320, price: 330, unit: 'box', emoji: '🌟', desc: 'Magizh Lima Green fountain with rich sustained green-hued sparks and brilliant visual effects.' },
+  { id: 170, name: 'Pattaya Mixing', nameTa: 'பட்டாயா மிக்சிங்', cat: 'magic-fountain', mrp: 1320, price: 330, unit: 'box', emoji: '🌟', desc: 'Magizh Pattaya Mixing fountain with multi-color blended sparks and sustained magical effects.' },
+  { id: 171, name: 'Cairo Night', nameTa: 'கெய்ரோ நைட்', cat: 'magic-fountain', mrp: 1320, price: 330, unit: 'box', emoji: '🌟', desc: 'Magizh Cairo Night fountain with golden Egyptian-themed sparks and long sustained display.' },
+
+  // FANCY PIPE (extra)
+  { id: 173, name: 'Tomb Raider', nameTa: 'டோம்ப் ரெய்டர்', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: 'ITC Tomb Raider pipe producing powerful sustained aerial bursts with multi-color brilliant trails.' },
+  { id: 174, name: 'Rock My World', nameTa: 'ராக் மை வேர்ல்டு', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: 'ITC Rock My World pipe producing powerful sustained aerial bursts with multi-color brilliant trails.' },
+  { id: 175, name: 'Cool Colours', nameTa: 'கூல் கலர்ஸ்', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: 'ITC Cool Colours pipe producing powerful sustained aerial bursts with multi-color brilliant trails.' },
+  { id: 176, name: 'Hot Chips', nameTa: 'ஹாட் சிப்ஸ்', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: 'ITC Hot Chips pipe producing powerful sustained aerial bursts with multi-color brilliant trails.' },
+  { id: 177, name: 'Big Boss', nameTa: 'பிக் பாஸ்', cat: 'fancy-pipe', mrp: 2000, price: 500, unit: 'box', emoji: '🎑', desc: 'ITC Big Boss pipe — the biggest in the series, producing extra-powerful sustained aerial bursts.' },
+  { id: 178, name: 'Dhisha-Nikha Candle', nameTa: 'திஷா-நிகா மெழுகுவர்த்தி', cat: 'fancy-pipe', mrp: 2000, price: 500, unit: 'box', emoji: '🎑', desc: 'Dhisha-Nikha Special Edition aerial candle — long-burning comet with brilliant multi-color bursts.' },
+
+  // PENCIL & FOUNTAINS (extra — named varieties)
+  { id: 179, name: 'Oppo Pencil', nameTa: 'ஒப்போ பென்சில்', cat: 'pencil-fountain', mrp: 960, price: 240, unit: 'box', emoji: '🕯️', desc: 'Oppo pencil candle with sustained green-hued multi-color fountain of sparks.' },
+  { id: 180, name: 'Realme Pencil', nameTa: 'ரியல்மி பென்சில்', cat: 'pencil-fountain', mrp: 960, price: 240, unit: 'box', emoji: '🕯️', desc: 'Realme pencil candle with sustained golden-hued multi-color fountain of sparks.' },
+  { id: 181, name: 'Lava Pencil', nameTa: 'லாவா பென்சில்', cat: 'pencil-fountain', mrp: 960, price: 240, unit: 'box', emoji: '🕯️', desc: 'Lava pencil candle with sustained purple-hued multi-color fountain of sparks.' },
+  { id: 182, name: 'Vivo Pencil', nameTa: 'விவோ பென்சில்', cat: 'pencil-fountain', mrp: 960, price: 240, unit: 'box', emoji: '🕯️', desc: 'Vivo pencil candle with sustained red-hued multi-color fountain of sparks.' },
+
   // FANCY SHOTS
   { id: 109, name: '7 Shot (5 in 1)', nameTa: '7 சாட் 5 in 1', cat: 'fancy-shots', mrp: 480, price: 120, unit: 'box', emoji: '🎇', desc: '7-shot multicolour aerial barrage — vibrant colors burst in rapid sequence. 5-in-1 pack.' },
   { id: 110, name: '12 Shot Multicolour', nameTa: '12 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 660, price: 165, unit: 'box', emoji: '🎇', desc: '12-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
   { id: 111, name: '15 Shot Multicolour', nameTa: '15 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 1280, price: 320, unit: 'box', emoji: '🎇', desc: '15-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
   { id: 112, name: '25 Shot Rider', nameTa: '25 சாட் ரைடர்', cat: 'fancy-shots', mrp: 1360, price: 340, unit: 'box', emoji: '🎇', desc: '25-shot rider aerial barrage — vibrant colors burst in rapid sequence across the sky.' },
   { id: 113, name: '30 Shot Multicolour', nameTa: '30 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 2000, price: 500, unit: 'box', emoji: '🎇', desc: '30-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
+  { id: 167, name: 'Symphony 50 Shot', nameTa: '50 சாட் சிம்பொனி', cat: 'fancy-shots', mrp: 2800, price: 700, unit: 'box', emoji: '🎇', desc: 'Symphony 50-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
   { id: 114, name: '60 Shot Multicolour', nameTa: '60 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 4000, price: 1000, unit: 'box', emoji: '🎇', desc: '60-shot multicolour aerial barrage — vibrant colors burst in rapid sequence for a grand show.' },
   { id: 115, name: '100 Shot Multicolour', nameTa: '100 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 7200, price: 1800, unit: 'box', emoji: '🎇', desc: '100-shot multicolour aerial barrage — vibrant colors burst in rapid sequence for a massive show.' },
   { id: 116, name: '120 Shot Multicolour', nameTa: '120 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 8000, price: 2000, unit: 'box', emoji: '🎇', desc: '120-shot multicolour aerial barrage — vibrant colors burst in rapid sequence for an epic display.' },

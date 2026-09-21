@@ -204,6 +204,37 @@ window.PRODUCT_IMAGES = {
   164: 'images/products/new_icon.jpg',
   165: 'images/products/new_love_dose.jpg',
 
+  // ROCKETS — extra
+  168: 'images/products/rocket_musical.jpg',
+
+  // SIREN — extra
+  172: 'images/products/siren_chamma.jpg',
+
+  // KIDS SPECIAL — extra
+  166: 'images/products/kids_snap_click.jpg',
+
+  // MAGIC FOUNTAIN — extra
+  169: 'images/products/fountain_magizh.jpg',
+  170: 'images/products/fountain_magizh.jpg',
+  171: 'images/products/fountain_magizh.jpg',
+
+  // FANCY SHOTS — extra
+  167: 'images/products/shots_50.jpg',
+
+  // FANCY PIPE — extra
+  173: 'images/products/pipe_itc_variety.jpg',
+  174: 'images/products/pipe_itc_variety.jpg',
+  175: 'images/products/pipe_itc_variety.jpg',
+  176: 'images/products/pipe_itc_variety.jpg',
+  177: 'images/products/pipe_itc_variety.jpg',
+  178: 'images/products/pipe_dhisha_nikha.jpg',
+
+  // PENCIL & FOUNTAINS — extra
+  179: 'images/products/pencil_namtved.jpg',
+  180: 'images/products/pencil_namtved.jpg',
+  181: 'images/products/pencil_namtved.jpg',
+  182: 'images/products/pencil_namtved.jpg',
+
   // GIFT BOXES (201-208)
   201: 'images/products/giftbox_pattasu.jpg',
   202: 'images/products/giftbox_arjuna.jpg',
