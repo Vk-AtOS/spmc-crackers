@@ -4,4 +4,4 @@
 // Prod: https://your-domain.com/api  (if nginx proxies /api → port 3001)
 //       https://api.your-domain.com  (if backend on a subdomain)
 window.SPMC_API = 'https://spmc-crackers.onrender.com';
-window.SPMC_UPI  = 'sripalanimurugan@upi'; // ← update with your actual UPI ID
+window.SPMC_UPI  = '7200915142@ibl';
