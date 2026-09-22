@@ -94,6 +94,7 @@ if (db.prepare('SELECT COUNT(*) as n FROM products').get().n === 0) {
 
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '1mb' }));
+app.use(express.static(path.join(__dirname, '..')));
 
 function adminAuth(req, res, next) {
   const auth = req.headers['authorization'] || '';
