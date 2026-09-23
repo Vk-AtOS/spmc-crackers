@@ -312,6 +312,7 @@ items.forEach(item => {
   info.append(rname, rsub);
   const rprice = document.createElement('div');
   rprice.className = 'review-item-price';
+  rprice.id = 'co-item-' + p.id;
   rprice.textContent = '₹' + (p.price * item.qty).toLocaleString('en-IN');
   row.append(thumb, info, rprice);
   revItems.appendChild(row);
@@ -332,10 +333,12 @@ grand.className = 'review-grand';
 const gl = document.createElement('span');
 gl.textContent = 'Total';
 const gv = document.createElement('span');
+gv.id = 'co-total-val';
 gv.textContent = '₹' + subtotal.toLocaleString('en-IN');
 grand.append(gl, gv);
 
 const savBadge = document.createElement('div');
+savBadge.id = 'co-savings-badge';
 savBadge.style.cssText = 'background:rgba(134,239,172,0.1);border:1px solid rgba(134,239,172,0.2);border-radius:10px;padding:10px;text-align:center;font-size:12px;color:#86efac;font-weight:600;margin-top:12px;';
 savBadge.textContent = '🎉 You save ₹' + savings.toLocaleString('en-IN') + '!';
 
@@ -361,6 +364,31 @@ review.append(revTitle, revItems, shipRow, grand, savBadge, submitBtn, trustChip
 layout.append(formSection, review);
 root.appendChild(layout);
 updateUpiSection();
+
+// Sync live prices from backend; update display + subtotal so submission total matches backend
+(async () => {
+  try {
+    const r = await fetch(window.SPMC_API + '/products');
+    if (!r.ok) return;
+    (await r.json()).forEach(b => {
+      const p = PRODUCTS.find(p => p.id === b.id);
+      if (p) { p.price = b.price; p.mrp = b.mrp; }
+    });
+    subtotal = 0; let liveSavings = 0;
+    Cart.get().forEach(item => {
+      const p = getProduct(item.id);
+      if (!p) return;
+      subtotal += p.price * item.qty;
+      if (!p.noDiscount) liveSavings += (p.mrp - p.price) * item.qty;
+      const el = document.getElementById('co-item-' + p.id);
+      if (el) el.textContent = '₹' + (p.price * item.qty).toLocaleString('en-IN');
+    });
+    const tv = document.getElementById('co-total-val');
+    if (tv) tv.textContent = '₹' + subtotal.toLocaleString('en-IN');
+    const sb = document.getElementById('co-savings-badge');
+    if (sb) sb.textContent = '🎉 You save ₹' + liveSavings.toLocaleString('en-IN') + '!';
+  } catch {}
+})();
 
 // Hide Razorpay option if not configured on backend
 fetch(window.SPMC_API + '/config').then(r => r.json()).then(cfg => {

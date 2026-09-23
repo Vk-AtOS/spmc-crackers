@@ -133,6 +133,7 @@ nav{
 <script src="js/i18n.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/support.js"></script>
+<script src="js/config.js"></script>
 <script>
 function renderCart() {
   const root = document.getElementById('cart-root');
@@ -303,8 +304,20 @@ function makeRow(label, val) {
   return row;
 }
 
-renderCart();
-window.addEventListener('cartUpdated', renderCart);
+(async () => {
+  try {
+    const r = await fetch(window.SPMC_API + '/products');
+    if (r.ok) {
+      (await r.json()).forEach(b => {
+        const p = PRODUCTS.find(p => p.id === b.id);
+        if (p) { p.price = b.price; p.mrp = b.mrp; }
+      });
+    }
+  } catch {} finally {
+    renderCart();
+    window.addEventListener('cartUpdated', renderCart);
+  }
+})();
 </script>
 </body>
 </html>
