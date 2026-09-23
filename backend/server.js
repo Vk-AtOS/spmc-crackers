@@ -1,10 +1,10 @@
 // Sri Palani Murugan Crackers — Order backend
 // Usage: cd backend && npm install && node server.js
-// Env vars: ADMIN_TOKEN, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, WA_TOKEN, WA_PHONE_ID
+// Env vars: ADMIN_TOKEN, TURSO_URL, TURSO_AUTH_TOKEN, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, WA_TOKEN, WA_PHONE_ID
 
 const express = require('express');
 const cors = require('cors');
-const { DatabaseSync } = require('node:sqlite');
+const { createClient } = require('@libsql/client');
 const crypto = require('crypto');
 const path = require('path');
 
@@ -25,9 +25,16 @@ function rateLimit(max, windowMs = 60_000) {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 if (!ADMIN_TOKEN) {
-  console.error('[FATAL] ADMIN_TOKEN env var not set. Copy backend/.env.example to backend/.env and set a secure token.');
+  console.error('[FATAL] ADMIN_TOKEN env var not set');
+  process.exit(1);
+}
+const TURSO_URL = process.env.TURSO_URL;
+const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
+if (!TURSO_URL || !TURSO_AUTH_TOKEN) {
+  console.error('[FATAL] TURSO_URL and TURSO_AUTH_TOKEN must be set');
   process.exit(1);
 }
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
@@ -42,70 +49,46 @@ if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
     const Razorpay = require('razorpay');
     rzp = new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
     console.log('[RAZORPAY] Enabled');
-  } catch (e) {
-    console.warn('[RAZORPAY] razorpay package missing — run: npm install razorpay');
+  } catch {
+    console.warn('[RAZORPAY] Package missing — run: npm install razorpay');
   }
 }
 
-// ── DB INIT ───────────────────────────────────────────────
-const db = new DatabaseSync(path.join(__dirname, 'orders.db'));
-db.prepare(`
-  CREATE TABLE IF NOT EXISTS orders (
-    orderId       TEXT PRIMARY KEY,
-    customerJson  TEXT NOT NULL,
-    itemsJson     TEXT NOT NULL,
-    total         REAL NOT NULL DEFAULT 0,
-    status        TEXT NOT NULL DEFAULT 'pending',
-    payment       TEXT,
-    paymentId     TEXT,
-    paymentStatus TEXT NOT NULL DEFAULT 'pending',
-    tracking      TEXT,
-    notes         TEXT,
-    createdAt     TEXT NOT NULL,
-    updatedAt     TEXT
-  )
-`).run();
+const db = createClient({ url: TURSO_URL, authToken: TURSO_AUTH_TOKEN });
 
-// Safe column migrations for existing DBs
-['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT', 'returnReason TEXT', 'utr TEXT'].forEach(col => {
-  try { db.prepare('ALTER TABLE orders ADD COLUMN ' + col).run(); } catch {}
-});
-db.prepare('CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(createdAt DESC)').run();
+// Products cache — avoids N queries per order when resolving names/prices
+let _productCache = null;
+async function getProducts() {
+  if (_productCache) return _productCache;
+  const r = await db.execute('SELECT id, name, nameTa, cat, mrp, price, unit, emoji, active, noDiscount FROM products ORDER BY id');
+  _productCache = r.rows;
+  return _productCache;
+}
+function invalidateProductCache() { _productCache = null; }
 
-// ── PRODUCTS TABLE ────────────────────────────────────────
-db.prepare(`
-  CREATE TABLE IF NOT EXISTS products (
-    id         INTEGER PRIMARY KEY,
-    name       TEXT NOT NULL,
-    nameTa     TEXT,
-    cat        TEXT NOT NULL,
-    mrp        REAL NOT NULL,
-    price      REAL NOT NULL,
-    unit       TEXT NOT NULL DEFAULT 'pkt',
-    emoji      TEXT,
-    active     INTEGER NOT NULL DEFAULT 1,
-    noDiscount INTEGER NOT NULL DEFAULT 0
-  )
-`).run();
-
-// Seed from static catalog on first run
-const seedData = require('./products_seed.json');
-if (db.prepare('SELECT COUNT(*) as n FROM products').get().n === 0) {
-  const ins = db.prepare(
-    'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)'
-  );
-  db.prepare('BEGIN').run();
-  try {
-    seedData.forEach(p =>
-      ins.run(p.id, p.name, p.nameTa || null, p.cat, p.mrp, p.price,
-              p.unit || 'pkt', p.emoji || null, p.noDiscount ? 1 : 0)
-    );
-    db.prepare('COMMIT').run();
-  } catch (e) {
-    db.prepare('ROLLBACK').run();
-    throw e;
-  }
-  console.log('[PRODUCTS] Seeded', seedData.length, 'products from catalog');
+async function parseOrder(row) {
+  const products = await getProducts();
+  const pMap = new Map(products.map(p => [Number(p.id), p]));
+  const items = JSON.parse(row.itemsJson).map(i => {
+    const p = pMap.get(Number(i.id));
+    return { ...i, name: p ? `${p.emoji} ${p.name}` : `Product #${i.id}`, price: p ? Number(p.price) : 0 };
+  });
+  return {
+    orderId: row.orderId,
+    customer: JSON.parse(row.customerJson),
+    items,
+    total: row.total,
+    status: row.status,
+    payment: row.payment,
+    paymentId: row.paymentId,
+    paymentStatus: row.paymentStatus || 'pending',
+    tracking: row.tracking,
+    utr: row.utr || null,
+    notes: row.notes,
+    returnReason: row.returnReason || null,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
 }
 
 app.use(cors({ origin: ['https://spmc-crackers.onrender.com', 'http://localhost:3001'] }));
@@ -133,34 +116,8 @@ function adminAuth(req, res, next) {
   next();
 }
 
-const _stmtProduct = db.prepare('SELECT name, emoji, price FROM products WHERE id = ?');
-
-function parseOrder(row) {
-  const items = JSON.parse(row.itemsJson).map(i => {
-    const p = _stmtProduct.get(i.id);
-    return { ...i, name: p ? `${p.emoji} ${p.name}` : `Product #${i.id}`, price: p ? p.price : 0 };
-  });
-  return {
-    orderId: row.orderId,
-    customer: JSON.parse(row.customerJson),
-    items,
-    total: row.total,
-    status: row.status,
-    payment: row.payment,
-    paymentId: row.paymentId,
-    paymentStatus: row.paymentStatus || 'pending',
-    tracking: row.tracking,
-    utr: row.utr || null,
-    notes: row.notes,
-    returnReason: row.returnReason || null,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-  };
-}
-
 // ── PUBLIC ROUTES ─────────────────────────────────────────
 
-// GET /config — frontend feature flags
 app.get('/config', (_req, res) => {
   res.json({
     razorpayEnabled: !!rzp,
@@ -169,40 +126,41 @@ app.get('/config', (_req, res) => {
   });
 });
 
-// POST /orders — place order
-app.post('/orders', rateLimit(20), (req, res) => {
+app.post('/orders', rateLimit(20), async (req, res) => {
   const { orderId, customer, items, total, notes, utr } = req.body;
   if (!orderId || !customer || !items) return res.status(400).json({ error: 'Missing required fields' });
   if (typeof orderId !== 'string' || orderId.length > 40) return res.status(400).json({ error: 'Invalid orderId' });
   if (typeof total !== 'number' || !Array.isArray(items)) return res.status(400).json({ error: 'Invalid payload' });
   if (items.length > 200) return res.status(400).json({ error: 'Too many items' });
-  // Validate customer field lengths
   const c = customer;
   if (String(c.name||'').length > 100 || String(c.phone||'').length > 20 ||
       String(c.address||'').length > 300 || String(c.notes||'').length > 500) {
     return res.status(400).json({ error: 'Field too long' });
   }
-  // Server-side total verification (only when all items are known to DB)
-  let serverTotal = 0, allKnown = true;
-  for (const item of items) {
-    const prod = db.prepare('SELECT price FROM products WHERE id = ? AND active = 1').get(item.id);
-    if (!prod) { allKnown = false; break; }
-    serverTotal += prod.price * Math.max(0, item.qty || 0);
-  }
-  if (allKnown && Math.abs(serverTotal - Number(total)) > 1) {
-    console.warn('[ORDER TAMPER]', orderId, 'client total', total, 'vs server', serverTotal);
-    return res.status(400).json({ error: 'Order total mismatch — please refresh and retry' });
-  }
   try {
-    db.prepare(`
-      INSERT OR IGNORE INTO orders
+    // Server-side total verification using product cache
+    const products = await getProducts();
+    const pMap = new Map(products.filter(p => p.active).map(p => [Number(p.id), p]));
+    let serverTotal = 0, allKnown = true;
+    for (const item of items) {
+      const prod = pMap.get(Number(item.id));
+      if (!prod) { allKnown = false; break; }
+      serverTotal += Number(prod.price) * Math.max(0, item.qty || 0);
+    }
+    if (allKnown && Math.abs(serverTotal - Number(total)) > 1) {
+      console.warn('[ORDER TAMPER]', orderId, 'client total', total, 'vs server', serverTotal);
+      return res.status(400).json({ error: 'Order total mismatch — please refresh and retry' });
+    }
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO orders
         (orderId, customerJson, itemsJson, total, status, payment, paymentId, paymentStatus, utr, notes, createdAt)
-      VALUES (?, ?, ?, ?, 'pending', ?, NULL, 'pending', ?, ?, ?)
-    `).run(
-      orderId, JSON.stringify(customer), JSON.stringify(items),
-      Number(total) || 0, customer.payment || '',
-      utr || null, notes || '', new Date().toISOString(),
-    );
+        VALUES (?, ?, ?, ?, 'pending', ?, NULL, 'pending', ?, ?, ?)`,
+      args: [
+        orderId, JSON.stringify(customer), JSON.stringify(items),
+        Number(total) || 0, customer.payment || '',
+        utr || null, notes || '', new Date().toISOString(),
+      ],
+    });
     console.log('[ORDER]', orderId, customer.name, 'Rs.' + total);
     res.status(201).json({ success: true, orderId });
   } catch (err) {
@@ -211,14 +169,13 @@ app.post('/orders', rateLimit(20), (req, res) => {
   }
 });
 
-// POST /create-razorpay-order — initiate online payment
 app.post('/create-razorpay-order', async (req, res) => {
   if (!rzp) return res.status(503).json({ error: 'Razorpay not configured — add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET to env' });
   const { amount, orderId } = req.body;
   if (!amount || !orderId) return res.status(400).json({ error: 'Missing amount or orderId' });
   try {
     const order = await rzp.orders.create({
-      amount: Math.round(amount * 100), // paise
+      amount: Math.round(amount * 100),
       currency: 'INR',
       receipt: orderId,
       notes: { source: 'spmc-website' },
@@ -230,8 +187,7 @@ app.post('/create-razorpay-order', async (req, res) => {
   }
 });
 
-// POST /verify-payment — verify Razorpay signature and mark order paid
-app.post('/verify-payment', (req, res) => {
+app.post('/verify-payment', async (req, res) => {
   if (!RAZORPAY_KEY_SECRET) return res.status(503).json({ error: 'Razorpay not configured' });
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -240,11 +196,12 @@ app.post('/verify-payment', (req, res) => {
   const body = razorpay_order_id + '|' + razorpay_payment_id;
   const expected = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET).update(body).digest('hex');
   if (expected !== razorpay_signature) return res.status(400).json({ error: 'Payment signature mismatch' });
-
   try {
     if (orderId) {
-      db.prepare('UPDATE orders SET paymentId = ?, paymentStatus = ?, updatedAt = ? WHERE orderId = ?')
-        .run(razorpay_payment_id, 'paid', new Date().toISOString(), orderId);
+      await db.execute({
+        sql: 'UPDATE orders SET paymentId = ?, paymentStatus = ?, updatedAt = ? WHERE orderId = ?',
+        args: [razorpay_payment_id, 'paid', new Date().toISOString(), orderId],
+      });
     }
     console.log('[PAYMENT VERIFIED]', razorpay_payment_id, orderId || '');
     res.json({ success: true, paymentId: razorpay_payment_id });
@@ -255,86 +212,87 @@ app.post('/verify-payment', (req, res) => {
 
 // ── ADMIN ROUTES ──────────────────────────────────────────
 
-// GET /orders — list all
-app.get('/orders', adminAuth, (req, res) => {
+app.get('/orders', adminAuth, async (req, res) => {
   try {
-    const rows = db.prepare('SELECT * FROM orders ORDER BY createdAt DESC').all();
-    res.json(rows.map(parseOrder));
+    const result = await db.execute('SELECT * FROM orders ORDER BY createdAt DESC');
+    res.json(await Promise.all(result.rows.map(parseOrder)));
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// GET /orders/export — CSV download
-app.get('/orders/export', adminAuth, (req, res) => {
-  const rows = db.prepare('SELECT * FROM orders ORDER BY createdAt DESC').all();
-  const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
-  const header = ['Order ID','Name','Phone','Address','City','State','Pincode','Payment Method','Total','Status','Payment Status','Tracking','Created At'].join(',');
-  const lines = rows.map(row => {
-    const c = JSON.parse(row.customerJson || '{}');
-    return [
-      esc(row.orderId), esc(c.name), esc(c.phone), esc(c.address),
-      esc(c.city), esc(c.state), esc(c.pincode), esc(c.payment || row.payment),
-      row.total || 0, esc(row.status), esc(row.paymentStatus || 'pending'),
-      esc(row.tracking || ''), esc(row.createdAt),
-    ].join(',');
-  });
-  res.setHeader('Content-Type', 'text/csv');
-  res.setHeader('Content-Disposition', 'attachment; filename="spmc-orders.csv"');
-  res.send([header, ...lines].join('\n'));
-});
-
-// GET /orders/:id — single order
-app.get('/orders/:id', adminAuth, (req, res) => {
+app.get('/orders/export', adminAuth, async (req, res) => {
   try {
-    const row = db.prepare('SELECT * FROM orders WHERE orderId = ?').get(req.params.id);
-    if (!row) return res.status(404).json({ error: 'Not found' });
-    res.json(parseOrder(row));
+    const result = await db.execute('SELECT * FROM orders ORDER BY createdAt DESC');
+    const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+    const header = ['Order ID','Name','Phone','Address','City','State','Pincode','Payment Method','Total','Status','Payment Status','Tracking','Created At'].join(',');
+    const lines = result.rows.map(row => {
+      const c = JSON.parse(row.customerJson || '{}');
+      return [
+        esc(row.orderId), esc(c.name), esc(c.phone), esc(c.address),
+        esc(c.city), esc(c.state), esc(c.pincode), esc(c.payment || row.payment),
+        row.total || 0, esc(row.status), esc(row.paymentStatus || 'pending'),
+        esc(row.tracking || ''), esc(row.createdAt),
+      ].join(',');
+    });
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="spmc-orders.csv"');
+    res.send([header, ...lines].join('\n'));
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// PATCH /orders/:id/status — update dispatch status (includes returned)
-app.patch('/orders/:id/status', adminAuth, (req, res) => {
+app.get('/orders/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await db.execute({ sql: 'SELECT * FROM orders WHERE orderId = ?', args: [req.params.id] });
+    if (!result.rows[0]) return res.status(404).json({ error: 'Not found' });
+    res.json(await parseOrder(result.rows[0]));
+  } catch { res.status(500).json({ error: 'Database error' }); }
+});
+
+app.patch('/orders/:id/status', adminAuth, async (req, res) => {
   const VALID = ['pending', 'confirmed', 'dispatched', 'delivered', 'cancelled', 'returned'];
   const { status, returnReason } = req.body;
   if (!VALID.includes(status)) return res.status(400).json({ error: 'Invalid status' });
   try {
-    const result = db.prepare('UPDATE orders SET status = ?, returnReason = ?, updatedAt = ? WHERE orderId = ?')
-      .run(status, returnReason || null, new Date().toISOString(), req.params.id);
-    if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
+    const result = await db.execute({
+      sql: 'UPDATE orders SET status = ?, returnReason = ?, updatedAt = ? WHERE orderId = ?',
+      args: [status, returnReason || null, new Date().toISOString(), req.params.id],
+    });
+    if (result.rowsAffected === 0) return res.status(404).json({ error: 'Order not found' });
     console.log('[STATUS]', req.params.id, '->', status);
     res.json({ success: true, orderId: req.params.id, status });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// PATCH /orders/:id/payment — admin confirms UPI payment with UTR
-app.patch('/orders/:id/payment', adminAuth, (req, res) => {
+app.patch('/orders/:id/payment', adminAuth, async (req, res) => {
   const { paymentStatus, utr } = req.body;
   if (!['paid', 'pending', 'failed'].includes(paymentStatus))
     return res.status(400).json({ error: 'Invalid paymentStatus' });
   try {
-    const result = db.prepare('UPDATE orders SET paymentStatus = ?, utr = ?, updatedAt = ? WHERE orderId = ?')
-      .run(paymentStatus, utr ? utr.trim() : null, new Date().toISOString(), req.params.id);
-    if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
+    const result = await db.execute({
+      sql: 'UPDATE orders SET paymentStatus = ?, utr = ?, updatedAt = ? WHERE orderId = ?',
+      args: [paymentStatus, utr ? utr.trim() : null, new Date().toISOString(), req.params.id],
+    });
+    if (result.rowsAffected === 0) return res.status(404).json({ error: 'Order not found' });
     console.log('[PAYMENT]', req.params.id, '->', paymentStatus, utr || '');
     res.json({ success: true, orderId: req.params.id, paymentStatus, utr: utr || null });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// PATCH /orders/:id/tracking — save tracking number
-app.patch('/orders/:id/tracking', adminAuth, (req, res) => {
+app.patch('/orders/:id/tracking', adminAuth, async (req, res) => {
   const { tracking } = req.body;
   if (!tracking || typeof tracking !== 'string' || tracking.length > 100) {
     return res.status(400).json({ error: 'Invalid tracking number' });
   }
   try {
-    const result = db.prepare('UPDATE orders SET tracking = ?, updatedAt = ? WHERE orderId = ?')
-      .run(tracking.trim(), new Date().toISOString(), req.params.id);
-    if (result.changes === 0) return res.status(404).json({ error: 'Order not found' });
+    const result = await db.execute({
+      sql: 'UPDATE orders SET tracking = ?, updatedAt = ? WHERE orderId = ?',
+      args: [tracking.trim(), new Date().toISOString(), req.params.id],
+    });
+    if (result.rowsAffected === 0) return res.status(404).json({ error: 'Order not found' });
     console.log('[TRACKING]', req.params.id, tracking);
     res.json({ success: true, tracking: tracking.trim() });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// POST /orders/:id/notify — WhatsApp Cloud API notification (requires approved templates)
 app.post('/orders/:id/notify', adminAuth, async (req, res) => {
   if (!WA_TOKEN || !WA_PHONE_ID) {
     return res.status(503).json({
@@ -342,26 +300,21 @@ app.post('/orders/:id/notify', adminAuth, async (req, res) => {
       hint: 'Add WA_TOKEN and WA_PHONE_ID env vars. See: https://developers.facebook.com/docs/whatsapp/cloud-api',
     });
   }
-  const row = db.prepare('SELECT * FROM orders WHERE orderId = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Order not found' });
-
-  const order = parseOrder(row);
-  const rawPhone = (order.customer?.phone || '').replace(/\D/g, '');
-  const phone = rawPhone.startsWith('91') ? rawPhone : '91' + rawPhone;
-  const { template } = req.body;
-
-  const templateNames = {
-    confirmed:  process.env.WA_TPL_CONFIRMED  || 'order_confirmed',
-    dispatched: process.env.WA_TPL_DISPATCHED || 'order_dispatched',
-    delivered:  process.env.WA_TPL_DELIVERED  || 'order_delivered',
-  };
-  if (!templateNames[template]) return res.status(400).json({ error: 'Unknown template. Use: confirmed | dispatched | delivered' });
-
-  // Body parameters per template: all include orderId; dispatched also includes tracking
-  const params = [{ type: 'text', text: order.orderId }];
-  if (template === 'dispatched' && row.tracking) params.push({ type: 'text', text: row.tracking });
-
   try {
+    const result = await db.execute({ sql: 'SELECT * FROM orders WHERE orderId = ?', args: [req.params.id] });
+    if (!result.rows[0]) return res.status(404).json({ error: 'Order not found' });
+    const order = await parseOrder(result.rows[0]);
+    const rawPhone = (order.customer?.phone || '').replace(/\D/g, '');
+    const phone = rawPhone.startsWith('91') ? rawPhone : '91' + rawPhone;
+    const { template } = req.body;
+    const templateNames = {
+      confirmed:  process.env.WA_TPL_CONFIRMED  || 'order_confirmed',
+      dispatched: process.env.WA_TPL_DISPATCHED || 'order_dispatched',
+      delivered:  process.env.WA_TPL_DELIVERED  || 'order_delivered',
+    };
+    if (!templateNames[template]) return res.status(400).json({ error: 'Unknown template. Use: confirmed | dispatched | delivered' });
+    const params = [{ type: 'text', text: order.orderId }];
+    if (template === 'dispatched' && result.rows[0].tracking) params.push({ type: 'text', text: result.rows[0].tracking });
     const waRes = await fetch(`https://graph.facebook.com/v19.0/${WA_PHONE_ID}/messages`, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + WA_TOKEN, 'Content-Type': 'application/json' },
@@ -388,72 +341,123 @@ app.post('/orders/:id/notify', adminAuth, async (req, res) => {
 
 // ── PRODUCT ROUTES ────────────────────────────────────────
 
-// GET /products — public (used by shop to get live prices + active flag)
-app.get('/products', (_req, res) => {
+app.get('/products', async (_req, res) => {
   try {
-    const rows = db.prepare('SELECT * FROM products ORDER BY id').all();
-    res.json(rows.map(r => ({
-      id: r.id, name: r.name, nameTa: r.nameTa, cat: r.cat,
-      mrp: r.mrp, price: r.price, unit: r.unit, emoji: r.emoji,
+    const products = await getProducts();
+    res.json(products.map(r => ({
+      id: Number(r.id), name: r.name, nameTa: r.nameTa, cat: r.cat,
+      mrp: Number(r.mrp), price: Number(r.price), unit: r.unit, emoji: r.emoji,
       active: !!r.active, noDiscount: !!r.noDiscount,
     })));
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// PUT /products/:id — admin: edit name/price/active/etc
-app.put('/products/:id', adminAuth, (req, res) => {
+app.put('/products/:id', adminAuth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (!id || isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
   const { name, nameTa, cat, mrp, price, unit, emoji, active, noDiscount } = req.body;
   try {
-    const row = db.prepare('SELECT id FROM products WHERE id = ?').get(id);
-    if (!row) return res.status(404).json({ error: 'Product not found' });
-    db.prepare(`
-      UPDATE products SET
+    const check = await db.execute({ sql: 'SELECT id FROM products WHERE id = ?', args: [id] });
+    if (!check.rows[0]) return res.status(404).json({ error: 'Product not found' });
+    await db.execute({
+      sql: `UPDATE products SET
         name=COALESCE(?,name), nameTa=COALESCE(?,nameTa), cat=COALESCE(?,cat),
         mrp=COALESCE(?,mrp), price=COALESCE(?,price), unit=COALESCE(?,unit),
         emoji=COALESCE(?,emoji), active=COALESCE(?,active), noDiscount=COALESCE(?,noDiscount)
-      WHERE id=?
-    `).run(
-      name || null, nameTa || null, cat || null,
-      mrp != null ? +mrp : null, price != null ? +price : null,
-      unit || null, emoji || null,
-      active != null ? (active ? 1 : 0) : null,
-      noDiscount != null ? (noDiscount ? 1 : 0) : null,
-      id
-    );
+      WHERE id=?`,
+      args: [
+        name || null, nameTa || null, cat || null,
+        mrp != null ? +mrp : null, price != null ? +price : null,
+        unit || null, emoji || null,
+        active != null ? (active ? 1 : 0) : null,
+        noDiscount != null ? (noDiscount ? 1 : 0) : null,
+        id,
+      ],
+    });
+    invalidateProductCache();
     res.json({ success: true });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// POST /products — admin: add new product
-app.post('/products', adminAuth, (req, res) => {
+app.post('/products', adminAuth, async (req, res) => {
   const { name, nameTa, cat, mrp, price, unit, emoji, noDiscount } = req.body;
   if (!name || !cat || mrp == null || price == null)
     return res.status(400).json({ error: 'name, cat, mrp, price are required' });
   if (typeof +mrp !== 'number' || typeof +price !== 'number')
     return res.status(400).json({ error: 'mrp and price must be numbers' });
   try {
-    const maxId = db.prepare('SELECT MAX(id) as m FROM products').get().m || 0;
-    const newId = maxId + 1;
-    db.prepare(
-      'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)'
-    ).run(newId, name.trim(), nameTa || null, cat, +mrp, +price,
-          unit || 'pkt', emoji || '🎆', noDiscount ? 1 : 0);
+    const maxResult = await db.execute('SELECT MAX(id) as m FROM products');
+    const newId = (Number(maxResult.rows[0]?.m) || 0) + 1;
+    await db.execute({
+      sql: 'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)',
+      args: [newId, name.trim(), nameTa || null, cat, +mrp, +price, unit || 'pkt', emoji || '🎆', noDiscount ? 1 : 0],
+    });
+    invalidateProductCache();
     console.log('[PRODUCT ADD]', newId, name.trim());
     res.status(201).json({ success: true, id: newId });
   } catch { res.status(500).json({ error: 'Database error' }); }
 });
 
-// Health
 app.get('/health', (_req, res) => res.json({
   status: 'ok', time: new Date().toISOString(),
   razorpay: !!rzp, waApi: !!(WA_TOKEN && WA_PHONE_ID),
 }));
 
-app.listen(PORT, () => {
-  console.log('SPMC Order Backend on port ' + PORT);
-  console.log('Admin token: [set]');
-  if (!rzp) console.log('[INFO] Razorpay disabled — set RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to enable');
-  if (!WA_TOKEN) console.log('[INFO] WhatsApp API disabled — set WA_TOKEN + WA_PHONE_ID to enable');
+// ── INIT: create tables, seed, then listen ────────────────
+async function init() {
+  await db.batch([
+    `CREATE TABLE IF NOT EXISTS orders (
+      orderId       TEXT PRIMARY KEY,
+      customerJson  TEXT NOT NULL,
+      itemsJson     TEXT NOT NULL,
+      total         REAL NOT NULL DEFAULT 0,
+      status        TEXT NOT NULL DEFAULT 'pending',
+      payment       TEXT,
+      paymentId     TEXT,
+      paymentStatus TEXT NOT NULL DEFAULT 'pending',
+      tracking      TEXT,
+      notes         TEXT,
+      utr           TEXT,
+      returnReason  TEXT,
+      createdAt     TEXT NOT NULL,
+      updatedAt     TEXT
+    )`,
+    `CREATE TABLE IF NOT EXISTS products (
+      id         INTEGER PRIMARY KEY,
+      name       TEXT NOT NULL,
+      nameTa     TEXT,
+      cat        TEXT NOT NULL,
+      mrp        REAL NOT NULL,
+      price      REAL NOT NULL,
+      unit       TEXT NOT NULL DEFAULT 'pkt',
+      emoji      TEXT,
+      active     INTEGER NOT NULL DEFAULT 1,
+      noDiscount INTEGER NOT NULL DEFAULT 0
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(createdAt DESC)`,
+  ], 'write');
+
+  const countResult = await db.execute('SELECT COUNT(*) as n FROM products');
+  if (Number(countResult.rows[0].n) === 0) {
+    const seedData = require('./products_seed.json');
+    const stmts = seedData.map(p => ({
+      sql: 'INSERT INTO products (id,name,nameTa,cat,mrp,price,unit,emoji,active,noDiscount) VALUES (?,?,?,?,?,?,?,?,1,?)',
+      args: [p.id, p.name, p.nameTa || null, p.cat, p.mrp, p.price,
+             p.unit || 'pkt', p.emoji || null, p.noDiscount ? 1 : 0],
+    }));
+    await db.batch(stmts, 'write');
+    console.log('[PRODUCTS] Seeded', seedData.length, 'products from catalog');
+  }
+
+  app.listen(PORT, () => {
+    console.log('SPMC Order Backend on port ' + PORT);
+    console.log('[DB] Turso connected:', TURSO_URL);
+    if (!rzp) console.log('[INFO] Razorpay disabled — set RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to enable');
+    if (!WA_TOKEN) console.log('[INFO] WhatsApp API disabled — set WA_TOKEN + WA_PHONE_ID to enable');
+  });
+}
+
+init().catch(err => {
+  console.error('[FATAL] Startup failed:', err.message);
+  process.exit(1);
 });
