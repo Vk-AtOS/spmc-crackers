@@ -133,11 +133,17 @@ function adminAuth(req, res, next) {
   next();
 }
 
+const _stmtProduct = db.prepare('SELECT name, emoji FROM products WHERE id = ?');
+
 function parseOrder(row) {
+  const items = JSON.parse(row.itemsJson).map(i => {
+    const p = _stmtProduct.get(i.id);
+    return { ...i, name: p ? `${p.emoji} ${p.name}` : `Product #${i.id}` };
+  });
   return {
     orderId: row.orderId,
     customer: JSON.parse(row.customerJson),
-    items: JSON.parse(row.itemsJson),
+    items,
     total: row.total,
     status: row.status,
     payment: row.payment,
