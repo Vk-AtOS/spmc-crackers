@@ -119,7 +119,7 @@ app.use((_req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https:",
-    "connect-src 'self' https://spmc-crackers.onrender.com",
+    "connect-src 'self' https://spmc-crackers.onrender.com https://lumberjack.razorpay.com",
     "frame-src https://api.razorpay.com",
   ].join('; '));
   next();
