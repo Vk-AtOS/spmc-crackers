@@ -363,7 +363,7 @@ root.appendChild(layout);
 updateUpiSection();
 
 // Hide Razorpay option if not configured on backend
-fetch(BACKEND + '/config').then(r => r.json()).then(cfg => {
+fetch(window.SPMC_API + '/config').then(r => r.json()).then(cfg => {
   if (!cfg.razorpayEnabled) {
     const rzpOpt = document.getElementById('pay-razorpay')?.closest('.payment-option');
     if (rzpOpt) rzpOpt.style.display = 'none';
