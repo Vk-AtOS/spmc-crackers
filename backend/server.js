@@ -8,6 +8,21 @@ const { DatabaseSync } = require('node:sqlite');
 const crypto = require('crypto');
 const path = require('path');
 
+// Simple in-memory rate limiter — no extra dep needed at this scale
+const _rl = new Map();
+function rateLimit(max, windowMs = 60_000) {
+  return (req, res, next) => {
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const now = Date.now();
+    const r = _rl.get(ip) || { n: 0, t: now + windowMs };
+    if (now > r.t) { r.n = 0; r.t = now + windowMs; }
+    r.n++;
+    _rl.set(ip, r);
+    if (r.n > max) return res.status(429).json({ error: 'Too many requests' });
+    next();
+  };
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
@@ -55,6 +70,7 @@ db.prepare(`
 ['paymentId TEXT', 'paymentStatus TEXT NOT NULL DEFAULT "pending"', 'tracking TEXT', 'returnReason TEXT', 'utr TEXT'].forEach(col => {
   try { db.prepare('ALTER TABLE orders ADD COLUMN ' + col).run(); } catch {}
 });
+db.prepare('CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(createdAt DESC)').run();
 
 // ── PRODUCTS TABLE ────────────────────────────────────────
 db.prepare(`
@@ -92,9 +108,16 @@ if (db.prepare('SELECT COUNT(*) as n FROM products').get().n === 0) {
   console.log('[PRODUCTS] Seeded', seedData.length, 'products from catalog');
 }
 
-app.use(cors({ origin: '*' }));
-app.use(express.json({ limit: '1mb' }));
+app.use(cors({ origin: ['https://spmc-crackers.onrender.com', 'http://localhost:3001'] }));
+app.use(express.json({ limit: '10kb' }));
+app.use((_req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; frame-src 'none'");
+  next();
+});
 app.use(express.static(path.join(__dirname, '..')));
+app.use(rateLimit(200));
 
 function adminAuth(req, res, next) {
   const auth = req.headers['authorization'] || '';
@@ -133,23 +156,40 @@ app.get('/config', (_req, res) => {
 });
 
 // POST /orders — place order
-app.post('/orders', (req, res) => {
-  const { orderId, customer, items, total, createdAt, notes, paymentId, paymentStatus, utr } = req.body;
+app.post('/orders', rateLimit(20), (req, res) => {
+  const { orderId, customer, items, total, notes, utr } = req.body;
   if (!orderId || !customer || !items) return res.status(400).json({ error: 'Missing required fields' });
   if (typeof orderId !== 'string' || orderId.length > 40) return res.status(400).json({ error: 'Invalid orderId' });
   if (typeof total !== 'number' || !Array.isArray(items)) return res.status(400).json({ error: 'Invalid payload' });
+  if (items.length > 200) return res.status(400).json({ error: 'Too many items' });
+  // Validate customer field lengths
+  const c = customer;
+  if (String(c.name||'').length > 100 || String(c.phone||'').length > 20 ||
+      String(c.address||'').length > 300 || String(c.notes||'').length > 500) {
+    return res.status(400).json({ error: 'Field too long' });
+  }
+  // Server-side total verification (only when all items are known to DB)
+  let serverTotal = 0, allKnown = true;
+  for (const item of items) {
+    const prod = db.prepare('SELECT price FROM products WHERE id = ? AND active = 1').get(item.id);
+    if (!prod) { allKnown = false; break; }
+    serverTotal += prod.price * Math.max(0, item.qty || 0);
+  }
+  if (allKnown && Math.abs(serverTotal - Number(total)) > 1) {
+    console.warn('[ORDER TAMPER]', orderId, 'client total', total, 'vs server', serverTotal);
+    return res.status(400).json({ error: 'Order total mismatch — please refresh and retry' });
+  }
   try {
     db.prepare(`
       INSERT OR IGNORE INTO orders
         (orderId, customerJson, itemsJson, total, status, payment, paymentId, paymentStatus, utr, notes, createdAt)
-      VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, 'pending', ?, NULL, 'pending', ?, ?, ?)
     `).run(
       orderId, JSON.stringify(customer), JSON.stringify(items),
       Number(total) || 0, customer.payment || '',
-      paymentId || null, paymentStatus || 'pending',
-      utr || null, notes || '', createdAt || new Date().toISOString(),
+      utr || null, notes || '', new Date().toISOString(),
     );
-    console.log('[ORDER]', orderId, customer.name, 'Rs.' + total, paymentStatus || 'pending');
+    console.log('[ORDER]', orderId, customer.name, 'Rs.' + total);
     res.status(201).json({ success: true, orderId });
   } catch (err) {
     console.error('[ORDER ERROR]', err.message);

@@ -789,15 +789,16 @@ function buildDetailRow(order) {
 
 // ── RECEIPT ───────────────────────────────────────────────
 function printReceipt(order) {
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const date = order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN') : '—';
   const c = order.customer || {};
   const itemRows = (order.items || []).map(i =>
-    `<tr><td>${i.name}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">&#8377;${((i.price||0)*i.qty).toLocaleString('en-IN')}</td></tr>`
+    `<tr><td>${esc(i.name)}</td><td style="text-align:center">${esc(String(i.qty))}</td><td style="text-align:right">&#8377;${((i.price||0)*i.qty).toLocaleString('en-IN')}</td></tr>`
   ).join('');
-  const utrRow = order.utr ? `<tr><td style="color:#555">UTR</td><td>${order.utr}</td></tr>` : '';
-  const addrParts = [c.address, c.city, c.state, c.pincode].filter(Boolean).join(', ');
+  const utrRow = order.utr ? `<tr><td style="color:#555">UTR</td><td>${esc(order.utr)}</td></tr>` : '';
+  const addrParts = [c.address, c.city, c.state, c.pincode].filter(Boolean).map(esc).join(', ');
   const html = [
-    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt – ' + order.orderId + '</title>',
+    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Receipt – ' + esc(order.orderId) + '</title>',
     '<style>',
     'body{font-family:Arial,sans-serif;max-width:480px;margin:30px auto;color:#111;font-size:13px}',
     'h1{font-size:18px;margin:0}.sub{color:#555;font-size:12px}',
@@ -812,10 +813,10 @@ function printReceipt(order) {
     '<h1>Sri Palani Murugan Crackers</h1>',
     '<div class="sub">Order Receipt</div><hr>',
     '<table><tbody>',
-    '<tr><td style="width:45%;color:#555">Order ID</td><td>' + order.orderId + '</td></tr>',
-    '<tr><td style="color:#555">Date</td><td>' + date + '</td></tr>',
-    '<tr><td style="color:#555">Name</td><td>' + (c.name || '—') + '</td></tr>',
-    '<tr><td style="color:#555">Phone</td><td>' + (c.phone || '—') + '</td></tr>',
+    '<tr><td style="width:45%;color:#555">Order ID</td><td>' + esc(order.orderId) + '</td></tr>',
+    '<tr><td style="color:#555">Date</td><td>' + esc(date) + '</td></tr>',
+    '<tr><td style="color:#555">Name</td><td>' + esc(c.name || '—') + '</td></tr>',
+    '<tr><td style="color:#555">Phone</td><td>' + esc(c.phone || '—') + '</td></tr>',
     '<tr><td style="color:#555">Address</td><td>' + (addrParts || '—') + '</td></tr>',
     '</tbody></table><hr>',
     '<table><thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Amount</th></tr></thead>',
@@ -823,7 +824,7 @@ function printReceipt(order) {
     '<tfoot><tr class="total-row"><td colspan="2">Grand Total</td><td style="text-align:right">&#8377;' + (order.total||0).toLocaleString('en-IN') + '</td></tr></tfoot>',
     '</table><hr>',
     '<table><tbody>',
-    '<tr><td style="width:45%;color:#555">Payment</td><td>' + (c.payment || order.payment || '—') + '</td></tr>',
+    '<tr><td style="width:45%;color:#555">Payment</td><td>' + esc(c.payment || order.payment || '—') + '</td></tr>',
     '<tr><td style="color:#555">Status</td><td>' + (order.paymentStatus === 'paid' ? 'Paid ✅' : 'Pending ⏳') + '</td></tr>',
     utrRow,
     '</tbody></table>',

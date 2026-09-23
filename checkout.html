@@ -362,6 +362,14 @@ layout.append(formSection, review);
 root.appendChild(layout);
 updateUpiSection();
 
+// Hide Razorpay option if not configured on backend
+fetch(BACKEND + '/config').then(r => r.json()).then(cfg => {
+  if (!cfg.razorpayEnabled) {
+    const rzpOpt = document.getElementById('pay-razorpay')?.closest('.payment-option');
+    if (rzpOpt) rzpOpt.style.display = 'none';
+  }
+}).catch(() => {});
+
 // ── SUBMIT ───────────────────────────────────────────────
 const BACKEND = window.SPMC_API;
 
@@ -416,7 +424,7 @@ function getCustomerInfo() {
 }
 
 function saveToBackend(orderId, customerInfo, paymentId, paymentStatus) {
-  fetch(BACKEND + '/orders', {
+  return fetch(BACKEND + '/orders', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -425,9 +433,7 @@ function saveToBackend(orderId, customerInfo, paymentId, paymentStatus) {
         const p = getProduct(i.id);
         return { id: i.id, name: p?.name, qty: i.qty, price: p?.price };
       }),
-      total: subtotal, createdAt: new Date().toISOString(),
-      paymentId: paymentId || null,
-      paymentStatus: paymentStatus || 'pending',
+      total: subtotal,
       utr: customerInfo.utr || null,
     }),
   }).catch(() => {});
@@ -478,9 +484,11 @@ submitBtn.addEventListener('click', async () => {
         prefill: { name: customerInfo.name, contact: customerInfo.phone },
         theme: { color: '#ffd700' },
         handler: async function(response) {
-          // Verify signature
+          // Save order first, then verify — server ignores client paymentStatus (always 'pending'),
+          // /verify-payment is the only path that sets it to 'paid' server-side
+          await saveToBackend(orderId, customerInfo, response.razorpay_payment_id, 'paid');
           try {
-            await fetch(BACKEND + '/verify-payment', {
+            const vr = await fetch(BACKEND + '/verify-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -490,8 +498,8 @@ submitBtn.addEventListener('click', async () => {
                 orderId,
               }),
             });
-          } catch {}
-          saveToBackend(orderId, customerInfo, response.razorpay_payment_id, 'paid');
+            if (!vr.ok) console.warn('[SPMC] Payment verify failed for', orderId);
+          } catch { console.warn('[SPMC] Payment verify network error for', orderId); }
           finishOrder(orderId, customerInfo);
         },
         modal: {

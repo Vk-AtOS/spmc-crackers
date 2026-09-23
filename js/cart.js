@@ -63,6 +63,7 @@ const Cart = {
     const items = this.get();
     const lines = items.map(i => {
       const p = getProduct(i.id);
+      if (!p) return `• Unknown item (id:${i.id}) × ${i.qty}`;
       return `• ${p.name} × ${i.qty} = ₹${(p.price * i.qty).toLocaleString('en-IN')}`;
     });
     const total = this.total();
