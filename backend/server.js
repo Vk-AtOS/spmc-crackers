@@ -133,12 +133,12 @@ function adminAuth(req, res, next) {
   next();
 }
 
-const _stmtProduct = db.prepare('SELECT name, emoji FROM products WHERE id = ?');
+const _stmtProduct = db.prepare('SELECT name, emoji, price FROM products WHERE id = ?');
 
 function parseOrder(row) {
   const items = JSON.parse(row.itemsJson).map(i => {
     const p = _stmtProduct.get(i.id);
-    return { ...i, name: p ? `${p.emoji} ${p.name}` : `Product #${i.id}` };
+    return { ...i, name: p ? `${p.emoji} ${p.name}` : `Product #${i.id}`, price: p ? p.price : 0 };
   });
   return {
     orderId: row.orderId,
