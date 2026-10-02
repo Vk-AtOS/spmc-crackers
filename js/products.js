@@ -100,22 +100,22 @@ const PRODUCTS = [
 
   // BOMBS
   { id: 27, name: 'Hydro Bomb', nameTa: 'கைட்ரோ பாம்', cat: 'bombs', mrp: 320, price: 80, unit: 'box', emoji: '💥', desc: 'Ground-shaking Hydro bomb with thunderous explosion — guaranteed crowd stopper.' },
-  { id: 28, name: 'Bullet Bomb', nameTa: 'புல்ட் பாம்', cat: 'bombs', mrp: 200, price: 50, unit: 'box', emoji: '💥', desc: 'Ground-shaking Bullet bomb with thunderous explosion — guaranteed crowd stopper.' },
+  { id: 28, name: 'Bullet Bomb', nameTa: 'புல்ட் பாம்', cat: 'bombs', mrp: 220, price: 55, unit: 'box', emoji: '💥', desc: 'Ground-shaking Bullet bomb with thunderous explosion — guaranteed crowd stopper.' },
   { id: 29, name: 'King of King', nameTa: 'கிங் ஆப் கிங்', cat: 'bombs', mrp: 480, price: 120, unit: 'box', emoji: '💥', desc: 'Ground-shaking King of King bomb with thunderous explosion — guaranteed crowd stopper.' },
   { id: 30, name: 'Classic Bomb', nameTa: 'கிளாசிக் பாம்', cat: 'bombs', mrp: 540, price: 135, unit: 'box', emoji: '💥', desc: 'Ground-shaking Classic bomb with thunderous explosion — the timeless crowd stopper.' },
   { id: 31, name: 'Mega Super Bomb', nameTa: 'மெகா சூப்பர் பாம்', cat: 'bombs', mrp: 740, price: 185, unit: 'box', emoji: '💥', desc: 'Ground-shaking Mega Super bomb with an earth-shattering explosion — maximum impact.' },
   { id: 32, name: 'DTS Bomb', nameTa: 'DTS பாம்', cat: 'bombs', mrp: 880, price: 220, unit: 'box', emoji: '💥', desc: 'Ground-shaking DTS bomb with thunderous explosion — premium surround-sound boom.' },
-  { id: 33, name: '1/4 KG Paper Bomb', nameTa: '1/4 கி பேப்பர் பாம்', cat: 'bombs', mrp: 240, price: 60, unit: 'box', emoji: '💥', desc: 'Traditional 1/4 KG paper bomb with a deep, resonant boom — Diwali classic.' },
-  { id: 34, name: '1/2 KG Paper Bomb', nameTa: '1/2 கி பேப்பர் பாம்', cat: 'bombs', mrp: 520, price: 130, unit: 'box', emoji: '💥', desc: 'Traditional 1/2 KG paper bomb with a powerful, deep boom — serious Diwali firepower.' },
-  { id: 35, name: '1 KG Paper Bomb', nameTa: '1 கி பேப்பர் பாம்', cat: 'bombs', mrp: 960, price: 240, unit: 'box', emoji: '💥', desc: 'Traditional 1 KG paper bomb with a massive, ground-shaking boom — the biggest bang.' },
+  { id: 33, name: '1/4 KG Paper Bomb', nameTa: '1/4 கி பேப்பர் பாம்', cat: 'bombs', mrp: 220, price: 55, unit: 'box', emoji: '💥', desc: 'Traditional 1/4 KG paper bomb with a deep, resonant boom — Diwali classic.' },
+  { id: 34, name: '1/2 KG Paper Bomb', nameTa: '1/2 கி பேப்பர் பாம்', cat: 'bombs', mrp: 480, price: 120, unit: 'box', emoji: '💥', desc: 'Traditional 1/2 KG paper bomb with a powerful, deep boom — serious Diwali firepower.' },
+  { id: 35, name: '1 KG Paper Bomb', nameTa: '1 கி பேப்பர் பாம்', cat: 'bombs', mrp: 900, price: 225, unit: 'box', emoji: '💥', desc: 'Traditional 1 KG paper bomb with a massive, ground-shaking boom — the biggest bang.' },
   { id: 160, name: '555 Bomb', nameTa: '555 பாம்', cat: 'bombs', mrp: 480, price: 120, unit: 'box', emoji: '💥', desc: 'Classic 555 bomb with a powerful thunderous explosion — the iconic Sivakasi crowd stopper.' },
 
   // CHAKKARS
   { id: 36, name: 'Money in the Bank (3 pcs)', nameTa: 'மணி இன் தி பேங்க்', cat: 'bombs', mrp: 800, price: 200, unit: 'box', emoji: '💥', desc: 'Explosive Money in the Bank bomb — big bang in a 3-piece box. Guaranteed crowd stopper.' },
   { id: 37, name: 'Chakkar Big (10 pcs)', nameTa: 'சக்கரம் பெரியது 10 pcs', cat: 'chakkars', mrp: 180, price: 45, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 10-piece box.' },
-  { id: 38, name: 'Chakkar Big (25 pcs)', nameTa: 'சக்கரம் பெரியது 25 pcs', cat: 'chakkars', mrp: 400, price: 100, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 25-piece box.' },
-  { id: 39, name: 'Chakkar Special', nameTa: 'சக்கரம் ஸ்பெஷல்', cat: 'chakkars', mrp: 480, price: 120, unit: 'box', emoji: '🌀', desc: 'Special spinning ground chakkar releasing colorful sparks in a dazzling whirling display.' },
-  { id: 40, name: 'Chakkar Deluxe', nameTa: 'சக்கரம் டீலக்ஸ்', cat: 'chakkars', mrp: 660, price: 165, unit: 'box', emoji: '🌀', desc: 'Deluxe spinning ground chakkar releasing brilliant colorful sparks in a mesmerizing whirl.' },
+  { id: 38, name: 'Chakkar Big (25 pcs)', nameTa: 'சக்கரம் பெரியது 25 pcs', cat: 'chakkars', mrp: 340, price: 85, unit: 'box', emoji: '🌀', desc: 'Spinning ground chakkar releasing colorful sparks in a dazzling whirling display. 25-piece box.' },
+  { id: 39, name: 'Chakkar Special', nameTa: 'சக்கரம் ஸ்பெஷல்', cat: 'chakkars', mrp: 400, price: 100, unit: 'box', emoji: '🌀', desc: 'Special spinning ground chakkar releasing colorful sparks in a dazzling whirling display.' },
+  { id: 40, name: 'Chakkar Deluxe', nameTa: 'சக்கரம் டீலக்ஸ்', cat: 'chakkars', mrp: 700, price: 175, unit: 'box', emoji: '🌀', desc: 'Deluxe spinning ground chakkar releasing brilliant colorful sparks in a mesmerizing whirl.' },
   { id: 41, name: 'Chakkar Orbit Spinner', nameTa: 'ஆர்பிட் சக்கரம்', cat: 'chakkars', mrp: 700, price: 175, unit: 'box', emoji: '🌀', desc: 'Orbit Spinner chakkar with wide spinning arc releasing colorful sparks — spectacular display.' },
   { id: 42, name: 'Whizzle Chakkar', nameTa: 'விசில் சக்கரம்', cat: 'chakkars', mrp: 740, price: 185, unit: 'box', emoji: '🌀', desc: 'Spinning Whizzle chakkar with a distinctive whistle sound and dazzling spark display.' },
   { id: 43, name: '4×4 Wheel Chakkar', nameTa: '4×4 சக்கரம்', cat: 'chakkars', mrp: 880, price: 220, unit: 'box', emoji: '🌀', desc: 'Large 4×4 wheel chakkar releasing colorful sparks in a spectacular four-wheel whirling display.' },
@@ -131,7 +131,7 @@ const PRODUCTS = [
   { id: 51, name: 'Tri Colour (5 in 1)', nameTa: 'ட்ரை கலர் 5 in 1', cat: 'flower-pots', mrp: 1120, price: 280, unit: 'box', emoji: '🌺', desc: 'Tri-colour 5-in-1 flower pot set with three distinct color phases — spectacular visual show.' },
 
   // TWINKLING STARS
-  { id: 52, name: '1 1/2" Twinkling Star', nameTa: '1 1/2" சாட்டை', cat: 'twinkling-stars', mrp: 160, price: 40, unit: 'box', emoji: '✨', desc: 'Spinning 1.5" twinkling star emitting rapid colorful sparks with dazzling effects.' },
+  { id: 52, name: '1 1/2" Twinkling Star', nameTa: '1 1/2" சாட்டை', cat: 'twinkling-stars', mrp: 140, price: 35, unit: 'box', emoji: '✨', desc: 'Spinning 1.5" twinkling star emitting rapid colorful sparks with dazzling effects.' },
   { id: 53, name: '4" Twinkling Star', nameTa: '4" சாட்டை', cat: 'twinkling-stars', mrp: 300, price: 75, unit: 'box', emoji: '✨', desc: 'Spinning 4" twinkling star emitting rapid colorful sparks with a larger dazzling display.' },
 
   // PENCIL / FOUNTAIN
@@ -141,7 +141,7 @@ const PRODUCTS = [
   { id: 57, name: 'Popcorn Pencil', nameTa: 'பாப்கான் பென்சில்', cat: 'pencil-fountain', mrp: 960, price: 240, unit: 'box', emoji: '🕯️', desc: 'Pencil candle with popcorn burst effects producing sustained crackling fountains of sparks.' },
 
   // ROCKETS
-  { id: 58, name: 'Rocket Bomb', nameTa: 'ராக்கெட் பாம்', cat: 'rockets', mrp: 360, price: 90, unit: 'box', emoji: '🚀', desc: 'Aerial rocket that shoots skyward with a blazing trail and thunderous bomb burst.' },
+  { id: 58, name: 'Rocket Bomb', nameTa: 'ராக்கெட் பாம்', cat: 'rockets', mrp: 300, price: 75, unit: 'box', emoji: '🚀', desc: 'Aerial rocket that shoots skyward with a blazing trail and thunderous bomb burst.' },
   { id: 59, name: 'Mega Rocket', nameTa: 'மெகா ராக்கெட்', cat: 'rockets', mrp: 600, price: 150, unit: 'box', emoji: '🚀', desc: 'Aerial mega rocket that shoots high skyward with a blazing trail and brilliant color burst.' },
   { id: 60, name: 'Whistle Rocket', nameTa: 'விசில் ராக்கெட்', cat: 'rockets', mrp: 900, price: 225, unit: 'box', emoji: '🚀', desc: 'Aerial rocket that shoots skyward with a distinctive whistle and dazzling color burst.' },
 
@@ -151,7 +151,7 @@ const PRODUCTS = [
   // MATCHES
   { id: 62, name: 'Mini Match Box', nameTa: 'மினி மேட்ச் பாக்ஸ்', cat: 'matches', mrp: 180, price: 45, unit: 'box', emoji: '🎆', desc: 'Color-flame safety match — mini box perfect for lighting fireworks safely.' },
   { id: 63, name: 'Deluxe Match Box', nameTa: 'DLX மேட்ச் பாக்ஸ்', cat: 'matches', mrp: 240, price: 60, unit: 'box', emoji: '🎆', desc: 'Color-flame safety match — deluxe box with extra-long flame for lighting fireworks.' },
-  { id: 64, name: 'Super Deluxe Match', nameTa: 'சூப்பர் DLX மேட்ச்', cat: 'matches', mrp: 400, price: 100, unit: 'box', emoji: '🎆', desc: 'Color-flame safety match — super deluxe box with premium extended flame.' },
+  { id: 64, name: 'Super Deluxe Match', nameTa: 'சூப்பர் DLX மேட்ச்', cat: 'matches', mrp: 480, price: 120, unit: 'box', emoji: '🎆', desc: 'Color-flame safety match — super deluxe box with premium extended flame.' },
   { id: 65, name: 'Pokeman', nameTa: 'போக்கெமான்', cat: 'matches', mrp: 900, price: 225, unit: 'box', emoji: '🎆', desc: 'Color-flame safety match — Pokeman novelty box with vibrant colored flames for festive lighting.' },
 
   // SHOWERS & FOUNTAINS
@@ -168,7 +168,7 @@ const PRODUCTS = [
 
   // VARIETY SHOWERS
   { id: 74, name: 'Beer Tin', nameTa: 'பீர் டின்', cat: 'variety-showers', mrp: 440, price: 110, unit: 'box', emoji: '🎨', desc: 'Themed Tin Beer shower fountain with beer-can novelty casing and multi-color sparks.' },
-  { id: 75, name: 'Popcorn Tin', nameTa: 'பாப்கான் டின்', cat: 'variety-showers', mrp: 600, price: 150, unit: 'box', emoji: '🎨', desc: 'Themed Popcorn Tin shower fountain with popcorn-bucket novelty casing and multi-color sparks.' },
+  { id: 75, name: 'Popcorn Tin', nameTa: 'பாப்கான் டின்', cat: 'variety-showers', mrp: 560, price: 140, unit: 'box', emoji: '🎨', desc: 'Themed Popcorn Tin shower fountain with popcorn-bucket novelty casing and multi-color sparks.' },
   { id: 76, name: 'Minions', nameTa: 'மினியன்ஸ்', cat: 'variety-showers', mrp: 800, price: 200, unit: 'box', emoji: '🎨', desc: 'Themed Minions shower fountain with adorable Minions novelty casing and multi-color sparks.' },
   { id: 77, name: 'Aqua Queen', nameTa: 'அக்வா குயின்', cat: 'variety-showers', mrp: 800, price: 200, unit: 'box', emoji: '🎨', desc: 'Themed Aqua Queen shower fountain with royal novelty casing and cascading multi-color sparks.' },
   { id: 78, name: 'Monster TN67', nameTa: 'மான்ஸ்டர் TN67', cat: 'variety-showers', mrp: 800, price: 200, unit: 'box', emoji: '🎨', desc: 'Themed Monster TN67 shower fountain with monster novelty casing and fierce multi-color sparks.' },
@@ -191,26 +191,26 @@ const PRODUCTS = [
   { id: 89, name: 'Photo Flash', nameTa: 'போட்டோ பிளாஸ்', cat: 'kids-special', mrp: 260, price: 65, unit: 'box', emoji: '🎈', desc: 'Safe fun Photo Flash firework designed for children — bright flash effects perfect for photos.' },
   { id: 90, name: 'Selfie Stick', nameTa: 'செல்பி ஸ்டிக்', cat: 'kids-special', mrp: 600, price: 150, unit: 'box', emoji: '🎈', desc: 'Safe fun Selfie Stick sparkler designed for children — long-handled colorful spark display.' },
   { id: 91, name: 'Smoke', nameTa: 'ஸ்மோக்', cat: 'kids-special', mrp: 720, price: 180, unit: 'box', emoji: '🎈', desc: 'Safe fun colorful smoke bomb designed for children — vivid colored smoke cloud for fun photos.' },
-  { id: 92, name: 'Sky Short', nameTa: 'ஸ்கை சாட்', cat: 'kids-special', mrp: 240, price: 60, unit: 'box', emoji: '🎈', desc: 'Safe fun Sky Shot firework designed for children — gentle aerial burst with colorful sparks.' },
-  { id: 93, name: 'Electric Stone', nameTa: 'எலட்ரிக் ஸ்டோன்', cat: 'kids-special', mrp: 40, price: 10, unit: 'box', emoji: '🎈', desc: 'Safe fun Electric Stone firework designed for children — colorful sparkling effect with minimal noise.' },
-  { id: 94, name: 'Jee Boomba', nameTa: 'ஜீ பும்பா', cat: 'kids-special', mrp: 40, price: 10, unit: 'box', emoji: '🎈', desc: 'Safe fun Jee Boomba firework designed for children — colorful pop effect perfect for little ones.' },
-  { id: 95, name: 'Snake Tablet', nameTa: 'பாம்பு மாத்திரை', cat: 'kids-special', mrp: 20, price: 5, unit: 'box', emoji: '🎈', desc: 'Safe fun Snake Tablet firework designed for children — classic growing snake ash effect.' },
+  { id: 92, name: 'Sky Short', nameTa: 'ஸ்கை சாட்', cat: 'kids-special', mrp: 280, price: 70, unit: 'box', emoji: '🎈', desc: 'Safe fun Sky Shot firework designed for children — gentle aerial burst with colorful sparks.' },
+  { id: 93, name: 'Electric Stone', nameTa: 'எலட்ரிக் ஸ்டோன்', cat: 'kids-special', mrp: 48, price: 12, unit: 'box', emoji: '🎈', desc: 'Safe fun Electric Stone firework designed for children — colorful sparkling effect with minimal noise.' },
+  { id: 94, name: 'Jee Boomba', nameTa: 'ஜீ பும்பா', cat: 'kids-special', mrp: 48, price: 12, unit: 'box', emoji: '🎈', desc: 'Safe fun Jee Boomba firework designed for children — colorful pop effect perfect for little ones.' },
+  { id: 95, name: 'Snake Tablet', nameTa: 'பாம்பு மாத்திரை', cat: 'kids-special', mrp: 120, price: 30, unit: 'box', emoji: '🎈', desc: 'Safe fun Snake Tablet firework designed for children — classic growing snake ash effect.' },
   { id: 96, name: 'Poondu Vedi', nameTa: 'பூண்டு வெடி', cat: 'kids-special', mrp: 80, price: 20, unit: 'box', emoji: '🎈', desc: 'Safe fun Poondu Vedi firework designed for children — colorful garlic-shaped burst with gentle pop.' },
   { id: 97, name: 'Cartoon', nameTa: 'கார்ட்டூன்', cat: 'kids-special', mrp: 60, price: 15, unit: 'box', emoji: '🎈', desc: 'Safe fun Cartoon firework designed for children — colorful cartoon-themed spark display.' },
   { id: 98, name: 'Roll Cap', nameTa: 'ரோல் கேப்', cat: 'kids-special', mrp: 400, price: 100, unit: 'box', emoji: '🎈', desc: 'Safe fun Roll Cap firework designed for children — classic roll of snap-cap fun.' },
-  { id: 99, name: 'Mini Selfie Stick (3 Pcs)', nameTa: 'மினி செல்பி ஸ்டிக்', cat: 'kids-special', mrp: 240, price: 60, unit: 'box', emoji: '🎈', desc: 'Safe fun Mini Selfie Stick sparkler set designed for children — compact colorful sparks. 3-piece.' },
+  { id: 99, name: 'Mini Selfie Stick (3 Pcs)', nameTa: 'மினி செல்பி ஸ்டிக்', cat: 'kids-special', mrp: 280, price: 70, unit: 'box', emoji: '🎈', desc: 'Safe fun Mini Selfie Stick sparkler set designed for children — compact colorful sparks. 3-piece.' },
 
   // NEW VERTIES 2026
-  { id: 100, name: 'Vel (2 pcs)', nameTa: 'வேல் 2 pcs', cat: 'new-2026', mrp: 900, price: 225, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Vel variety — exciting new firework effects you\'ve never seen before.' },
+  { id: 100, name: 'Vel (2 pcs)', nameTa: 'வேல் 2 pcs', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Vel variety — exciting new firework effects you\'ve never seen before.' },
   { id: 101, name: 'Kalash Nikavo', nameTa: 'காலாஸ் நிக்கவோ', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Kalash Nikavo variety — exciting new firework effects you\'ve never seen before.' },
   { id: 102, name: 'Bheema Kadham', nameTa: 'பீமா கதம்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Bheema Kadham variety — exciting new firework effects you\'ve never seen before.' },
   { id: 103, name: 'Guitar', nameTa: 'கிட்டார்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Guitar variety — exciting new firework effects you\'ve never seen before.' },
   { id: 104, name: 'Hunter 007 (Fire Gun)', nameTa: 'கண்டர் 007', cat: 'new-2026', mrp: 900, price: 225, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Hunter 007 Fire Gun variety — exciting new firework effects you\'ve never seen before.' },
   { id: 105, name: 'Emu Egg', nameTa: 'ஈமு எக்', cat: 'new-2026', mrp: 880, price: 220, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Emu Egg variety — exciting new firework effects you\'ve never seen before.' },
   { id: 106, name: 'Watermelon', nameTa: 'வாட்டர்மிலன்', cat: 'new-2026', mrp: 1400, price: 350, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Watermelon variety — exciting new firework effects you\'ve never seen before.' },
-  { id: 107, name: 'Mini Cylinder', nameTa: 'மினி சிலிண்டர்', cat: 'new-2026', mrp: 640, price: 160, unit: 'pcs', emoji: '🆕', desc: 'Brand new 2026 Mini Cylinder variety — exciting new firework effects you\'ve never seen before.' },
+  { id: 107, name: 'Mini Cylinder', nameTa: 'மினி சிலிண்டர்', cat: 'new-2026', mrp: 660, price: 165, unit: 'pcs', emoji: '🆕', desc: 'Brand new 2026 Mini Cylinder variety — exciting new firework effects you\'ve never seen before.' },
   { id: 108, name: 'Cylinder', nameTa: 'சிலிண்டர்', cat: 'new-2026', mrp: 800, price: 200, unit: 'pcs', emoji: '🆕', desc: 'Brand new 2026 Cylinder variety — exciting new firework effects you\'ve never seen before.' },
-  { id: 161, name: 'Raceing Car', nameTa: 'ரேஸிங் கார்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Racing Car variety — speeds across the ground with a blazing trail of sparks.' },
+  { id: 161, name: 'Raceing Car', nameTa: 'ரேஸிங் கார்', cat: 'new-2026', mrp: 1400, price: 350, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Racing Car variety — speeds across the ground with a blazing trail of sparks.' },
   { id: 162, name: 'Hand Short', nameTa: 'ஹேண்ட் ஷாட்', cat: 'new-2026', mrp: 2200, price: 550, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Hand Short variety — handheld aerial shot with spectacular color burst effects.' },
   { id: 163, name: 'Bat Ball', nameTa: 'பேட் பால்', cat: 'new-2026', mrp: 1000, price: 250, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 Bat Ball variety — exciting bat-and-ball shaped firework with dazzling effects.' },
   { id: 164, name: 'I-CON', nameTa: 'ஐ-கான்', cat: 'new-2026', mrp: 800, price: 200, unit: 'box', emoji: '🆕', desc: 'Brand new 2026 I-CON variety — iconic new firework with unforgettable visual effects.' },
@@ -246,7 +246,7 @@ const PRODUCTS = [
 
   // FANCY SHOTS
   { id: 109, name: '7 Shot (5 in 1)', nameTa: '7 சாட் 5 in 1', cat: 'fancy-shots', mrp: 480, price: 120, unit: 'box', emoji: '🎇', desc: '7-shot multicolour aerial barrage — vibrant colors burst in rapid sequence. 5-in-1 pack.' },
-  { id: 110, name: '12 Shot Multicolour', nameTa: '12 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 660, price: 165, unit: 'box', emoji: '🎇', desc: '12-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
+  { id: 110, name: '12 Shot Multicolour', nameTa: '12 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 800, price: 200, unit: 'box', emoji: '🎇', desc: '12-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
   { id: 111, name: '15 Shot Multicolour', nameTa: '15 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 1280, price: 320, unit: 'box', emoji: '🎇', desc: '15-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
   { id: 112, name: '25 Shot Rider', nameTa: '25 சாட் ரைடர்', cat: 'fancy-shots', mrp: 1360, price: 340, unit: 'box', emoji: '🎇', desc: '25-shot rider aerial barrage — vibrant colors burst in rapid sequence across the sky.' },
   { id: 113, name: '30 Shot Multicolour', nameTa: '30 சாட் மல்டி கலர்', cat: 'fancy-shots', mrp: 2000, price: 500, unit: 'box', emoji: '🎇', desc: '30-shot multicolour aerial barrage — vibrant colors burst in rapid sequence.' },
@@ -260,14 +260,14 @@ const PRODUCTS = [
 
   // FANCY PIPE ITEMS
   { id: 120, name: '1" Pipe', nameTa: '1" பைப்', cat: 'fancy-pipe', mrp: 200, price: 50, unit: 'box', emoji: '🎑', desc: '1" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
-  { id: 121, name: '2" Pipe', nameTa: '2" பைப்', cat: 'fancy-pipe', mrp: 400, price: 100, unit: 'box', emoji: '🎑', desc: '2" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
-  { id: 122, name: '2" Pipe (3 pcs)', nameTa: '2" பைப் 3 pcs', cat: 'fancy-pipe', mrp: 1200, price: 300, unit: 'box', emoji: '🎑', desc: '2" fancy pipe comet producing sustained aerial bursts with brilliant trails. 3-piece set.' },
+  { id: 121, name: '2" Pipe', nameTa: '2" பைப்', cat: 'fancy-pipe', mrp: 380, price: 95, unit: 'box', emoji: '🎑', desc: '2" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
+  { id: 122, name: '2" Pipe (3 pcs)', nameTa: '2" பைப் 3 pcs', cat: 'fancy-pipe', mrp: 1140, price: 285, unit: 'box', emoji: '🎑', desc: '2" fancy pipe comet producing sustained aerial bursts with brilliant trails. 3-piece set.' },
   { id: 123, name: '3" Pipe', nameTa: '3" பைப்', cat: 'fancy-pipe', mrp: 1320, price: 330, unit: 'box', emoji: '🎑', desc: '3" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
-  { id: 124, name: '3 1/2" Pipe', nameTa: '3 1/2" பைப்', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: '3.5" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
-  { id: 125, name: '4" Pipe Naiyagara Falls', nameTa: '4" பைப் Naiyagara', cat: 'fancy-pipe', mrp: 1800, price: 450, unit: 'box', emoji: '🎑', desc: '4" Naiyagara Falls fancy pipe comet producing sustained cascading aerial bursts.' },
+  { id: 124, name: '3 1/2" Pipe', nameTa: '3 1/2" பைப்', cat: 'fancy-pipe', mrp: 1500, price: 375, unit: 'box', emoji: '🎑', desc: '3.5" fancy pipe comet producing sustained aerial bursts with brilliant trails.' },
+  { id: 125, name: '4" Pipe Naiyagara Falls', nameTa: '4" பைப் Naiyagara', cat: 'fancy-pipe', mrp: 1600, price: 400, unit: 'box', emoji: '🎑', desc: '4" Naiyagara Falls fancy pipe comet producing sustained cascading aerial bursts.' },
   { id: 126, name: '4 1/2" Pipe (7 Steps)', nameTa: '4 1/2" பைப் 7 Steps', cat: 'fancy-pipe', mrp: 2000, price: 500, unit: 'box', emoji: '🎑', desc: '4.5" fancy pipe comet with 7-step effects producing sustained spectacular aerial bursts.' },
   { id: 127, name: '4 1/2" Pipe Double Ball', nameTa: '4 1/2" டபுல் பால்', cat: 'fancy-pipe', mrp: 2000, price: 500, unit: 'box', emoji: '🎑', desc: '4.5" double ball fancy pipe comet producing two simultaneous brilliant aerial bursts.' },
-  { id: 128, name: '5" Pipe Naiyagara Falls', nameTa: '5" பைப் Naiyagara', cat: 'fancy-pipe', mrp: 2000, price: 500, unit: 'box', emoji: '🎑', desc: '5" Naiyagara Falls fancy pipe comet producing the largest sustained cascading aerial bursts.' },
+  { id: 128, name: '5" Pipe Naiyagara Falls', nameTa: '5" பைப் Naiyagara', cat: 'fancy-pipe', mrp: 2200, price: 550, unit: 'box', emoji: '🎑', desc: '5" Naiyagara Falls fancy pipe comet producing the largest sustained cascading aerial bursts.' },
   { id: 129, name: '5" Pipe (2 pcs)', nameTa: '5" பைப் 2 pcs', cat: 'fancy-pipe', mrp: 4000, price: 1000, unit: 'box', emoji: '🎑', desc: '5" fancy pipe comet producing sustained aerial bursts with brilliant trails. 2-piece set.' },
 
   // SPARKLERS
@@ -278,7 +278,7 @@ const PRODUCTS = [
   { id: 134, name: '10cm Electric Sparkler', nameTa: '10cm கம்பி', cat: 'sparklers', mrp: 72, price: 18, unit: 'box', emoji: '✨', desc: '10cm sparkler with bright electric white sparks — perfect for handheld Diwali fun.' },
   { id: 135, name: '10cm Colour Sparkler', nameTa: '10cm கலர் கம்பி', cat: 'sparklers', mrp: 84, price: 21, unit: 'box', emoji: '✨', desc: '10cm sparkler with multi-color sparks — perfect for handheld Diwali fun.' },
   { id: 136, name: '10cm Green Sparkler', nameTa: '10cm பச்சை கம்பி', cat: 'sparklers', mrp: 92, price: 23, unit: 'box', emoji: '✨', desc: '10cm sparkler with vivid green sparks — perfect for handheld Diwali fun.' },
-  { id: 137, name: '10cm Red Sparkler', nameTa: '10cm சிவப்பு கம்பி', cat: 'sparklers', mrp: 116, price: 26, unit: 'box', emoji: '✨', desc: '10cm sparkler with brilliant red sparks — perfect for handheld Diwali fun.' },
+  { id: 137, name: '10cm Red Sparkler', nameTa: '10cm சிவப்பு கம்பி', cat: 'sparklers', mrp: 104, price: 26, unit: 'box', emoji: '✨', desc: '10cm sparkler with brilliant red sparks — perfect for handheld Diwali fun.' },
   { id: 138, name: '15cm Electric Sparkler', nameTa: '15cm கம்பி', cat: 'sparklers', mrp: 180, price: 45, unit: 'box', emoji: '✨', desc: '15cm sparkler with bright electric white sparks — longer burn for extra Diwali fun.' },
   { id: 139, name: '15cm Colour Sparkler', nameTa: '15cm கலர் கம்பி', cat: 'sparklers', mrp: 184, price: 46, unit: 'box', emoji: '✨', desc: '15cm sparkler with multi-color sparks — longer burn for extra Diwali fun.' },
   { id: 140, name: '15cm Green Sparkler', nameTa: '15cm பச்சை கம்பி', cat: 'sparklers', mrp: 192, price: 48, unit: 'box', emoji: '✨', desc: '15cm sparkler with vivid green sparks — longer burn for extra Diwali fun.' },
@@ -291,17 +291,17 @@ const PRODUCTS = [
   { id: 147, name: '30cm All in One', nameTa: '30cm 3 in 1 (6 pcs)', cat: 'sparklers', mrp: 800, price: 200, unit: 'box', emoji: '✨', desc: '30cm 3-in-1 assorted sparkler set with electric, colour and green sparks. 6-piece box.' },
   { id: 148, name: '50cm Electric Sparkler', nameTa: '50cm கம்பி', cat: 'sparklers', mrp: 800, price: 200, unit: 'box', emoji: '✨', desc: '50cm sparkler with bright electric white sparks — the longest burn for premium Diwali fun.' },
   { id: 149, name: '50cm Colour Sparkler', nameTa: '50cm கலர் கம்பி', cat: 'sparklers', mrp: 880, price: 220, unit: 'box', emoji: '✨', desc: '50cm sparkler with multi-color sparks — the longest burn for premium Diwali fun.' },
-  { id: 150, name: 'Rotating Sparkler (Umbrella)', nameTa: 'ரோட்டேடிங் கம்பி குடை', cat: 'sparklers', mrp: 960, price: 240, unit: 'box', emoji: '✨', desc: 'Rotating umbrella sparkler with spinning multi-color sparks — a unique handheld Diwali showpiece.' },
+  { id: 150, name: 'Rotating Sparkler (Umbrella)', nameTa: 'ரோட்டேடிங் கம்பி குடை', cat: 'sparklers', mrp: 1000, price: 250, unit: 'box', emoji: '✨', desc: 'Rotating umbrella sparkler with spinning multi-color sparks — a unique handheld Diwali showpiece.' },
 
   // GIFT BOXES (no discount)
-  { id: 201, name: 'Gift Box 21 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 21', cat: 'gift-boxes', mrp: 250, price: 250, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 21 assorted fireworks — perfect for family gifting.' },
-  { id: 202, name: 'Gift Box 25 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 25', cat: 'gift-boxes', mrp: 310, price: 310, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 25 assorted fireworks — perfect for family gifting.' },
-  { id: 203, name: 'Gift Box 30 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 30', cat: 'gift-boxes', mrp: 370, price: 370, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 30 assorted fireworks — perfect for family gifting.' },
-  { id: 204, name: 'Gift Box 35 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 35', cat: 'gift-boxes', mrp: 440, price: 440, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 35 assorted fireworks — perfect for family gifting.' },
-  { id: 205, name: 'Gift Box 40 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 40', cat: 'gift-boxes', mrp: 520, price: 520, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 40 assorted fireworks — perfect for family gifting.' },
-  { id: 206, name: 'Gift Box 51 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 51', cat: 'gift-boxes', mrp: 760, price: 760, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 51 assorted fireworks — perfect for family gifting.' },
-  { id: 207, name: 'Gift Box 60 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 60', cat: 'gift-boxes', mrp: 980, price: 980, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 60 assorted fireworks — perfect for family gifting.' },
-  { id: 208, name: 'Gift Box 70 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 70', cat: 'gift-boxes', mrp: 1150, price: 1150, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 70 assorted fireworks — the grandest gift for big celebrations.' },
+  { id: 201, name: 'Gift Box 21 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 21', cat: 'gift-boxes', mrp: 280, price: 280, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 21 assorted fireworks — perfect for family gifting.' },
+  { id: 202, name: 'Gift Box 25 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 25', cat: 'gift-boxes', mrp: 340, price: 340, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 25 assorted fireworks — perfect for family gifting.' },
+  { id: 203, name: 'Gift Box 30 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 30', cat: 'gift-boxes', mrp: 410, price: 410, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 30 assorted fireworks — perfect for family gifting.' },
+  { id: 204, name: 'Gift Box 35 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 35', cat: 'gift-boxes', mrp: 490, price: 490, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 35 assorted fireworks — perfect for family gifting.' },
+  { id: 205, name: 'Gift Box 40 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 40', cat: 'gift-boxes', mrp: 580, price: 580, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 40 assorted fireworks — perfect for family gifting.' },
+  { id: 206, name: 'Gift Box 51 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 51', cat: 'gift-boxes', mrp: 830, price: 830, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 51 assorted fireworks — perfect for family gifting.' },
+  { id: 207, name: 'Gift Box 60 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 60', cat: 'gift-boxes', mrp: 1100, price: 1100, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 60 assorted fireworks — perfect for family gifting.' },
+  { id: 208, name: 'Gift Box 70 Items', nameTa: 'கிஃப்ட் பாக்ஸ் 70', cat: 'gift-boxes', mrp: 1250, price: 1250, unit: 'box', emoji: '🎁', noDiscount: true, desc: 'Curated Diwali gift box with 70 assorted fireworks — the grandest gift for big celebrations.' },
 ];
 
 const FEATURED_IDS = [51, 68, 119, 44, 82, 142, 65, 35, 203, 66, 60, 81];
