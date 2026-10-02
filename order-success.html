@@ -124,8 +124,11 @@ body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-ser
   </div>
 
   <div class="actions">
-    <a href="https://wa.me/917200915142" target="_blank" rel="noopener" class="btn-wa">
+    <a id="wa-link" href="https://wa.me/917200915142" target="_blank" rel="noopener" class="btn-wa">
       <span>💬</span><span>WhatsApp Us</span>
+    </a>
+    <a id="track-link" href="order-status.html" class="btn-shop">
+      <span>📦</span><span>Track Order</span>
     </a>
     <a href="shop.html" class="btn-shop">
       <span>🎆</span><span>Shop More</span>
@@ -133,10 +136,14 @@ body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-ser
   </div>
 </div>
 
+<script src="js/config.js"></script>
 <script>
 // Populate order details from sessionStorage
 (function() {
+  const waLink = document.getElementById('wa-link');
+  if (waLink && window.SPMC_WA_PHONE) waLink.href = 'https://wa.me/' + window.SPMC_WA_PHONE;
   const orderId = sessionStorage.getItem('spmc_order_id') || '';
+  if (!orderId) { window.location.replace('shop.html'); return; }
   const customer = JSON.parse(sessionStorage.getItem('spmc_customer') || '{}');
   const total = sessionStorage.getItem('spmc_order_total') || '0';
 
@@ -151,6 +158,12 @@ body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-ser
 
   const totalEl = document.getElementById('detail-total');
   if (totalEl) totalEl.textContent = '₹' + parseInt(total).toLocaleString('en-IN');
+
+  // Pre-fill track order link so customer can check status directly
+  if (orderId && customer.phone) {
+    const trackLink = document.getElementById('track-link');
+    if (trackLink) trackLink.href = 'order-status.html?id=' + encodeURIComponent(orderId) + '&phone=' + encodeURIComponent(customer.phone);
+  }
 })();
 
 // Simple confetti animation

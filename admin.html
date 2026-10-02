@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin CRM — SPMC Order Dispatch</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#ffd700;--red-deep:#0d0205;--red-card:#240b0e;--red-mid:#1a0508;--text:#fff5e4;--text-muted:#b08060;--border:rgba(255,215,0,0.18);--green:#25d366}
@@ -162,7 +163,37 @@ body{background:var(--red-deep);color:var(--text);font-family:'Poppins',sans-ser
 .no-backend{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:13px;color:#fbbf24;line-height:1.6}
 code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px}
 
-@media(max-width:640px){.stat-cards,.prod-stat-cards{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}.form-grid{grid-template-columns:1fr}}
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.chart-card{background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.chart-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px}
+.days-toggle{display:flex;gap:6px;margin-bottom:20px}
+.days-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text-muted);font-size:12px;cursor:pointer;font-weight:600;transition:all 0.2s}
+.days-btn.active{background:rgba(255,215,0,0.12);border-color:rgba(255,215,0,0.4);color:var(--gold)}
+
+/* COUPONS */
+.coupon-form{background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.coupon-form-title{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);margin-bottom:14px}
+
+/* SHIPPING */
+.zone-form{background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.zone-form-title{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);margin-bottom:14px}
+
+/* REVIEWS */
+.review-card{background:var(--red-card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px}
+.review-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.review-meta{font-size:12px;color:var(--text-muted)}
+.review-name{font-weight:600;font-size:14px;color:var(--text)}
+.review-stars{color:var(--gold);font-size:16px;letter-spacing:2px;margin:4px 0}
+.review-text{font-size:13px;color:var(--text);line-height:1.5;margin-bottom:12px}
+.review-actions{display:flex;gap:8px}
+.approve-btn{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.approve-btn:hover{background:rgba(52,211,153,0.22)}
+.reject-btn{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#f87171;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.reject-btn:hover{background:rgba(248,113,113,0.2)}
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:5px;line-height:1.4}
+
+@media(max-width:640px){.stat-cards,.prod-stat-cards{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}.form-grid{grid-template-columns:1fr}.analytics-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -193,6 +224,10 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="orders">📦 Orders</button>
     <button class="tab-btn" data-tab="products">🛒 Products</button>
+    <button class="tab-btn" data-tab="analytics">📊 Analytics</button>
+    <button class="tab-btn" data-tab="coupons">🎟 Coupons</button>
+    <button class="tab-btn" data-tab="shipping">🚚 Shipping</button>
+    <button class="tab-btn" data-tab="reviews" id="tab-btn-reviews">⭐ Reviews</button>
   </div>
 
   <!-- ORDERS TAB -->
@@ -227,13 +262,115 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
         <option value="pending">Unpaid</option>
         <option value="cod">COD</option>
       </select>
-      <button class="toolbar-btn" id="refresh-btn">🔄 Refresh</button>
+      <input type="date" class="filter-select" id="date-from" title="From date" style="width:auto">
+      <input type="date" class="filter-select" id="date-to" title="To date" style="width:auto">
+      <button class="toolbar-btn" id="refresh-btn">🔄 Refresh <span id="new-order-badge" style="display:none;background:#ef4444;color:#fff;border-radius:12px;padding:1px 7px;font-size:10px;margin-left:4px">NEW</span></button>
       <button class="toolbar-btn green" id="export-btn">⬇ Export CSV</button>
     </div>
 
     <div id="orders-container">
       <div class="loading">Loading orders...</div>
     </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div class="tab-section admin-body" id="tab-analytics">
+    <div class="days-toggle">
+      <button class="days-btn active" data-days="30">30 days</button>
+      <button class="days-btn" data-days="7">7 days</button>
+      <button class="days-btn" data-days="90">90 days</button>
+    </div>
+    <div class="stat-cards" id="analytics-stats">
+      <div class="stat-card"><span class="stat-val" id="an-orders">—</span><span class="stat-label">Total Orders</span></div>
+      <div class="stat-card"><span class="stat-val" id="an-revenue">—</span><span class="stat-label">Total Revenue</span></div>
+      <div class="stat-card"><span class="stat-val" id="an-pending">—</span><span class="stat-label">Pending</span></div>
+      <div class="stat-card"><span class="stat-val" id="an-delivered">—</span><span class="stat-label">Delivered</span></div>
+    </div>
+    <div class="analytics-grid">
+      <div class="chart-card" style="grid-column:1/-1">
+        <div class="chart-title">Daily Revenue</div>
+        <canvas id="chart-daily" height="90"></canvas>
+      </div>
+      <div class="chart-card" style="grid-column:1/-1">
+        <div class="chart-title">Top 10 Products by Quantity</div>
+        <canvas id="chart-top" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- COUPONS TAB -->
+  <div class="tab-section admin-body" id="tab-coupons">
+    <div class="coupon-form">
+      <div class="coupon-form-title">＋ Add Coupon</div>
+      <div class="form-grid">
+        <div>
+          <label class="form-label">Code *</label>
+          <input type="text" class="form-input" id="cp-code" placeholder="DIWALI20" style="text-transform:uppercase">
+        </div>
+        <div>
+          <label class="form-label">Type *</label>
+          <select class="form-select" id="cp-type">
+            <option value="flat">Flat (₹ off)</option>
+            <option value="percent">Percent (% off)</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Value *</label>
+          <input type="number" class="form-input" id="cp-value" placeholder="200" min="0">
+        </div>
+        <div>
+          <label class="form-label">Min Order (₹)</label>
+          <input type="number" class="form-input" id="cp-minorder" placeholder="0" min="0">
+        </div>
+        <div>
+          <label class="form-label">Max Uses</label>
+          <input type="number" class="form-input" id="cp-maxuses" placeholder="100" min="1">
+        </div>
+        <div>
+          <label class="form-label">Expires At</label>
+          <input type="date" class="form-input" id="cp-expires">
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="toolbar-btn" id="cp-add-btn">＋ Add Coupon</button>
+      </div>
+    </div>
+    <div id="coupons-container"><div class="loading">Loading coupons...</div></div>
+  </div>
+
+  <!-- SHIPPING ZONES TAB -->
+  <div class="tab-section admin-body" id="tab-shipping">
+    <div class="zone-form">
+      <div class="zone-form-title">＋ Add / Update Shipping Zone</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">State name <code>default</code> is the catch-all for unlisted states.</p>
+      <div class="form-grid">
+        <div>
+          <label class="form-label">State *</label>
+          <input type="text" class="form-input" id="sz-state" placeholder="Tamil Nadu / default">
+        </div>
+        <div>
+          <label class="form-label">Cost (₹) *</label>
+          <input type="number" class="form-input" id="sz-cost" placeholder="100" min="0">
+        </div>
+        <div>
+          <label class="form-label">Free Above (₹)</label>
+          <input type="number" class="form-input" id="sz-freeabove" placeholder="1000" min="0">
+        </div>
+        <div>
+          <label class="form-label">Est. Days</label>
+          <input type="text" class="form-input" id="sz-days" placeholder="3-5">
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="toolbar-btn" id="sz-save-btn">Save Zone</button>
+      </div>
+    </div>
+    <div id="shipping-container"><div class="loading">Loading shipping zones...</div></div>
+  </div>
+
+  <!-- REVIEWS TAB -->
+  <div class="tab-section admin-body" id="tab-reviews">
+    <div id="reviews-container"><div class="loading">Loading pending reviews...</div></div>
   </div>
 
   <!-- PRODUCTS TAB -->
@@ -307,6 +444,18 @@ code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-si
         <input type="checkbox" id="new-nodiscount" style="width:16px;height:16px">
         <label for="new-nodiscount" style="font-size:12px;color:var(--text-muted)">No discount (full price)</label>
       </div>
+      <div class="form-full">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-input" id="new-desc" placeholder="Short product description">
+      </div>
+      <div class="form-full">
+        <label class="form-label">Image URL</label>
+        <input type="url" class="form-input" id="new-imageurl" placeholder="https://... (optional)">
+      </div>
+      <div>
+        <label class="form-label">Initial Stock (-1 = unlimited)</label>
+        <input type="number" class="form-input" id="new-stock" placeholder="-1" value="-1" min="-1">
+      </div>
     </div>
     <div class="modal-actions">
       <button class="modal-cancel" id="modal-cancel">Cancel</button>
@@ -328,15 +477,26 @@ let backendOnline = false;
 const loginBtn = document.getElementById('login-btn');
 const adminPassInput = document.getElementById('admin-password');
 
-function tryLogin() {
+async function tryLogin() {
   const entered = adminPassInput.value.trim();
   if (!entered) return;
-  ADMIN_TOKEN = entered;
-  sessionStorage.setItem('spmc_admin_token', entered);
-  sessionStorage.setItem('spmc_admin', '1');
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  loadOrders();
+  loginBtn.textContent = 'Verifying...';
+  loginBtn.disabled = true;
+  try {
+    const test = await fetch(API + '/orders?limit=1', { headers: { 'Authorization': 'Bearer ' + entered } });
+    if (!test.ok) throw new Error('auth');
+    ADMIN_TOKEN = entered;
+    sessionStorage.setItem('spmc_admin_token', entered);
+    sessionStorage.setItem('spmc_admin', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadOrders();
+    startOrderPolling();
+  } catch {
+    document.getElementById('login-error').style.display = 'block';
+    loginBtn.textContent = 'Sign In';
+    loginBtn.disabled = false;
+  }
 }
 loginBtn.addEventListener('click', tryLogin);
 adminPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
@@ -350,18 +510,46 @@ if (sessionStorage.getItem('spmc_admin') && ADMIN_TOKEN) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   loadOrders();
+  startOrderPolling();
+}
+
+let _lastOrderCount = 0;
+function startOrderPolling() {
+  setInterval(async () => {
+    try {
+      const r = await fetch(API + '/orders?limit=1', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+      if (!r.ok) return;
+      const data = await r.json();
+      const total = data.total || 0;
+      if (_lastOrderCount > 0 && total > _lastOrderCount) {
+        document.getElementById('new-order-badge').style.display = 'inline';
+        document.title = '🔔 New Order! — SPMC Admin';
+      }
+      _lastOrderCount = total;
+    } catch {}
+  }, 60_000);
 }
 
 // ── DATA ─────────────────────────────────────────────────
 async function loadOrders() {
+  const from = document.getElementById('date-from').value;
+  const to   = document.getElementById('date-to').value;
+  const statusQ = document.getElementById('status-filter').value;
+  const params = new URLSearchParams({ limit: 500 });
+  if (from) params.set('from', from);
+  if (to)   params.set('to', to);
+  if (statusQ && statusQ !== 'all') params.set('status', statusQ);
   try {
-    const res = await fetch(API + '/orders', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+    const res = await fetch(API + '/orders?' + params, { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
     if (!res.ok) throw new Error();
-    allOrders = await res.json();
+    const data = await res.json();
+    allOrders = data.orders || data; // backwards compat if old backend
+    _lastOrderCount = data.total || allOrders.length;
     backendOnline = true;
     document.getElementById('backend-status').textContent = '🟢 Backend online';
     document.getElementById('no-backend').style.display = 'none';
-    // update export link with auth (just opens in new tab — backend already requires Bearer token)
+    document.getElementById('new-order-badge').style.display = 'none';
+    document.title = 'Admin CRM — SPMC Order Dispatch';
   } catch {
     backendOnline = false;
     allOrders = [];
@@ -371,6 +559,8 @@ async function loadOrders() {
   renderOrders();
   updateStats();
 }
+document.getElementById('date-from').addEventListener('change', loadOrders);
+document.getElementById('date-to').addEventListener('change', loadOrders);
 
 function updateStats() {
   const orders = allOrders;
@@ -861,6 +1051,11 @@ document.getElementById('export-btn').addEventListener('click', async e => {
 
 // ── TAB SWITCHING ─────────────────────────────────────────
 let productsLoaded = false;
+let analyticsLoaded = false;
+let couponsLoaded = false;
+let shippingLoaded = false;
+let reviewsLoaded = false;
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -870,6 +1065,22 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     if (btn.dataset.tab === 'products' && !productsLoaded) {
       loadProducts();
       productsLoaded = true;
+    }
+    if (btn.dataset.tab === 'analytics' && !analyticsLoaded) {
+      loadAnalytics(30);
+      analyticsLoaded = true;
+    }
+    if (btn.dataset.tab === 'coupons' && !couponsLoaded) {
+      loadCoupons();
+      couponsLoaded = true;
+    }
+    if (btn.dataset.tab === 'shipping' && !shippingLoaded) {
+      loadShippingZones();
+      shippingLoaded = true;
+    }
+    if (btn.dataset.tab === 'reviews' && !reviewsLoaded) {
+      loadReviews();
+      reviewsLoaded = true;
     }
   });
 });
@@ -897,6 +1108,24 @@ function setContainerMsg(cls, text) {
   d.className = cls;
   d.textContent = text;
   c.appendChild(d);
+}
+
+async function compressImage(file, maxW = 600, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Bad image')); };
+    img.src = url;
+  });
 }
 
 async function loadProducts() {
@@ -978,7 +1207,7 @@ function renderProductsTable() {
 
   const thead = document.createElement('thead');
   const hrow = document.createElement('tr');
-  ['ID','Product','Category','MRP (₹)','Sale Price (₹)','Unit','Status','Actions'].forEach(col => {
+  ['ID','Product','Category','MRP (₹)','Sale Price (₹)','Unit','Stock','Status','Actions'].forEach(col => {
     const th = document.createElement('th');
     th.textContent = col;
     hrow.appendChild(th);
@@ -1038,6 +1267,38 @@ function buildProductRow(p) {
   tdUnit.textContent = p.unit;
   tr.appendChild(tdUnit);
 
+  // Stock cell — inline editable
+  const tdStock = document.createElement('td');
+  const stockInput = document.createElement('input');
+  stockInput.type = 'number'; stockInput.min = -1; stockInput.step = 1;
+  stockInput.value = (p.stock != null ? p.stock : -1);
+  stockInput.title = '-1 = unlimited';
+  stockInput.style.cssText = 'width:58px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:12px;outline:none;';
+  const stockSaveBtn = document.createElement('button');
+  stockSaveBtn.style.cssText = 'margin-left:4px;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer;';
+  stockSaveBtn.textContent = '✓';
+  stockSaveBtn.title = 'Save stock';
+  stockSaveBtn.addEventListener('click', async () => {
+    const val = parseInt(stockInput.value, 10);
+    if (isNaN(val) || val < -1) { alert('Stock must be -1 (unlimited) or ≥ 0.'); return; }
+    try {
+      const r = await fetch(API + '/products/' + p.id + '/stock', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+        body: JSON.stringify({ stock: val }),
+      });
+      if (!r.ok) throw new Error();
+      p.stock = val;
+      stockSaveBtn.textContent = '✓✓'; stockSaveBtn.style.color = '#86efac';
+      setTimeout(() => { stockSaveBtn.textContent = '✓'; stockSaveBtn.style.color = '#34d399'; }, 1500);
+    } catch { alert('Stock save failed.'); }
+  });
+  const stockHint = document.createElement('div');
+  stockHint.style.cssText = 'font-size:9px;color:var(--text-muted);margin-top:2px;';
+  stockHint.textContent = '-1=∞';
+  tdStock.append(stockInput, stockSaveBtn, stockHint);
+  tr.appendChild(tdStock);
+
   const tdStatus = document.createElement('td');
   const statusBadge = document.createElement('span');
   statusBadge.className = 'badge ' + (p.active ? 's-confirmed' : 's-cancelled');
@@ -1047,6 +1308,62 @@ function buildProductRow(p) {
 
   const tdAct = document.createElement('td');
   tdAct.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
+
+  // desc + imageUrl inputs (shown in actions cell)
+  const descInput = document.createElement('input');
+  descInput.type = 'text'; descInput.placeholder = 'Description';
+  descInput.value = p.desc || '';
+  descInput.style.cssText = 'width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:3px 7px;color:var(--text);font-size:11px;outline:none;margin-bottom:4px';
+
+  const imgInput = document.createElement('input');
+  imgInput.type = 'url'; imgInput.placeholder = 'Image URL';
+  imgInput.value = p.imageUrl || '';
+  imgInput.style.cssText = descInput.style.cssText + 'margin-bottom:2px';
+
+  const imgFileInput = document.createElement('input');
+  imgFileInput.type = 'file'; imgFileInput.accept = 'image/*';
+  imgFileInput.style.display = 'none';
+
+  const imgUploadBtn = document.createElement('button');
+  imgUploadBtn.type = 'button';
+  imgUploadBtn.textContent = '📷 Upload';
+  imgUploadBtn.title = 'Compress & upload image';
+  imgUploadBtn.style.cssText = 'background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;margin-bottom:6px;';
+  imgUploadBtn.addEventListener('click', () => imgFileInput.click());
+
+  imgFileInput.addEventListener('change', async () => {
+    const file = imgFileInput.files[0];
+    if (!file) return;
+    imgUploadBtn.textContent = '⏳ Compressing…'; imgUploadBtn.disabled = true;
+    try {
+      const dataUrl = await compressImage(file);
+      imgUploadBtn.textContent = '⬆️ Uploading…';
+      const r = await fetch(API + '/products/' + p.id + '/image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+        body: JSON.stringify({ data: dataUrl }),
+      });
+      const json = await r.json();
+      if (!r.ok) throw new Error(json.error || 'Upload failed');
+      imgInput.value = json.imageUrl;
+      p.imageUrl = json.imageUrl;
+      imgUploadBtn.textContent = '✓ Uploaded';
+      imgUploadBtn.style.color = '#34d399';
+      setTimeout(() => { imgUploadBtn.textContent = '📷 Upload'; imgUploadBtn.style.color = '#a5b4fc'; imgUploadBtn.disabled = false; }, 2000);
+    } catch (e) {
+      alert(e.message);
+      imgUploadBtn.textContent = '📷 Upload'; imgUploadBtn.disabled = false;
+    }
+  });
+
+  // noDiscount toggle inline with Save
+  const ndLabel = document.createElement('label');
+  ndLabel.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);cursor:pointer;white-space:nowrap';
+  const ndCheck = document.createElement('input');
+  ndCheck.type = 'checkbox';
+  ndCheck.checked = !!p.noDiscount;
+  ndCheck.title = 'No discount badge';
+  ndLabel.append(ndCheck, 'No disc.');
 
   const saveBtn = document.createElement('button');
   saveBtn.className = 'save-row-btn';
@@ -1061,10 +1378,12 @@ function buildProductRow(p) {
       const r = await fetch(API + '/products/' + p.id, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
-        body: JSON.stringify({ mrp: newMrp, price: newPrice }),
+        body: JSON.stringify({ mrp: newMrp, price: newPrice, noDiscount: ndCheck.checked, desc: descInput.value.trim() || null, imageUrl: imgInput.value.trim() || null, stock: parseInt(stockInput.value,10) }),
       });
       if (!r.ok) throw new Error();
-      p.mrp = newMrp; p.price = newPrice;
+      p.mrp = newMrp; p.price = newPrice; p.noDiscount = ndCheck.checked;
+      p.desc = descInput.value.trim() || null; p.imageUrl = imgInput.value.trim() || null;
+      p.stock = parseInt(stockInput.value, 10);
       saveBtn.textContent = 'Saved';
       saveBtn.style.color = '#34d399';
       setTimeout(() => { saveBtn.textContent = 'Save'; saveBtn.style.color = ''; }, 1800);
@@ -1089,7 +1408,29 @@ function buildProductRow(p) {
     } catch { alert('Toggle failed. Check backend.'); }
   });
 
-  tdAct.append(saveBtn, toggleBtn);
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'save-row-btn';
+  deleteBtn.style.cssText = 'background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.3);color:#f87171;';
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.addEventListener('click', async () => {
+    if (!confirm('Delete "' + p.name + '" permanently? This cannot be undone.')) return;
+    try {
+      const r = await fetch(API + '/products/' + p.id, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+      });
+      if (!r.ok) throw new Error();
+      allProducts = allProducts.filter(x => x.id !== p.id);
+      renderProductsTable();
+      updateProdStats();
+    } catch { alert('Delete failed.'); }
+  });
+
+  tdAct.insertBefore(descInput, ndLabel);
+  tdAct.insertBefore(imgInput, ndLabel);
+  tdAct.insertBefore(imgFileInput, ndLabel);
+  tdAct.insertBefore(imgUploadBtn, ndLabel);
+  tdAct.append(ndLabel, saveBtn, toggleBtn, deleteBtn);
   tr.appendChild(tdAct);
   return tr;
 }
@@ -1109,6 +1450,605 @@ document.getElementById('add-prod-btn').addEventListener('click', () => modal.cl
 document.getElementById('modal-cancel').addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
+// ── ANALYTICS TAB ─────────────────────────────────────────
+let _chartDaily = null;
+let _chartTop = null;
+let _analyticsDays = 30;
+
+document.querySelectorAll('.days-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.days-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _analyticsDays = parseInt(btn.dataset.days, 10);
+    analyticsLoaded = false;
+    loadAnalytics(_analyticsDays);
+    analyticsLoaded = true;
+  });
+});
+
+async function loadAnalytics(days) {
+  try {
+    const r = await fetch(API + '/analytics?days=' + days, { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    renderAnalytics(data);
+  } catch {
+    document.getElementById('analytics-stats').style.opacity = '0.5';
+  }
+}
+
+function renderAnalytics(data) {
+  const t = data.totals || {};
+  document.getElementById('an-orders').textContent = t.totalOrders ?? '—';
+  document.getElementById('an-revenue').textContent = t.totalRevenue != null ? '₹' + Number(t.totalRevenue).toLocaleString('en-IN') : '—';
+  document.getElementById('an-pending').textContent = t.pending ?? '—';
+  document.getElementById('an-delivered').textContent = t.delivered ?? '—';
+
+  const daily = data.daily || [];
+  const chartDefaults = {
+    color: '#fff5e4',
+    borderColor: 'rgba(255,215,0,0.3)',
+  };
+  Chart.defaults.color = chartDefaults.color;
+  Chart.defaults.borderColor = chartDefaults.borderColor;
+
+  const ctxDaily = document.getElementById('chart-daily').getContext('2d');
+  if (_chartDaily) _chartDaily.destroy();
+  _chartDaily = new Chart(ctxDaily, {
+    type: 'line',
+    data: {
+      labels: daily.map(d => d.day),
+      datasets: [{
+        label: 'Revenue (₹)',
+        data: daily.map(d => d.revenue),
+        borderColor: '#ffd700',
+        backgroundColor: 'rgba(255,215,0,0.08)',
+        borderWidth: 2,
+        pointBackgroundColor: '#ffd700',
+        pointRadius: 3,
+        tension: 0.3,
+        fill: true,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,215,0,0.06)' }, ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+        y: { grid: { color: 'rgba(255,215,0,0.06)' }, ticks: { font: { size: 10 }, callback: v => '₹' + v.toLocaleString('en-IN') } },
+      },
+    },
+  });
+
+  const top = (data.topProducts || []).slice(0, 10);
+  const ctxTop = document.getElementById('chart-top').getContext('2d');
+  if (_chartTop) _chartTop.destroy();
+  _chartTop = new Chart(ctxTop, {
+    type: 'bar',
+    data: {
+      labels: top.map(p => p.name),
+      datasets: [{
+        label: 'Qty Sold',
+        data: top.map(p => p.qty),
+        backgroundColor: 'rgba(255,215,0,0.25)',
+        borderColor: 'rgba(255,215,0,0.6)',
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,215,0,0.06)' }, ticks: { font: { size: 10 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      },
+    },
+  });
+}
+
+// ── COUPONS TAB ───────────────────────────────────────────
+async function loadCoupons() {
+  const c = document.getElementById('coupons-container');
+  c.textContent = '';
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.textContent = 'Loading coupons...';
+  c.appendChild(loading);
+  try {
+    const r = await fetch(API + '/coupons', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+    if (!r.ok) throw new Error();
+    const coupons = await r.json();
+    renderCoupons(coupons);
+  } catch {
+    c.textContent = '';
+    const d = document.createElement('div');
+    d.className = 'no-backend';
+    d.textContent = 'Could not load coupons. Is the backend running?';
+    c.appendChild(d);
+  }
+}
+
+function renderCoupons(coupons) {
+  const c = document.getElementById('coupons-container');
+  c.textContent = '';
+
+  if (coupons.length === 0) {
+    const d = document.createElement('div');
+    d.className = 'empty-state';
+    const icon = document.createElement('span');
+    icon.textContent = '🎟';
+    const msg = document.createElement('p');
+    msg.textContent = 'No coupons yet.';
+    d.append(icon, msg);
+    c.appendChild(d);
+    return;
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'table-wrap';
+  const table = document.createElement('table');
+  table.className = 'orders-table';
+  table.style.minWidth = '700px';
+
+  const thead = document.createElement('thead');
+  const hrow = document.createElement('tr');
+  ['Code', 'Type', 'Value', 'Min Order', 'Used / Max', 'Expires', 'Active', 'Actions'].forEach(col => {
+    const th = document.createElement('th');
+    th.textContent = col;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  coupons.forEach(cp => {
+    const tr = document.createElement('tr');
+
+    const tdCode = document.createElement('td');
+    tdCode.className = 'oid';
+    tdCode.textContent = cp.code;
+    tr.appendChild(tdCode);
+
+    const tdType = document.createElement('td');
+    const typeBadge = document.createElement('span');
+    typeBadge.className = 'badge ' + (cp.type === 'flat' ? 's-confirmed' : 's-dispatched');
+    typeBadge.textContent = cp.type === 'flat' ? '₹ Flat' : '% Percent';
+    tdType.appendChild(typeBadge);
+    tr.appendChild(tdType);
+
+    const tdVal = document.createElement('td');
+    tdVal.style.fontWeight = '700';
+    tdVal.textContent = cp.type === 'flat' ? '₹' + cp.value : cp.value + '%';
+    tr.appendChild(tdVal);
+
+    const tdMin = document.createElement('td');
+    tdMin.textContent = cp.minOrder ? '₹' + cp.minOrder : '—';
+    tr.appendChild(tdMin);
+
+    const tdUses = document.createElement('td');
+    tdUses.textContent = (cp.usedCount || 0) + ' / ' + (cp.maxUses || '∞');
+    tr.appendChild(tdUses);
+
+    const tdExp = document.createElement('td');
+    tdExp.style.cssText = 'font-size:12px;color:var(--text-muted)';
+    tdExp.textContent = cp.expiresAt ? new Date(cp.expiresAt).toLocaleDateString('en-IN') : '—';
+    tr.appendChild(tdExp);
+
+    const tdActive = document.createElement('td');
+    const activeBadge = document.createElement('span');
+    activeBadge.className = 'badge ' + (cp.active ? 's-confirmed' : 's-cancelled');
+    activeBadge.textContent = cp.active ? '✓ Active' : '✗ Off';
+    tdActive.appendChild(activeBadge);
+    tr.appendChild(tdActive);
+
+    const tdAct = document.createElement('td');
+    tdAct.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'save-btn';
+    toggleBtn.textContent = cp.active ? 'Disable' : 'Enable';
+    toggleBtn.addEventListener('click', async () => {
+      try {
+        const nr = await fetch(API + '/coupons/' + encodeURIComponent(cp.code), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+          body: JSON.stringify({ active: !cp.active }),
+        });
+        if (!nr.ok) throw new Error();
+        cp.active = !cp.active;
+        activeBadge.className = 'badge ' + (cp.active ? 's-confirmed' : 's-cancelled');
+        activeBadge.textContent = cp.active ? '✓ Active' : '✗ Off';
+        toggleBtn.textContent = cp.active ? 'Disable' : 'Enable';
+      } catch { alert('Toggle failed.'); }
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'save-btn';
+    delBtn.style.color = '#f87171';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', async () => {
+      if (!confirm('Delete coupon ' + cp.code + '?')) return;
+      try {
+        const nr = await fetch(API + '/coupons/' + encodeURIComponent(cp.code), {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+        });
+        if (!nr.ok) throw new Error();
+        tr.remove();
+      } catch { alert('Delete failed.'); }
+    });
+
+    tdAct.append(toggleBtn, delBtn);
+    tr.appendChild(tdAct);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  c.appendChild(wrap);
+}
+
+document.getElementById('cp-add-btn').addEventListener('click', async () => {
+  const code = document.getElementById('cp-code').value.trim().toUpperCase();
+  const type = document.getElementById('cp-type').value;
+  const value = parseFloat(document.getElementById('cp-value').value);
+  const minOrder = parseFloat(document.getElementById('cp-minorder').value) || 0;
+  const maxUses = parseInt(document.getElementById('cp-maxuses').value, 10) || null;
+  const expiresAt = document.getElementById('cp-expires').value || null;
+
+  if (!code || isNaN(value) || value <= 0) { alert('Code and value are required.'); return; }
+  try {
+    const r = await fetch(API + '/coupons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+      body: JSON.stringify({ code, type, value, minOrder, maxUses, expiresAt }),
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || 'Error'); }
+    ['cp-code','cp-value','cp-minorder','cp-maxuses','cp-expires'].forEach(id => { document.getElementById(id).value = ''; });
+    couponsLoaded = false;
+    loadCoupons();
+    couponsLoaded = true;
+  } catch (err) { alert('Failed to add coupon: ' + err.message); }
+});
+
+// ── SHIPPING ZONES TAB ────────────────────────────────────
+async function loadShippingZones() {
+  const c = document.getElementById('shipping-container');
+  c.textContent = '';
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.textContent = 'Loading shipping zones...';
+  c.appendChild(loading);
+  try {
+    const r = await fetch(API + '/shipping-zones', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+    if (!r.ok) throw new Error();
+    const zones = await r.json();
+    renderShippingZones(zones);
+  } catch {
+    c.textContent = '';
+    const d = document.createElement('div');
+    d.className = 'no-backend';
+    d.textContent = 'Could not load shipping zones. Is the backend running?';
+    c.appendChild(d);
+  }
+}
+
+function renderShippingZones(zones) {
+  const c = document.getElementById('shipping-container');
+  c.textContent = '';
+
+  if (zones.length === 0) {
+    const d = document.createElement('div');
+    d.className = 'empty-state';
+    const icon = document.createElement('span');
+    icon.textContent = '🚚';
+    const msg = document.createElement('p');
+    msg.textContent = 'No shipping zones yet. Add one above.';
+    d.append(icon, msg);
+    c.appendChild(d);
+    return;
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'table-wrap';
+  const table = document.createElement('table');
+  table.className = 'orders-table';
+  table.style.minWidth = '600px';
+
+  const thead = document.createElement('thead');
+  const hrow = document.createElement('tr');
+  ['State', 'Cost (₹)', 'Free Above (₹)', 'Est. Days', 'Actions'].forEach(col => {
+    const th = document.createElement('th');
+    th.textContent = col;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  zones.forEach(zone => {
+    const tr = document.createElement('tr');
+
+    const tdState = document.createElement('td');
+    const stateLabel = document.createElement('span');
+    stateLabel.className = zone.state === 'default' ? 'badge s-pending' : '';
+    stateLabel.textContent = zone.state === 'default' ? '⚙ default (catch-all)' : zone.state;
+    tdState.appendChild(stateLabel);
+    tr.appendChild(tdState);
+
+    const costInput = document.createElement('input');
+    costInput.type = 'number'; costInput.className = 'price-input';
+    costInput.value = zone.cost; costInput.min = 0;
+
+    const tdCost = document.createElement('td');
+    tdCost.appendChild(costInput);
+    tr.appendChild(tdCost);
+
+    const freeInput = document.createElement('input');
+    freeInput.type = 'number'; freeInput.className = 'price-input';
+    freeInput.value = zone.freeAbove || ''; freeInput.min = 0;
+    freeInput.placeholder = 'none';
+
+    const tdFree = document.createElement('td');
+    tdFree.appendChild(freeInput);
+    tr.appendChild(tdFree);
+
+    const daysInput = document.createElement('input');
+    daysInput.type = 'text'; daysInput.className = 'tracking-input';
+    daysInput.value = zone.estimatedDays || ''; daysInput.placeholder = '3-5';
+
+    const tdDays = document.createElement('td');
+    tdDays.appendChild(daysInput);
+    tr.appendChild(tdDays);
+
+    const tdAct = document.createElement('td');
+    tdAct.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-btn';
+    saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', async () => {
+      const cost = parseFloat(costInput.value);
+      const freeAbove = parseFloat(freeInput.value) || null;
+      const estimatedDays = daysInput.value.trim() || null;
+      if (isNaN(cost) || cost < 0) { alert('Enter a valid cost.'); return; }
+      try {
+        const nr = await fetch(API + '/shipping-zones/' + encodeURIComponent(zone.state), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+          body: JSON.stringify({ cost, freeAbove, estimatedDays }),
+        });
+        if (!nr.ok) throw new Error();
+        zone.cost = cost; zone.freeAbove = freeAbove; zone.estimatedDays = estimatedDays;
+        saveBtn.textContent = '✓ Saved';
+        saveBtn.style.color = '#34d399';
+        setTimeout(() => { saveBtn.textContent = 'Save'; saveBtn.style.color = ''; }, 1800);
+      } catch { alert('Save failed.'); }
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'save-btn';
+    delBtn.style.color = '#f87171';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', async () => {
+      if (!confirm('Delete zone "' + zone.state + '"?')) return;
+      try {
+        const nr = await fetch(API + '/shipping-zones/' + encodeURIComponent(zone.state), {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+        });
+        if (!nr.ok) throw new Error();
+        tr.remove();
+      } catch { alert('Delete failed.'); }
+    });
+
+    tdAct.append(saveBtn, delBtn);
+    tr.appendChild(tdAct);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  c.appendChild(wrap);
+}
+
+document.getElementById('sz-save-btn').addEventListener('click', async () => {
+  const state = document.getElementById('sz-state').value.trim();
+  const cost = parseFloat(document.getElementById('sz-cost').value);
+  const freeAbove = parseFloat(document.getElementById('sz-freeabove').value) || null;
+  const estimatedDays = document.getElementById('sz-days').value.trim() || null;
+
+  if (!state || isNaN(cost) || cost < 0) { alert('State name and cost are required.'); return; }
+  try {
+    const r = await fetch(API + '/shipping-zones/' + encodeURIComponent(state), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+      body: JSON.stringify({ cost, freeAbove, estimatedDays }),
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || 'Error'); }
+    ['sz-state','sz-cost','sz-freeabove','sz-days'].forEach(id => { document.getElementById(id).value = ''; });
+    shippingLoaded = false;
+    loadShippingZones();
+    shippingLoaded = true;
+  } catch (err) { alert('Failed to save zone: ' + err.message); }
+});
+
+// ── REVIEWS TAB ───────────────────────────────────────────
+async function loadReviews() {
+  const c = document.getElementById('reviews-container');
+  c.textContent = '';
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.textContent = 'Loading pending reviews...';
+  c.appendChild(loading);
+  try {
+    const r = await fetch(API + '/reviews/pending', { headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN } });
+    if (!r.ok) throw new Error();
+    const reviews = await r.json();
+    updateReviewsBadge(reviews.length);
+    renderReviews(reviews);
+  } catch {
+    c.textContent = '';
+    const d = document.createElement('div');
+    d.className = 'no-backend';
+    d.textContent = 'Could not load reviews. Is the backend running?';
+    c.appendChild(d);
+  }
+}
+
+function updateReviewsBadge(count) {
+  const btn = document.getElementById('tab-btn-reviews');
+  let badge = btn.querySelector('.tab-badge');
+  if (count > 0) {
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'tab-badge';
+      btn.appendChild(badge);
+    }
+    badge.textContent = count;
+  } else if (badge) {
+    badge.remove();
+  }
+}
+
+function renderReviews(reviews) {
+  const c = document.getElementById('reviews-container');
+  c.textContent = '';
+
+  if (reviews.length === 0) {
+    const d = document.createElement('div');
+    d.className = 'empty-state';
+    const icon = document.createElement('span');
+    icon.textContent = '⭐';
+    const msg = document.createElement('p');
+    msg.textContent = 'No pending reviews. All caught up!';
+    d.append(icon, msg);
+    c.appendChild(d);
+    return;
+  }
+
+  reviews.forEach(rv => {
+    const card = document.createElement('div');
+    card.className = 'review-card';
+
+    const header = document.createElement('div');
+    header.className = 'review-header';
+
+    const metaLeft = document.createElement('div');
+    const nameEl = document.createElement('div');
+    nameEl.className = 'review-name';
+    nameEl.textContent = rv.name || 'Anonymous';
+    const metaEl = document.createElement('div');
+    metaEl.className = 'review-meta';
+    metaEl.textContent = 'Product ID: ' + (rv.productId || '—') + ' · Order: ' + (rv.orderId || '—') + ' · ' + (rv.createdAt ? new Date(rv.createdAt).toLocaleDateString('en-IN') : '');
+    metaLeft.append(nameEl, metaEl);
+
+    const stars = document.createElement('div');
+    stars.className = 'review-stars';
+    const rating = Math.min(5, Math.max(0, rv.rating || 0));
+    stars.textContent = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+
+    header.append(metaLeft, stars);
+    card.appendChild(header);
+
+    const text = document.createElement('div');
+    text.className = 'review-text';
+    text.textContent = rv.review || '';
+    card.appendChild(text);
+
+    const actions = document.createElement('div');
+    actions.className = 'review-actions';
+
+    const approveBtn = document.createElement('button');
+    approveBtn.className = 'approve-btn';
+    approveBtn.textContent = '✓ Approve';
+    approveBtn.addEventListener('click', async () => {
+      try {
+        const nr = await fetch(API + '/reviews/' + rv.id, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+          body: JSON.stringify({ approved: true }),
+        });
+        if (!nr.ok) throw new Error();
+        card.remove();
+        const remaining = c.querySelectorAll('.review-card').length;
+        updateReviewsBadge(remaining);
+        if (remaining === 0) {
+          const d = document.createElement('div');
+          d.className = 'empty-state';
+          const icon = document.createElement('span');
+          icon.textContent = '⭐';
+          const msg = document.createElement('p');
+          msg.textContent = 'No pending reviews. All caught up!';
+          d.append(icon, msg);
+          c.appendChild(d);
+        }
+      } catch { alert('Approve failed.'); }
+    });
+
+    const rejectBtn = document.createElement('button');
+    rejectBtn.className = 'reject-btn';
+    rejectBtn.textContent = '✗ Reject';
+    rejectBtn.addEventListener('click', async () => {
+      try {
+        const nr = await fetch(API + '/reviews/' + rv.id, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+          body: JSON.stringify({ approved: false }),
+        });
+        if (!nr.ok) throw new Error();
+        card.remove();
+        const remaining = c.querySelectorAll('.review-card').length;
+        updateReviewsBadge(remaining);
+        if (remaining === 0) {
+          const d = document.createElement('div');
+          d.className = 'empty-state';
+          const icon = document.createElement('span');
+          icon.textContent = '⭐';
+          const msg = document.createElement('p');
+          msg.textContent = 'No pending reviews. All caught up!';
+          d.append(icon, msg);
+          c.appendChild(d);
+        }
+      } catch { alert('Reject failed.'); }
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'save-btn';
+    delBtn.style.color = '#f87171';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', async () => {
+      if (!confirm('Permanently delete this review?')) return;
+      try {
+        const nr = await fetch(API + '/reviews/' + rv.id, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN },
+        });
+        if (!nr.ok) throw new Error();
+        card.remove();
+        const remaining = c.querySelectorAll('.review-card').length;
+        updateReviewsBadge(remaining);
+        if (remaining === 0) {
+          const d = document.createElement('div');
+          d.className = 'empty-state';
+          const icon = document.createElement('span');
+          icon.textContent = '⭐';
+          const msg = document.createElement('p');
+          msg.textContent = 'No pending reviews. All caught up!';
+          d.append(icon, msg);
+          c.appendChild(d);
+        }
+      } catch { alert('Delete failed.'); }
+    });
+
+    actions.append(approveBtn, rejectBtn, delBtn);
+    card.appendChild(actions);
+    c.appendChild(card);
+  });
+}
+
 document.getElementById('modal-save').addEventListener('click', async () => {
   const name = document.getElementById('new-name').value.trim();
   const nameTa = document.getElementById('new-nameta').value.trim();
@@ -1118,6 +2058,9 @@ document.getElementById('modal-save').addEventListener('click', async () => {
   const unit = document.getElementById('new-unit').value;
   const emoji = document.getElementById('new-emoji').value.trim() || '🎆';
   const noDiscount = document.getElementById('new-nodiscount').checked;
+  const desc = document.getElementById('new-desc').value.trim();
+  const imageUrl = document.getElementById('new-imageurl').value.trim();
+  const stock = parseInt(document.getElementById('new-stock').value || '-1', 10);
 
   if (!name || !cat || isNaN(mrp) || isNaN(price)) {
     alert('Fill in all required fields (name, category, MRP, sale price).'); return;
@@ -1126,17 +2069,18 @@ document.getElementById('modal-save').addEventListener('click', async () => {
     const r = await fetch(API + '/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ADMIN_TOKEN },
-      body: JSON.stringify({ name, nameTa, cat, mrp, price, unit, emoji, noDiscount }),
+      body: JSON.stringify({ name, nameTa, cat, mrp, price, unit, emoji, noDiscount, desc, imageUrl, stock }),
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'Error');
-    allProducts.push({ id: data.id, name, nameTa, cat, mrp, price, unit, emoji, active: true, noDiscount });
+    allProducts.push({ id: data.id, name, nameTa, cat, mrp, price, unit, emoji, active: true, noDiscount, desc, imageUrl, stock });
     renderProductsTable();
     updateProdStats();
     modal.classList.remove('open');
-    ['new-name','new-nameta','new-mrp','new-price','new-emoji'].forEach(fid => {
+    ['new-name','new-nameta','new-mrp','new-price','new-emoji','new-desc','new-imageurl'].forEach(fid => {
       document.getElementById(fid).value = '';
     });
+    document.getElementById('new-stock').value = '-1';
     document.getElementById('new-nodiscount').checked = false;
   } catch (err) { alert('Failed to add product: ' + err.message); }
 });

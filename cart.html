@@ -308,10 +308,25 @@ function makeRow(label, val) {
   try {
     const r = await fetch(window.SPMC_API + '/products');
     if (r.ok) {
-      (await r.json()).forEach(b => {
+      const backendProducts = await r.json();
+      const activeIds = new Set(backendProducts.map(b => b.id));
+      backendProducts.forEach(b => {
         const p = PRODUCTS.find(p => p.id === b.id);
-        if (p) { p.price = b.price; p.mrp = b.mrp; }
+        if (p) { p.price = b.price; p.mrp = b.mrp; p._hidden = false; p.stock = (b.stock != null ? b.stock : -1); }
       });
+      PRODUCTS.forEach(p => { if (!activeIds.has(p.id)) p._hidden = true; });
+      // Evict hidden and out-of-stock items from cart
+      const evicted = Cart.get().filter(i => {
+        const p = PRODUCTS.find(p => p.id === i.id);
+        return p && (p._hidden || (typeof p.stock === 'number' && p.stock === 0));
+      });
+      if (evicted.length) {
+        evicted.forEach(i => Cart.remove(i.id));
+        const notice = document.createElement('div');
+        notice.style.cssText = 'background:#fff3cd;color:#856404;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px;';
+        notice.textContent = evicted.length + ' item' + (evicted.length > 1 ? 's were' : ' was') + ' removed from your cart as ' + (evicted.length > 1 ? 'they are' : 'it is') + ' no longer available.';
+        document.querySelector('.cart-page, main, body')?.prepend(notice);
+      }
     }
   } catch {} finally {
     renderCart();

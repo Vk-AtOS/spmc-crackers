@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shop — Sri Palani Murugan Crackers</title>
+<title>Shop Crackers Online — Sri Palani Murugan Crackers</title>
+<meta name="description" content="Shop 157+ Sivakasi fireworks online. Sparklers, bombs, rockets, flower pots and more. Direct factory prices. Pan-India delivery.">
+<meta property="og:title" content="Shop Crackers Online — Sri Palani Murugan Crackers">
+<meta property="og:description" content="Shop 157+ Sivakasi fireworks. Direct factory prices. Pan-India delivery.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://spmc-crackers.onrender.com/shop.html">
+<meta property="og:image" content="https://spmc-crackers.onrender.com/images/company_banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://spmc-crackers.onrender.com/shop.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -79,19 +87,6 @@ nav{
 }
 .sort-select option{background:#1a0508}
 
-/* CATEGORY FILTER PILLS */
-.cat-filters{
-  display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;
-  scrollbar-width:none;
-}
-.cat-filters::-webkit-scrollbar{display:none}
-.cat-pill{
-  flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid var(--border);
-  border-radius:30px;padding:7px 16px;font-size:12px;font-weight:600;
-  color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;
-}
-.cat-pill:hover{border-color:rgba(255,215,0,0.4);color:var(--gold)}
-.cat-pill.active{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold)}
 
 /* PRODUCTS GRID */
 .shop-layout{
@@ -131,6 +126,9 @@ nav{
   border-radius:6px;padding:3px 7px;
 }
 .product-badge-nodiscount{background:#555;color:#ccc;}
+.product-badge-oos{background:rgba(239,68,68,0.85);color:#fff;}
+.stock-low{font-size:10px;color:#fb923c;font-weight:600;margin-top:3px}
+.btn-add-oos{flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);border-radius:8px;padding:8px;font-size:12px;font-weight:600;cursor:not-allowed;}
 .product-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
 .product-cat-tag{
   font-size:10px;color:var(--orange);font-weight:600;
@@ -249,6 +247,8 @@ nav{
       <button class="lang-btn active" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="ta">தமிழ்</button>
     </div>
+    <a href="order-status.html" style="color:var(--text-muted);text-decoration:none;font-size:13px">📦 Track Order</a>
+    <a href="my-orders.html" style="color:var(--text-muted);text-decoration:none;font-size:13px">📋 My Orders</a>
     <a href="admin.html" class="nav-admin">⚙️ Admin</a>
     <a href="cart.html" class="nav-cart">
       🛒 Cart
@@ -271,7 +271,6 @@ nav{
     </select>
   </div>
 
-  <div class="cat-filters" id="cat-filters"></div>
 </div>
 
 <div class="shop-layout">
@@ -310,6 +309,7 @@ nav{
         <span class="modal-mrp" id="modal-mrp"></span>
         <span class="modal-unit" id="modal-unit"></span>
       </div>
+      <div id="modal-reviews" style="margin-bottom:14px"></div>
       <div class="modal-actions">
         <div class="modal-qty">
           <button class="qty-btn" id="modal-qty-minus">−</button>
@@ -329,39 +329,8 @@ nav{
 <script src="js/product-images.js?v=4"></script>
 <script src="js/config.js"></script>
 <script>
-let activeCat = 'all';
 let searchQ = '';
 let sortMode = 'default';
-
-// Build category filter pills
-(function() {
-  const container = document.getElementById('cat-filters');
-  CATEGORIES.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.className = 'cat-pill' + (cat.id === 'all' ? ' active' : '');
-    btn.textContent = cat.emoji + ' ' + (currentLang === 'ta' ? cat.labelTa : cat.label);
-    btn.dataset.cat = cat.id;
-    btn.addEventListener('click', () => {
-      activeCat = cat.id;
-      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderProducts();
-    });
-    container.appendChild(btn);
-  });
-})();
-
-// Check URL param for pre-selected category
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat');
-  if (cat) {
-    activeCat = cat;
-    document.querySelectorAll('.cat-pill').forEach(b => {
-      b.classList.toggle('active', b.dataset.cat === cat);
-    });
-  }
-})();
 
 // Search
 document.getElementById('search-input').addEventListener('input', e => {
@@ -379,7 +348,7 @@ document.getElementById('sort-select').addEventListener('change', e => {
 const qtyState = {};
 
 function renderProducts() {
-  let list = (activeCat === 'all' ? [...PRODUCTS] : getByCategory(activeCat)).filter(p => !p._hidden);
+  let list = PRODUCTS.filter(p => !p._hidden);
 
   if (searchQ) {
     list = list.filter(p =>
@@ -389,14 +358,15 @@ function renderProducts() {
     );
   }
 
-  if (sortMode === 'price-asc') list.sort((a, b) => a.price - b.price);
-  else if (sortMode === 'price-desc') list.sort((a, b) => b.price - a.price);
-  else if (sortMode === 'name-asc') list.sort((a, b) => a.name.localeCompare(b.name));
-
+  // Single combined sort: image-availability group first, user sort within each group
   list.sort((a, b) => {
     const aImg = !!(window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[a.id]);
     const bImg = !!(window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[b.id]);
-    return aImg === bImg ? 0 : aImg ? -1 : 1;
+    if (aImg !== bImg) return aImg ? -1 : 1;
+    if (sortMode === 'price-asc') return a.price - b.price;
+    if (sortMode === 'price-desc') return b.price - a.price;
+    if (sortMode === 'name-asc') return a.name.localeCompare(b.name);
+    return 0;
   });
 
   const grid = document.getElementById('products-grid');
@@ -426,7 +396,7 @@ function buildCard(p) {
   const bg = CATEGORY_COLORS[p.cat] || '#240b0e';
   const thumb = document.createElement('div');
   thumb.className = 'product-thumb';
-  const imgUrl = window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id];
+  const imgUrl = p.imageUrl || (window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id]);
   if (imgUrl) {
     thumb.style.background = '#0d0205';
     const img = document.createElement('img');
@@ -442,9 +412,13 @@ function buildCard(p) {
     thumb.appendChild(em);
   }
 
+  const isOOS = typeof p.stock === 'number' && p.stock === 0;
+  const isLowStock = typeof p.stock === 'number' && p.stock > 0 && p.stock <= 5;
+  if (isOOS) card.style.opacity = '0.7';
+
   const badge = document.createElement('div');
-  badge.className = p.noDiscount ? 'product-badge product-badge-nodiscount' : 'product-badge';
-  badge.textContent = p.noDiscount ? 'No Discount' : '75% OFF';
+  badge.className = isOOS ? 'product-badge product-badge-oos' : (p.noDiscount ? 'product-badge product-badge-nodiscount' : 'product-badge');
+  badge.textContent = isOOS ? 'Out of Stock' : (p.noDiscount ? 'No Discount' : '75% OFF');
   thumb.appendChild(badge);
 
   const body = document.createElement('div');
@@ -486,6 +460,12 @@ function buildCard(p) {
 
   if (inCart) {
     renderQtyControls(actions, p, inCart.qty);
+  } else if (isOOS) {
+    const oos = document.createElement('button');
+    oos.className = 'btn-add-oos';
+    oos.textContent = 'Out of Stock';
+    oos.disabled = true;
+    actions.appendChild(oos);
   } else {
     const addBtn = document.createElement('button');
     addBtn.className = 'btn-add';
@@ -499,7 +479,14 @@ function buildCard(p) {
     actions.appendChild(addBtn);
   }
 
-  body.append(catTag, name, nameTa, priceRow, actions);
+  if (isLowStock) {
+    const stockInfo = document.createElement('div');
+    stockInfo.className = 'stock-low';
+    stockInfo.textContent = '⚡ Only ' + p.stock + ' left';
+    body.append(catTag, name, nameTa, priceRow, stockInfo, actions);
+  } else {
+    body.append(catTag, name, nameTa, priceRow, actions);
+  }
   card.append(thumb, body);
 
   card.style.cursor = 'pointer';
@@ -588,7 +575,7 @@ function openModal(p) {
   modalQty = 1;
   document.getElementById('modal-qty-num').textContent = 1;
 
-  const imgUrl = window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id];
+  const imgUrl = p.imageUrl || (window.PRODUCT_IMAGES && window.PRODUCT_IMAGES[p.id]);
   const imgEl = document.getElementById('modal-img');
   const emojiEl = document.getElementById('modal-emoji');
   if (imgUrl) {
@@ -607,6 +594,31 @@ function openModal(p) {
   document.getElementById('modal-name').textContent = currentLang === 'ta' ? p.nameTa : p.name;
   document.getElementById('modal-name-ta').textContent = currentLang === 'ta' ? p.name : p.nameTa;
   document.getElementById('modal-desc').textContent = p.desc || 'Premium Sivakasi firework — direct from factory.';
+
+  // Load and display approved reviews
+  const reviewsWrap = document.getElementById('modal-reviews');
+  if (reviewsWrap) {
+    reviewsWrap.textContent = '';
+    fetch(window.SPMC_API + '/reviews?productId=' + p.id).then(r => r.ok ? r.json() : []).then(reviews => {
+      if (!reviews.length) return;
+      const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+      const header = document.createElement('div');
+      header.style.cssText = 'font-size:12px;color:var(--gold);font-weight:600;margin-bottom:8px;';
+      header.textContent = '⭐ ' + avg + ' · ' + reviews.length + ' review' + (reviews.length !== 1 ? 's' : '');
+      reviewsWrap.appendChild(header);
+      reviews.slice(0, 3).forEach(rv => {
+        const item = document.createElement('div');
+        item.style.cssText = 'padding:8px 0;border-top:1px solid rgba(255,215,0,0.08);font-size:12px;';
+        const stars = '★'.repeat(rv.rating) + '☆'.repeat(5 - rv.rating);
+        const meta = document.createElement('div');
+        meta.style.cssText = 'color:var(--gold);font-size:11px;margin-bottom:3px;';
+        meta.textContent = stars + (rv.name ? '  ' + rv.name : '');
+        item.appendChild(meta);
+        if (rv.text) { const txt = document.createElement('div'); txt.style.color = 'var(--text-muted)'; txt.textContent = rv.text; item.appendChild(txt); }
+        reviewsWrap.appendChild(item);
+      });
+    }).catch(() => {});
+  }
   document.getElementById('modal-price').textContent = '₹' + p.price.toLocaleString('en-IN');
   document.getElementById('modal-mrp').textContent = p.noDiscount ? '' : '₹' + p.mrp.toLocaleString('en-IN');
   document.getElementById('modal-unit').textContent = '/ ' + p.unit;
@@ -649,27 +661,32 @@ document.getElementById('modal-add-btn').addEventListener('click', () => {
 })();
 
 // Sync live prices + active state from backend (non-blocking)
-// If backend is offline the static PRODUCTS array is used as-is.
+// Public /products only returns active items, so anything absent = hidden by admin.
 (async function syncBackendProducts() {
   try {
     const r = await fetch(window.SPMC_API + '/products');
     if (!r.ok) return;
     const backendProducts = await r.json();
+    const returnedIds = new Set(backendProducts.map(bp => bp.id));
     let changed = false;
     backendProducts.forEach(bp => {
       const idx = PRODUCTS.findIndex(p => p.id === bp.id);
       if (idx === -1) {
-        // New product added via admin — append it
-        if (bp.active) { PRODUCTS.push(bp); changed = true; }
+        PRODUCTS.push({ ...bp, _hidden: false, desc: bp.desc || null }); changed = true;
       } else {
-        // Update price and active state
         const p = PRODUCTS[idx];
         if (p.mrp !== bp.mrp || p.price !== bp.price) { p.mrp = bp.mrp; p.price = bp.price; changed = true; }
-        if (!!p._hidden !== !bp.active) { p._hidden = !bp.active; changed = true; }
+        if (p._hidden) { p._hidden = false; changed = true; }
+        if (bp.desc  !== undefined && p.desc     !== bp.desc)     { p.desc     = bp.desc;     changed = true; }
+        if (bp.imageUrl !== undefined && p.imageUrl !== bp.imageUrl) { p.imageUrl = bp.imageUrl; changed = true; }
+        if (bp.stock  !== undefined && p.stock  !== bp.stock)  { p.stock  = bp.stock;  changed = true; }
       }
     });
-    // Mark products hidden by admin
-    PRODUCTS.forEach(p => { if (p._hidden === undefined) p._hidden = false; });
+    // Products absent from response have been hidden by admin
+    PRODUCTS.forEach(p => {
+      const shouldHide = !returnedIds.has(p.id);
+      if (!!p._hidden !== shouldHide) { p._hidden = shouldHide; changed = true; }
+    });
     if (changed) renderProducts();
   } catch { /* backend offline — static catalog used */ }
 })();

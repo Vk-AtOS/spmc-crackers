@@ -143,6 +143,7 @@ const fieldDefs = [
   { id: 'city', label: 'City *', placeholder: 'Your city', type: 'text', full: false, ac: 'address-level2' },
   { id: 'state', label: 'State *', placeholder: 'State', type: 'text', full: false, ac: 'address-level1' },
   { id: 'pincode', label: 'Pincode *', placeholder: '6 digit pincode', type: 'text', full: false, ac: 'postal-code' },
+  { id: 'email', label: 'Email (optional — for order updates)', placeholder: 'your@email.com', type: 'email', full: true, ac: 'email' },
 ];
 
 fieldDefs.forEach(f => {
@@ -287,7 +288,7 @@ revTitle.textContent = '🛒 Order Summary';
 const revItems = document.createElement('div');
 revItems.className = 'review-items';
 
-let subtotal = 0, savings = 0;
+let subtotal = 0, savings = 0, discount = 0, shippingCost = 0, appliedCoupon = null;
 items.forEach(item => {
   const p = getProduct(item.id);
   if (!p) return;
@@ -296,6 +297,7 @@ items.forEach(item => {
 
   const row = document.createElement('div');
   row.className = 'review-item';
+  row.id = 'review-row-' + p.id;
   const bg = CATEGORY_COLORS[p.cat] || '#240b0e';
   const thumb = document.createElement('div');
   thumb.className = 'review-item-thumb';
@@ -325,7 +327,8 @@ sl.className = 'review-total-label';
 sl.textContent = 'Shipping';
 const sv = document.createElement('span');
 sv.className = 'review-total-val';
-sv.textContent = 'To be confirmed';
+sv.id = 'co-shipping-val';
+sv.textContent = 'Free';
 shipRow.append(sl, sv);
 
 const grand = document.createElement('div');
@@ -360,33 +363,117 @@ trustChips.className = 'trust-chips';
   trustChips.appendChild(c);
 });
 
-review.append(revTitle, revItems, shipRow, grand, savBadge, submitBtn, trustChips);
+// Coupon input
+const couponWrap = document.createElement('div');
+couponWrap.style.cssText = 'margin:14px 0 4px;display:flex;gap:8px;';
+const couponInput = document.createElement('input');
+couponInput.type = 'text';
+couponInput.id = 'coupon-input';
+couponInput.placeholder = 'Coupon code';
+couponInput.style.cssText = 'flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;font-family:Poppins,sans-serif;outline:none;text-transform:uppercase;';
+const couponBtn = document.createElement('button');
+couponBtn.type = 'button';
+couponBtn.textContent = 'Apply';
+couponBtn.style.cssText = 'background:rgba(255,215,0,0.12);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;';
+const couponMsg = document.createElement('div');
+couponMsg.id = 'coupon-msg';
+couponMsg.style.cssText = 'font-size:11px;margin-bottom:8px;min-height:14px;';
+couponWrap.append(couponInput, couponBtn);
+
+couponBtn.addEventListener('click', async () => {
+  const code = couponInput.value.trim().toUpperCase();
+  if (!code) return;
+  couponBtn.disabled = true; couponBtn.textContent = '...';
+  try {
+    const r = await fetch(window.SPMC_API + '/validate-coupon', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, orderTotal: subtotal }),
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      couponMsg.textContent = '✗ ' + (data.error || 'Invalid coupon');
+      couponMsg.style.color = '#f87171';
+      appliedCoupon = null; discount = 0;
+    } else {
+      appliedCoupon = data.code; discount = data.discount;
+      couponMsg.textContent = '✓ ' + data.code + ' applied — ₹' + discount.toLocaleString('en-IN') + ' off!';
+      couponMsg.style.color = '#86efac';
+    }
+    updateOrderTotals();
+  } catch {
+    couponMsg.textContent = '✗ Could not apply coupon';
+    couponMsg.style.color = '#f87171';
+  } finally { couponBtn.disabled = false; couponBtn.textContent = 'Apply'; }
+});
+
+// Discount row (hidden until coupon applied)
+const discountRow = document.createElement('div');
+discountRow.className = 'review-total-row';
+discountRow.id = 'discount-row';
+discountRow.style.display = 'none';
+const dl = document.createElement('span'); dl.className = 'review-total-label'; dl.textContent = '🎟 Discount';
+const dv = document.createElement('span'); dv.className = 'review-total-val'; dv.id = 'discount-val'; dv.style.color = '#86efac'; dv.textContent = '-₹0';
+discountRow.append(dl, dv);
+
+function updateOrderTotals() {
+  const finalTotal = subtotal - discount + shippingCost;
+  const tv = document.getElementById('co-total-val');
+  if (tv) tv.textContent = '₹' + finalTotal.toLocaleString('en-IN');
+  const dr = document.getElementById('discount-row');
+  if (dr) dr.style.display = discount > 0 ? 'flex' : 'none';
+  const dvEl = document.getElementById('discount-val');
+  if (dvEl) dvEl.textContent = '-₹' + discount.toLocaleString('en-IN');
+}
+
+review.append(revTitle, revItems, couponWrap, couponMsg, discountRow, shipRow, grand, savBadge, submitBtn, trustChips);
 layout.append(formSection, review);
 root.appendChild(layout);
 updateUpiSection();
+
+// Fetch shipping cost when state field is filled
+async function fetchShippingCost() {
+  const stateVal = document.getElementById('state')?.value.trim();
+  if (!stateVal) return;
+  try {
+    const r = await fetch(window.SPMC_API + '/shipping-cost?state=' + encodeURIComponent(stateVal) + '&total=' + subtotal);
+    if (!r.ok) return;
+    const data = await r.json();
+    shippingCost = data.cost || 0;
+    const sv2 = document.getElementById('co-shipping-val');
+    if (sv2) sv2.textContent = shippingCost === 0 ? (data.freeAbove > 0 ? 'FREE 🎉' : 'Free') : '₹' + shippingCost.toLocaleString('en-IN');
+    updateOrderTotals();
+  } catch {}
+}
+document.getElementById('state')?.addEventListener('blur', fetchShippingCost);
 
 // Sync live prices from backend; update display + subtotal so submission total matches backend
 (async () => {
   try {
     const r = await fetch(window.SPMC_API + '/products');
     if (!r.ok) return;
-    (await r.json()).forEach(b => {
+    const backendProducts = await r.json();
+    const activeIds = new Set(backendProducts.map(b => b.id));
+    backendProducts.forEach(b => {
       const p = PRODUCTS.find(p => p.id === b.id);
-      if (p) { p.price = b.price; p.mrp = b.mrp; }
+      if (p) { p.price = b.price; p.mrp = b.mrp; p._hidden = false; }
+    });
+    PRODUCTS.forEach(p => { if (!activeIds.has(p.id)) p._hidden = true; });
+    // Remove DOM rows for any products that are now hidden
+    PRODUCTS.filter(p => p._hidden).forEach(p => {
+      document.getElementById('review-row-' + p.id)?.remove();
     });
     subtotal = 0; let liveSavings = 0;
     Cart.get().forEach(item => {
       const p = getProduct(item.id);
-      if (!p) return;
+      if (!p || p._hidden) return; // skip products hidden by admin
       subtotal += p.price * item.qty;
       if (!p.noDiscount) liveSavings += (p.mrp - p.price) * item.qty;
       const el = document.getElementById('co-item-' + p.id);
       if (el) el.textContent = '₹' + (p.price * item.qty).toLocaleString('en-IN');
     });
-    const tv = document.getElementById('co-total-val');
-    if (tv) tv.textContent = '₹' + subtotal.toLocaleString('en-IN');
     const sb = document.getElementById('co-savings-badge');
     if (sb) sb.textContent = '🎉 You save ₹' + liveSavings.toLocaleString('en-IN') + '!';
+    updateOrderTotals();
   } catch {}
 })();
 
@@ -445,6 +532,7 @@ function getCustomerInfo() {
   return {
     name: val('name'), phone: val('phone'), address: val('address'),
     city: val('city'), state: val('state'), pincode: val('pincode'),
+    email: val('email') || null,
     payment: document.querySelector('input[name="payment"]:checked')?.value || 'WhatsApp Confirmation',
     notes: val('notes'),
     utr: document.getElementById('utr-input')?.value.trim() || '',
@@ -461,8 +549,10 @@ function saveToBackend(orderId, customerInfo, paymentId, paymentStatus) {
         const p = getProduct(i.id);
         return { id: i.id, name: p?.name, qty: i.qty, price: p?.price };
       }),
-      total: subtotal,
+      total: subtotal - discount + shippingCost,
       utr: customerInfo.utr || null,
+      coupon: appliedCoupon || null,
+      state: customerInfo.state || null,
     }),
   }).catch(() => {});
 }
@@ -470,7 +560,7 @@ function saveToBackend(orderId, customerInfo, paymentId, paymentStatus) {
 function finishOrder(orderId, customerInfo) {
   sessionStorage.setItem('spmc_order_id', orderId);
   sessionStorage.setItem('spmc_customer', JSON.stringify(customerInfo));
-  sessionStorage.setItem('spmc_order_total', subtotal);
+  sessionStorage.setItem('spmc_order_total', subtotal - discount + shippingCost);
   Cart.clear();
   window.location.href = 'order-success.html';
 }
@@ -496,7 +586,7 @@ submitBtn.addEventListener('click', async () => {
       const r = await fetch(BACKEND + '/create-razorpay-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: subtotal, orderId }),
+        body: JSON.stringify({ amount: subtotal - discount + shippingCost, orderId }),
       });
       if (!r.ok) throw new Error('order_create_failed');
       const data = await r.json();
@@ -551,13 +641,16 @@ submitBtn.addEventListener('click', async () => {
   }
 
   // ── WHATSAPP / COD FLOW ───────────────────────────────
-  saveToBackend(orderId, customerInfo, null, 'pending');
+  submitBtn.disabled = true;
+  const waText = submitBtn.querySelector('span:last-child');
+  if (waText) waText.textContent = 'Placing order...';
+  await saveToBackend(orderId, customerInfo, null, 'pending');
   const waMsg = Cart.toWhatsApp(customerInfo);
   sessionStorage.setItem('spmc_order_id', orderId);
   sessionStorage.setItem('spmc_customer', JSON.stringify(customerInfo));
-  sessionStorage.setItem('spmc_order_total', subtotal);
+  sessionStorage.setItem('spmc_order_total', subtotal - discount + shippingCost);
   Cart.clear();
-  window.open('https://wa.me/917200915142?text=' + waMsg, '_blank');
+  window.open('https://wa.me/' + (window.SPMC_WA_PHONE || '917200915142') + '?text=' + waMsg, '_blank');
   window.location.href = 'order-success.html';
 });
 </script>
