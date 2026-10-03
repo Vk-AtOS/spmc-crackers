@@ -44,7 +44,7 @@ window.PRODUCT_IMAGES = {
   28:  'images/products/bomb_bullet.jpg',
   29:  'images/products/bomb_king_of_king.jpg',
   30:  'images/products/bomb_classic.jpg',
-  31:  'images/products/product_32.jpg',
+  31:  'images/products/bomb_king_of_king.jpg',
   32:  'images/products/bomb_dts.jpg',
   33:  'images/products/bomb_paper.jpg',
   34:  'images/products/bomb_paper.jpg',
@@ -108,7 +108,7 @@ window.PRODUCT_IMAGES = {
 
   // VARIETY SHOWERS (74-78)
   74:  'images/products/shower_tin_beer.jpg',
-  75:  'images/products/product_75.jpg',
+  75:  'images/products/fountain_5color.jpg',
   76:  'images/products/shower_minions.jpg',
   77:  'images/products/shower_aqua_queen.jpg',
   78:  'images/products/shower_monster_tn67.jpg',
@@ -119,7 +119,7 @@ window.PRODUCT_IMAGES = {
   81:  'images/products/fountain_dragon_slay.jpg',
 
   // AMAZING FOUNTAIN (82-84)
-  82:  'images/products/fountain_volcano.jpg',
+  82:  'images/products/fountain_wonder.jpg',
   83:  'images/products/fountain_mangatha.jpg',
   84:  'images/products/fountain_jigarthanda.jpg',
 
@@ -131,16 +131,19 @@ window.PRODUCT_IMAGES = {
   89:  'images/products/kids_photo_flash.jpg',
   90:  'images/products/kids_selfie_stick.jpg',
   91:  'images/products/product_98.jpg',
-  92:  'images/products/product_91.jpg',
-  93:  'images/products/product_93.jpg',
-  94:  'images/products/product_94.jpg',
+  92:  'images/products/kids_gun.jpg',
+  93:  'images/products/kids_snap_click.jpg',
+  94:  'images/products/kids_snap_click.jpg',
   95:  'images/products/kids_snake.jpg',
-  96:  'images/products/product_95.jpg',
-  97:  'images/products/product_93.jpg',
-  98:  'images/products/product_100.jpg',
-  99:  'images/products/product_92.jpg',
+  96:  'images/products/kids_snap_click.jpg',
+  97:  'images/products/kids_snap_click.jpg',
+  98:  'images/products/kids_snap_click.jpg',
+  99:  'images/products/kids_selfie_stick.jpg',
 
   // NEW VERTIES 2026 (100-108)
+  100: 'images/products/cylinder_bomb.jpg',
+  101: 'images/products/product_101.jpg',
+  102: 'images/products/product_102.jpg',
   103: 'images/products/new_guitar.jpg',
   104: 'images/products/new_hunter007.jpg',
   105: 'images/products/new_emu_egg.jpg',
@@ -200,6 +203,8 @@ window.PRODUCT_IMAGES = {
   160: 'images/products/bomb_555.jpg',
 
   // NEW VERTIES 2026 — extra IDs
+  161: 'images/products/chakkar_whizz.jpg',
+  162: 'images/products/rocket_bomb.jpg',
   163: 'images/products/new_bat_ball.jpg',
   164: 'images/products/new_icon.jpg',
   165: 'images/products/new_love_dose.jpg',
