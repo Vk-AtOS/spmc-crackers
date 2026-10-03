@@ -1090,7 +1090,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 // ── PRODUCTS TAB ──────────────────────────────────────────
 const CATEGORY_LABELS = {
-  'one-sound':'One Sound','deluxe':'Deluxe','garland':'Garlands',
+  'one-sound':'One Sound','deluxe':'Deluxe',
+  'garland-full':'Garland Full','garland-half':'Garland Half','garland':'Garlands',
   'chorsa-giant':'Chorsa & Giant','bijili':'Bijili','bombs':'Bombs',
   'chakkars':'Ground Chakkars','flower-pots':'Flower Pots',
   'twinkling-stars':'Twinkling Stars','pencil-fountain':'Pencil & Fountains',
@@ -1098,6 +1099,7 @@ const CATEGORY_LABELS = {
   'showers':'Showers','fancy-showers':'Fancy Showers',
   'variety-showers':'Variety Showers','magic-fountain':'Magic Fountain',
   'amazing-fountain':'Amazing Fountain','kids-special':'Kids Special',
+  'new-2026':'New 2026 Varieties',
   'fancy-shots':'Fancy Shots','fancy-pipe':'Fancy Pipe',
   'sparklers':'Sparklers','gift-boxes':'Gift Boxes',
 };
@@ -1449,7 +1451,10 @@ document.getElementById('prod-refresh-btn').addEventListener('click', () => {
 
 // Add product modal
 const modal = document.getElementById('add-prod-modal');
-document.getElementById('add-prod-btn').addEventListener('click', () => modal.classList.add('open'));
+document.getElementById('add-prod-btn').addEventListener('click', () => {
+  populateModalCatSelect();
+  modal.classList.add('open');
+});
 document.getElementById('modal-cancel').addEventListener('click', () => modal.classList.remove('open'));
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
